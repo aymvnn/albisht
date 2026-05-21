@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ALBISHT — DESIGN SYSTEM
+   Pearl Court · Men's Hall · Royal Qatari Protocol
+   ============================================================ */
+
+@font-face {
+  font-family: "Cinzel";
+  src: url("https://fonts.gstatic.com/s/cinzel/v25/8vIU7ww63mVu7gtR-kwKxNvkNOjw-tbnTYrvDE5ZdqU.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@theme {
+  /* === Color tokens (OKLCH, perceptually uniform) === */
+  --color-ink-bisht: oklch(0.135 0.005 60);
+  --color-ink-soft: oklch(0.22 0.014 60);
+  --color-ink-warm: oklch(0.32 0.022 60);
+  --color-pearl: oklch(0.951 0.012 82);
+  --color-ivory: oklch(0.92 0.018 82);
+  --color-marble: oklch(0.895 0.014 80);
+  --color-mist: oklch(0.78 0.012 78);
+  --color-zari: oklch(0.745 0.105 78);
+  --color-zari-deep: oklch(0.585 0.085 70);
+  --color-zari-bright: oklch(0.82 0.095 82);
+  --color-olive: oklch(0.42 0.045 130);
+  --color-crystal: oklch(0.98 0.025 86);
+  --color-blood-velvet: oklch(0.31 0.072 22);
+
+  /* === Type families === */
+  --font-display: "Italiana", "Cormorant Garamond", "Times New Roman", serif;
+  --font-roman: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --font-serif: "Cardo", "EB Garamond", "Garamond", serif;
+  --font-arabic: "Amiri", "Scheherazade New", serif;
+  --font-arabic-body: "Markazi Text", "Amiri", serif;
+
+  /* === Type scale (fluid via clamp on display, fixed on body) === */
+  --text-micro: 0.6875rem;     /* 11px — small caps labels */
+  --text-mini: 0.8125rem;      /* 13px — captions */
+  --text-body: 1rem;           /* 16px — base body */
+  --text-prose: 1.125rem;      /* 18px — long-read body */
+  --text-lead: 1.375rem;       /* 22px — lead paragraphs */
+  --text-h4: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
+  --text-h3: clamp(2rem, 1.5rem + 2vw, 2.875rem);
+  --text-h2: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+  --text-h1: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+  --text-display: clamp(4.5rem, 3rem + 8vw, 10rem);
+
+  /* === Spacing (4pt scale) === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-48: 12rem;
+
+  /* === Motion === */
+  --ease-ceremonial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-veil: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* === Layout === */
+  --container-narrow: 38rem;
+  --container-text: 48rem;
+  --container-prose: 64rem;
+  --container-wide: 90rem;
+}
+
+/* === Web font loading via Google Fonts (display headings + Arabic) === */
+/* Loaded via <link> in layout for performance */
+
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background-color: var(--color-ink-bisht);
+  }
+
+  body {
+    background-color: var(--color-pearl);
+    color: var(--color-ink-soft);
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    font-feature-settings: "kern", "liga", "calt";
+    overflow-x: hidden;
+  }
+
+  /* Paper grain — barely there, ~1.5% opacity */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.025;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.04  0 0 0 0 0.02  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic-body);
+    line-height: 1.85;
+  }
+
+  ::selection {
+    background-color: var(--color-zari);
+    color: var(--color-ink-bisht);
+  }
+
+  /* Long-form prose */
+  .prose-ceremonial p {
+    max-width: 60ch;
+    margin-block: var(--space-6);
+  }
+
+  html[dir="rtl"] .prose-ceremonial p {
+    max-width: 64ch;
+  }
+
+  /* === Type role utilities === */
+  .type-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  .type-roman {
+    font-family: var(--font-roman);
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .type-roman-light {
+    font-family: var(--font-roman);
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+
+  .type-serif {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  .type-arabic-display {
+    font-family: var(--font-arabic);
+    font-weight: 700;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+
+  .type-arabic {
+    font-family: var(--font-arabic);
+    font-weight: 400;
+    line-height: 1.85;
+  }
+
+  .type-arabic-body {
+    font-family: var(--font-arabic-body);
+    font-weight: 400;
+    line-height: 1.9;
+  }
+
+  /* ============================================================
+     CEREMONIAL EFFECTS
+     ============================================================ */
+
+  /* Bisht weave texture — for ink-bisht surfaces */
+  .surface-bisht {
+    background-color: var(--color-ink-bisht);
+    background-image:
+      linear-gradient(135deg, oklch(0 0 0 / 0.4) 0%, oklch(0 0 0 / 0) 50%, oklch(0 0 0 / 0.4) 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.85 0.4' numOctaves='1'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.04  0 0 0 0 0.03  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>");
+    background-blend-mode: overlay;
+    color: var(--color-pearl);
+  }
+
+  /* Pearl paper texture — for primary light surfaces */
+  .surface-pearl {
+    background-color: var(--color-pearl);
+    position: relative;
+  }
+
+  /* Marble veining (very subtle) — for hero blocks */
+  .surface-marble {
+    background-color: var(--color-ivory);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 30%, oklch(0.96 0.018 82 / 0.6), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 80% 70%, oklch(0.88 0.014 82 / 0.4), transparent 70%);
+  }
+
+  /* === Zari embroidery: animated golden line === */
+  .zari-line {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-zari-deep) 8%,
+      var(--color-zari) 25%,
+      var(--color-zari-bright) 50%,
+      var(--color-zari) 75%,
+      var(--color-zari-deep) 92%,
+      transparent 100%
+    );
+    height: 1px;
+  }
+
+  .zari-line-thick {
+    background:
+      linear-gradient(90deg, transparent 0, var(--color-zari) 50%, transparent 100%) center / 100% 1px no-repeat,
+      linear-gradient(90deg, transparent 0, var(--color-zari-deep) 50%, transparent 100%) center / 100% 3px no-repeat;
+    height: 3px;
+  }
+
+  /* === Hairline divider with seal dot === */
+  .seal-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--color-zari);
+  }
+
+  .seal-divider::before,
+  .seal-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      currentColor 30%,
+      currentColor 70%,
+      transparent
+    );
+  }
+
+  /* === Diwani SVG path animation === */
+  .diwani-draw path {
+    stroke-dasharray: var(--length, 1000);
+    stroke-dashoffset: var(--length, 1000);
+    animation: diwani-write 2.2s var(--ease-ceremonial) forwards;
+  }
+
+  @keyframes diwani-write {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* === Subtle text reveal === */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    animation: reveal-up 1.4s var(--ease-ceremonial) forwards;
+  }
+
+  @keyframes reveal-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === Olive leaf rustle (CTA hover) === */
+  @keyframes leaf-rustle {
+    0%, 100% { transform: rotate(0deg); }
+    35% { transform: rotate(2.5deg); }
+    70% { transform: rotate(-1.5deg); }
+  }
+
+  /* === Reduced motion fallbacks === */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal-up { opacity: 1; transform: none; }
+    .diwani-draw path { stroke-dashoffset: 0; }
+  }
+
+  /* === Focus ring (a11y) === */
+  :focus-visible {
+    outline: 2px solid var(--color-zari);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* RTL-aware utility */
+  html[dir="rtl"] .flip-rtl { transform: scaleX(-1); }
+
+  /* === Hide scrollbar but keep scrollable === */
+  .scrollbar-hidden { scrollbar-width: none; }
+  .scrollbar-hidden::-webkit-scrollbar { display: none; }
+}
+
+/* ============================================================
+   RTL OVERRIDES — placed outside @layer base so they win against
+   Tailwind utilities like `text-[0.7rem]`. Arabic letters MUST join,
+   so letter-spacing is wrong on Arabic eyebrows.
+   ============================================================ */
+
+html[dir="rtl"] .type-roman,
+html[dir="rtl"] .type-roman-light {
+  font-family: var(--font-arabic) !important;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.95rem;
+}
+
+/* When the eyebrow appears on a dark surface in RTL, keep gold tint */
+html[dir="rtl"] .surface-bisht .type-roman,
+html[dir="rtl"] .surface-bisht .type-roman-light {
+  font-size: 1rem;
+}
+
+/* In RTL mode, Latin brand wordmarks like "ALBISHT" should still use Cinzel */
+html[dir="rtl"] .force-latin {
+  font-family: var(--font-roman) !important;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
