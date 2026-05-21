@@ -2,7 +2,7 @@
 
 > *Qatari Wedding Atelier — Doha · Men's Hall Specialism*
 
-The ceremonial atelier for the men's hall of the Qatari wedding. Six ceremonies a year. No two alike.
+The ceremonial atelier for the men's hall of the Qatari wedding. Three hundred ceremonies a year. No two alike.
 
 This repository hosts the website — a bilingual (Arabic-primary, English-mirror) site built around the bisht: the ceremonial cloak worn by the groom and the heart of the brand.
 

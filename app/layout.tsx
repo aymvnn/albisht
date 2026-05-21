@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ALBISHT — البِشت · Qatari Men's Hall Atelier",
   description:
-    "ALBISHT is the Qatari ceremonial atelier for the men's hall of the wedding. Six ceremonies a year. None of them repeated.",
+    "ALBISHT is the Qatari ceremonial atelier for the men's hall of the wedding. Three hundred ceremonies a year. None of them repeated.",
   metadataBase: new URL("http://localhost:3300"),
   openGraph: {
     title: "ALBISHT — البِشت",

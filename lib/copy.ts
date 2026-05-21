@@ -29,13 +29,13 @@ export const HERO = {
   ar: {
     eyebrow: "البِشت ـ صالة الرجال",
     headline: "حَفلٌ يُذكر،\nلا يُقارن.",
-    subline: "ست مناسبات في العام. لا تتكرر اثنتان.",
+    subline: "ثلاث مئة مناسبة في العام. لا تتكرر اثنتان.",
     cta: "تَكرّم بالتواصل",
   },
   en: {
     eyebrow: "ALBISHT — Men's Hall Atelier",
     headline: "A wedding remembered.\nNever compared.",
-    subline: "Six ceremonies a year. No two alike.",
+    subline: "Three hundred ceremonies a year. No two alike.",
     cta: "Begin the conversation",
   },
 };
@@ -49,7 +49,7 @@ export const PROMISE = {
   ar: {
     title: "العهد",
     lines: [
-      "ست مناسبات في السنة.",
+      "ثلاث مئة مناسبة في السنة.",
       "كل واحدة لا تُنسى.",
       "كل واحدة على حدة.",
     ],
@@ -57,7 +57,7 @@ export const PROMISE = {
   en: {
     title: "The promise",
     lines: [
-      "Six ceremonies a year.",
+      "Three hundred ceremonies a year.",
       "None of them repeated.",
       "None of them forgotten.",
     ],
@@ -177,13 +177,13 @@ export const CELEBRATIONS = {
 export const INVITATION = {
   ar: {
     title: "دعوةٌ مُحدودة",
-    line1: "نَستقبل ست عائلات في السنة.",
+    line1: "نَستقبل ثلاث مئة عائلة في السنة.",
     line2: "للاستفسار، تَكرّم بالتواصل.",
     cta: "اكتب الرسالة",
   },
   en: {
     title: "A limited invitation",
-    line1: "We accept six families a year.",
+    line1: "We accept three hundred families a year.",
     line2: "To enquire — be so kind as to write to us.",
     cta: "Write the letter",
   },
@@ -236,7 +236,7 @@ export const ATELIER = {
       title: "كيف نَعمَل.",
       lines: [
         "نَقبَل المناسبة قبل سبعة أشهر على الأقل.",
-        "لا نُجري أكثر من ستِّ مناسبات في العام.",
+        "لا نُجري أكثر من ثلاث مئة مناسبة في العام.",
         "نَعمَل في قطر، والبحرين، والإمارات.",
         "نتعامل مع وَلي الأمر، لا مع وكلائه.",
       ],
@@ -275,7 +275,7 @@ export const ATELIER = {
       title: "How we work.",
       lines: [
         "We accept a wedding no less than seven months in advance.",
-        "We do not undertake more than six weddings a year.",
+        "We do not undertake more than three hundred weddings a year.",
         "We work in Qatar, Bahrain and the Emirates.",
         "We speak with the head of the family, not with his agents.",
       ],

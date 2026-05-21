@@ -19,12 +19,11 @@ import { Logo } from "./Logo";
  * Triggers (in "closed" phase, whichever first):
  *  - scroll (wheel/touch)
  *  - click anywhere on the overlay
- *  - Enter / Space keypress
+ *  - Enter / Space keypress (Esc skips)
  *
- * Played once per session (sessionStorage). `?intro=play` forces a replay.
+ * Plays every time the home page mounts. Only skipped when the user has
+ * `prefers-reduced-motion: reduce` set.
  */
-
-const SESSION_KEY = "albisht.reveal.seen";
 
 type Phase = "closed" | "opening" | "revealed" | "done";
 
@@ -38,15 +37,11 @@ export function BishtReveal({ lang }: { lang: Lang }) {
     startedRef.current = true;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const forceReplay = new URLSearchParams(window.location.search).has("intro");
-    const alreadySeen = !forceReplay && sessionStorage.getItem(SESSION_KEY);
-
-    if (reducedMotion || alreadySeen) {
+    if (reducedMotion) {
       setPhase("done");
       return;
     }
 
-    sessionStorage.setItem(SESSION_KEY, "1");
     document.body.style.overflow = "hidden";
     setPhase("closed");
 
