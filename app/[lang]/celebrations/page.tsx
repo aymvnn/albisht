@@ -5,10 +5,11 @@ import { CelebrationsTimeline } from "@/components/CelebrationsTimeline";
 export default async function CelebrationsPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  if (!LANGS.includes(lang)) notFound();
+  const { lang: rawLang } = await params;
+  if (!LANGS.includes(rawLang as Lang)) notFound();
+  const lang = rawLang as Lang;
   return (
     <div className="pt-24">
       <CelebrationsTimeline lang={lang} />

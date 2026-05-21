@@ -11,17 +11,16 @@ export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }
 
-type Params = { lang: Lang };
-
 export default async function LangLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: Promise<Params>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  if (!LANGS.includes(lang)) notFound();
+  const { lang: rawLang } = await params;
+  if (!LANGS.includes(rawLang as Lang)) notFound();
+  const lang = rawLang as Lang;
   const rtl = isRTL(lang);
 
   return (

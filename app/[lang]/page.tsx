@@ -10,10 +10,11 @@ import { InvitationSection } from "@/components/InvitationSection";
 export default async function HomePage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  if (!LANGS.includes(lang)) notFound();
+  const { lang: rawLang } = await params;
+  if (!LANGS.includes(rawLang as Lang)) notFound();
+  const lang = rawLang as Lang;
 
   return (
     <>

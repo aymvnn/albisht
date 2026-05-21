@@ -5,9 +5,10 @@ import { ConsultLetter } from "@/components/ConsultLetter";
 export default async function ConsultPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  if (!LANGS.includes(lang)) notFound();
+  const { lang: rawLang } = await params;
+  if (!LANGS.includes(rawLang as Lang)) notFound();
+  const lang = rawLang as Lang;
   return <ConsultLetter lang={lang} />;
 }

@@ -6,10 +6,11 @@ import { ATELIER } from "@/lib/copy";
 export default async function AtelierPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  if (!LANGS.includes(lang)) notFound();
+  const { lang: rawLang } = await params;
+  if (!LANGS.includes(rawLang as Lang)) notFound();
+  const lang = rawLang as Lang;
   const c = ATELIER[lang];
 
   return (
