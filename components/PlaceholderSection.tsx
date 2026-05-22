@@ -20,7 +20,7 @@ export function PlaceholderSection({
         <h1
           className={`${
             lang === "ar" ? "type-arabic-display" : "type-display"
-          } text-[color:var(--color-ink-bisht)] mb-10`}
+          } text-[color:var(--color-ink)] mb-10`}
           style={{ fontSize: "var(--text-h1)" }}
         >
           {title}

@@ -22,7 +22,7 @@ export default async function ContactPage({
             <h1
               className={`${
                 lang === "ar" ? "type-arabic-display" : "type-display"
-              } text-[color:var(--color-ink-bisht)] mb-8`}
+              } text-[color:var(--color-ink)] mb-8`}
               style={{ fontSize: "var(--text-h2)" }}
             >
               {lang === "ar" ? "الباب." : "The door."}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FOOTER, NAV } from "@/lib/copy";
 import { type Lang, localizedNumeral } from "@/lib/i18n";
 import { Logo } from "./Logo";
+import { SilkRibbon } from "./SilkRibbon";
 
 export function SiteFooter({ lang }: { lang: Lang }) {
   const f = FOOTER[lang];
@@ -9,8 +10,10 @@ export function SiteFooter({ lang }: { lang: Lang }) {
 
   return (
     <footer className="surface-bisht relative z-10 mt-32">
-      {/* Top zari border */}
-      <div className="zari-line opacity-50" />
+      {/* Brand signature silk-and-zari ribbon spanning the top of the footer */}
+      <div className="relative h-24 md:h-32 overflow-hidden -mb-px">
+        <SilkRibbon variant="horizontal" className="absolute inset-x-0 -bottom-4 w-full h-auto" />
+      </div>
 
       <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">

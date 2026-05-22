@@ -71,7 +71,7 @@ export default async function JournalPage({
           <h1
             className={`${
               lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink-bisht)] max-w-3xl`}
+            } text-[color:var(--color-ink)] max-w-3xl`}
             style={{ fontSize: "var(--text-h1)" }}
           >
             {lang === "ar"
@@ -102,7 +102,7 @@ export default async function JournalPage({
                   <h2
                     className={`${
                       lang === "ar" ? "type-arabic-display" : "type-display"
-                    } text-[color:var(--color-ink-bisht)] text-2xl md:text-3xl mb-3 group-hover:text-[color:var(--color-zari-deep)] transition-colors`}
+                    } text-[color:var(--color-ink)] text-2xl md:text-3xl mb-3 group-hover:text-[color:var(--color-zari-deep)] transition-colors`}
                   >
                     {e.title}
                   </h2>

@@ -39,7 +39,7 @@ export function CelebrationsTimeline({ lang }: { lang: Lang }) {
             <h2
               className={`${
                 lang === "ar" ? "type-arabic-display" : "type-display"
-              } text-[color:var(--color-ink-bisht)]`}
+              } text-[color:var(--color-ink)]`}
               style={{ fontSize: "var(--text-h2)" }}
             >
               {data.title}

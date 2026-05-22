@@ -84,7 +84,7 @@ export function ConsultLetter({ lang }: { lang: Lang }) {
           <h1
             className={`${
               lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink-bisht)] min-h-[1.1em]`}
+            } text-[color:var(--color-ink)] min-h-[1.1em]`}
             style={{
               fontSize: "var(--text-h2)",
             }}
@@ -165,7 +165,7 @@ function Field({
         name={name}
         placeholder={placeholder}
         required={required}
-        className="w-full bg-transparent border-b border-[color:var(--color-ink-warm)]/30 focus:border-[color:var(--color-zari-deep)] focus:outline-none py-3 text-xl type-serif text-[color:var(--color-ink-bisht)] transition-colors duration-500"
+        className="w-full bg-transparent border-b border-[color:var(--color-ink-warm)]/30 focus:border-[color:var(--color-zari-deep)] focus:outline-none py-3 text-xl type-serif text-[color:var(--color-ink)] transition-colors duration-500"
         style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
       />
     </label>
@@ -194,7 +194,7 @@ function FieldTextArea({
       <textarea
         name={name}
         rows={4}
-        className="w-full bg-transparent border-b border-[color:var(--color-ink-warm)]/30 focus:border-[color:var(--color-zari-deep)] focus:outline-none py-3 text-lg type-serif text-[color:var(--color-ink-bisht)] transition-colors duration-500 resize-none"
+        className="w-full bg-transparent border-b border-[color:var(--color-ink-warm)]/30 focus:border-[color:var(--color-zari-deep)] focus:outline-none py-3 text-lg type-serif text-[color:var(--color-ink)] transition-colors duration-500 resize-none"
         style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
       />
     </label>

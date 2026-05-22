@@ -9,10 +9,10 @@ const OUT_LIGHT = join(__dirname, "..", "public", "logo-light.png"); // pearl + 
 
 const TARGET_WIDTH = 1600;
 
-// Pearl color (target for "black" recolour on dark surfaces)
-const PEARL = { r: 245, g: 240, b: 230 };
-// Brighten gold slightly on dark surfaces
-const GOLD_DARK_BG = { r: 217, g: 175, b: 92 };  // a touch brighter than zari
+// Brand spec: on dark backgrounds (and over photos with scrim) the logo is
+// rendered in PURE WHITE — no gold accents. Both the calligraphy (black in
+// the source) and the tassels/ribbon (gold in the source) become white.
+const WHITE = { r: 255, g: 255, b: 255 };
 
 // Read raw pixels
 const img = sharp(SRC).resize({ width: TARGET_WIDTH });
@@ -36,7 +36,7 @@ for (let i = 0; i < data.length; i += channels) {
 
   const isTransparent = a < 8;
   const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-  const yellowness = (r + g) / 2 - b; // high when gold
+  const yellowness = (r + g) / 2 - b;
 
   if (isTransparent) {
     lightBuf[i] = 0;
@@ -46,32 +46,42 @@ for (let i = 0; i < data.length; i += channels) {
     continue;
   }
 
-  // GOLD: yellowness > ~40 and r > 130
-  if (yellowness > 35 && r > 130) {
-    // Blend toward GOLD_DARK_BG (brighten a touch)
-    lightBuf[i] = Math.min(255, Math.round(r * 0.65 + GOLD_DARK_BG.r * 0.35));
-    lightBuf[i + 1] = Math.min(255, Math.round(g * 0.65 + GOLD_DARK_BG.g * 0.35));
-    lightBuf[i + 2] = Math.min(255, Math.round(b * 0.65 + GOLD_DARK_BG.b * 0.35));
+  // Both black calligraphy AND gold decorations → pure WHITE.
+  // The original alpha is preserved for the stroke shape; gold pixels also become
+  // fully opaque white because they're part of the same brand mark.
+  const isGold = yellowness > 35 && r > 130;
+  const isInk = lum < 200;
+
+  if (isGold) {
+    // Gold pixel — full white, preserve original alpha.
+    lightBuf[i] = WHITE.r;
+    lightBuf[i + 1] = WHITE.g;
+    lightBuf[i + 2] = WHITE.b;
     if (channels === 4) lightBuf[i + 3] = a;
-  } else {
-    // BLACK-ish → replace with pearl with strong opacity to keep the calligraphy crisp.
-    // Below lum 140 = full pearl (the strokes), 140-220 = ramp, >220 transparent.
-    let blackness;
-    if (lum < 140) blackness = 1;
-    else if (lum > 220) blackness = 0;
-    else blackness = 1 - (lum - 140) / 80;
-    const out_a = Math.round(a * blackness);
+  } else if (isInk) {
+    // Black/grey calligraphy stroke — full white with darkness as alpha mask.
+    let inkness;
+    if (lum < 140) inkness = 1;
+    else if (lum > 220) inkness = 0;
+    else inkness = 1 - (lum - 140) / 80;
+    const out_a = Math.round(a * inkness);
     if (out_a < 4) {
       lightBuf[i] = 0;
       lightBuf[i + 1] = 0;
       lightBuf[i + 2] = 0;
       if (channels === 4) lightBuf[i + 3] = 0;
     } else {
-      lightBuf[i] = PEARL.r;
-      lightBuf[i + 1] = PEARL.g;
-      lightBuf[i + 2] = PEARL.b;
+      lightBuf[i] = WHITE.r;
+      lightBuf[i + 1] = WHITE.g;
+      lightBuf[i + 2] = WHITE.b;
       if (channels === 4) lightBuf[i + 3] = out_a;
     }
+  } else {
+    // Effectively background — transparent.
+    lightBuf[i] = 0;
+    lightBuf[i + 1] = 0;
+    lightBuf[i + 2] = 0;
+    if (channels === 4) lightBuf[i + 3] = 0;
   }
 }
 

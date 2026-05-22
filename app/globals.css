@@ -2,38 +2,45 @@
 
 /* ============================================================
    ALBISHT — DESIGN SYSTEM
-   Pearl Court · Men's Hall · Royal Qatari Protocol
+   Aligned with the official ALBISHT brand identity book (2026).
+   - Gold (flat):   #D28E29     (warm 38° hue — the brand's primary gold)
+   - Gold gradient: #E29F29 → #F6B62B
+   - Black:         #000000     (pure, not tinted)
+   - White logos use pure white on photos/dark surfaces, no gold accents
+   - Type: Adobe Arabic — approximated with EB Garamond (Latin) + Markazi Text (Arabic)
+   - Signature motif: black-silk + gold-zari ribbon swoosh
    ============================================================ */
 
-@font-face {
-  font-family: "Cinzel";
-  src: url("https://fonts.gstatic.com/s/cinzel/v25/8vIU7ww63mVu7gtR-kwKxNvkNOjw-tbnTYrvDE5ZdqU.woff2") format("woff2");
-  font-weight: 400 900;
-  font-display: swap;
-  font-style: normal;
-}
-
 @theme {
-  /* === Color tokens (OKLCH, perceptually uniform) === */
-  --color-ink-bisht: oklch(0.135 0.005 60);
-  --color-ink-soft: oklch(0.22 0.014 60);
-  --color-ink-warm: oklch(0.32 0.022 60);
-  --color-pearl: oklch(0.951 0.012 82);
-  --color-ivory: oklch(0.92 0.018 82);
-  --color-marble: oklch(0.895 0.014 80);
-  --color-mist: oklch(0.78 0.012 78);
-  --color-zari: oklch(0.745 0.105 78);
-  --color-zari-deep: oklch(0.585 0.085 70);
-  --color-zari-bright: oklch(0.82 0.095 82);
+  /* === Color tokens === */
+  /* Pure-black + warm-gold per brand book */
+  --color-ink: #000000;             /* pure black, per spec */
+  --color-ink-soft: oklch(0.22 0 0);   /* near-black, neutral */
+  --color-ink-warm: oklch(0.34 0.006 60); /* secondary text on light bg */
+  --color-pearl: #FFFFFF;           /* primary light surface = pure white */
+  --color-ivory: oklch(0.97 0.006 80);  /* secondary light surface */
+  --color-marble: oklch(0.945 0.008 80); /* tertiary light surface */
+  --color-mist: oklch(0.74 0.006 60);   /* muted text on dark */
+  /* Brand gold — exact hex from spec */
+  --color-zari: #D28E29;            /* primary flat gold */
+  --color-zari-deep: #B07418;       /* darker shadow gold */
+  --color-zari-bright: #F6B62B;     /* top of the gradient */
+  --color-zari-mid: #E29F29;        /* bottom of the gradient */
   --color-olive: oklch(0.42 0.045 130);
-  --color-crystal: oklch(0.98 0.025 86);
-  --color-blood-velvet: oklch(0.31 0.072 22);
+  --color-crystal: oklch(0.98 0.02 86);
+  /* Sealing-wax red (from brand book wax-seal mockups) */
+  --color-seal-wax: #6E1F1F;
+  --color-seal-wax-deep: #4A1313;
 
-  /* === Type families === */
-  --font-display: "Italiana", "Cormorant Garamond", "Times New Roman", serif;
-  --font-roman: "Cinzel", "Trajan Pro", "Times New Roman", serif;
-  --font-serif: "Cardo", "EB Garamond", "Garamond", serif;
-  --font-arabic: "Amiri", "Scheherazade New", serif;
+  /* === Type families ===
+     Adobe Arabic alternatives — keep two families, one per script.
+     EB Garamond: classical Garalde, mirrors Adobe Arabic's Latin glyphs.
+     Markazi Text: refined modern Naskh, mirrors Adobe Arabic's Arabic.
+     Used at multiple weights/sizes — no separate display families. */
+  --font-display: "EB Garamond", "Garamond", "Times New Roman", serif;
+  --font-roman: "EB Garamond", "Garamond", "Times New Roman", serif;
+  --font-serif: "EB Garamond", "Garamond", "Times New Roman", serif;
+  --font-arabic: "Markazi Text", "Amiri", serif;
   --font-arabic-body: "Markazi Text", "Amiri", serif;
 
   /* === Type scale (fluid via clamp on display, fixed on body) === */
@@ -91,7 +98,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    background-color: var(--color-ink-bisht);
+    background-color: var(--color-ink);
   }
 
   body {
@@ -123,7 +130,7 @@
 
   ::selection {
     background-color: var(--color-zari);
-    color: var(--color-ink-bisht);
+    color: var(--color-ink);
   }
 
   /* Long-form prose */
@@ -190,7 +197,7 @@
 
   /* Bisht weave texture — for ink-bisht surfaces */
   .surface-bisht {
-    background-color: var(--color-ink-bisht);
+    background-color: var(--color-ink);
     background-image:
       linear-gradient(135deg, oklch(0 0 0 / 0.4) 0%, oklch(0 0 0 / 0) 50%, oklch(0 0 0 / 0.4) 100%),
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.85 0.4' numOctaves='1'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.04  0 0 0 0 0.03  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>");

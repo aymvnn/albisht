@@ -60,7 +60,7 @@ export default async function ServicesPage({
                   <h3
                     className={`${
                       lang === "ar" ? "type-arabic-display text-4xl" : "type-display text-4xl"
-                    } text-[color:var(--color-ink-bisht)] mb-2`}
+                    } text-[color:var(--color-ink)] mb-2`}
                   >
                     {p.ar}
                   </h3>

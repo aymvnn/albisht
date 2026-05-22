@@ -25,7 +25,7 @@ export default async function AtelierPage({
             <h1
               className={`${
                 lang === "ar" ? "type-arabic-display" : "type-display"
-              } text-[color:var(--color-ink-bisht)]`}
+              } text-[color:var(--color-ink)]`}
               style={{ fontSize: "var(--text-h1)" }}
             >
               {c.headline}
@@ -127,7 +127,7 @@ export default async function AtelierPage({
           <h2
             className={`${
               lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink-bisht)] mb-16`}
+            } text-[color:var(--color-ink)] mb-16`}
             style={{ fontSize: "var(--text-h2)" }}
           >
             {c.terms.title}

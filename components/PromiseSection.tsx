@@ -18,7 +18,7 @@ export function PromiseSection({ lang }: { lang: Lang }) {
                 lang === "ar"
                   ? "type-arabic-display text-3xl md:text-5xl"
                   : "type-display text-3xl md:text-5xl"
-              } text-[color:var(--color-ink-bisht)] reveal-up`}
+              } text-[color:var(--color-ink)] reveal-up`}
               style={{ animationDelay: `${i * 0.15}s` }}
             >
               {line}

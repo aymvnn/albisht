@@ -26,9 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Brand-spec type pair: EB Garamond (Latin Garalde, closest free analogue to Adobe Arabic Latin)
+            and Markazi Text (refined modern Naskh, closest free analogue to Adobe Arabic Arabic).
+            One family per script — no separate display faces. */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Italiana&family=Cardo:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Markazi+Text:wght@400;500;600&family=Aref+Ruqaa:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Markazi+Text:wght@400;500;600;700&display=swap"
         />
       </head>
       <body>{children}</body>

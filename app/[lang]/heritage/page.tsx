@@ -21,7 +21,7 @@ export default async function HeritagePage({
           <h1
             className={`${
               lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink-bisht)] mb-12`}
+            } text-[color:var(--color-ink)] mb-12`}
             style={{ fontSize: "var(--text-h1)" }}
           >
             {lang === "ar" ? "عن البِشت." : "On the bisht."}
@@ -101,7 +101,7 @@ function Chapter({ n, title, body }: { n: string; title: string; body: string })
         </p>
       </div>
       <div className="md:col-span-10">
-        <h2 className="type-display text-3xl md:text-4xl text-[color:var(--color-ink-bisht)] mb-6">
+        <h2 className="type-display text-3xl md:text-4xl text-[color:var(--color-ink)] mb-6">
           {title}
         </h2>
         <p className="text-[color:var(--color-ink-soft)] text-lg leading-relaxed">{body}</p>
