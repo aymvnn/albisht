@@ -17,31 +17,24 @@ export function ChandelierCursor() {
     if (reducedMotion || isTouch) return;
     setEnabled(true);
 
-    let raf = 0;
-    let tx = window.innerWidth / 2;
-    let ty = window.innerHeight / 2;
-    let cx = tx;
-    let cy = ty;
-
+    // Center the glow exactly on the pointer — no interpolation lag.
+    // pointermove fires at high frequency, so transforming directly is smooth.
     const onMove = (e: PointerEvent) => {
-      tx = e.clientX;
-      ty = e.clientY;
+      if (ref.current) {
+        ref.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      }
     };
 
-    const loop = () => {
-      cx += (tx - cx) * 0.18;
-      cy += (ty - cy) * 0.18;
-      if (ref.current) {
-        ref.current.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-      }
-      raf = requestAnimationFrame(loop);
-    };
+    // Initial position — center of viewport until the first pointermove
+    if (ref.current) {
+      ref.current.style.transform = `translate3d(${window.innerWidth / 2}px, ${
+        window.innerHeight / 2
+      }px, 0)`;
+    }
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    loop();
     return () => {
       window.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(raf);
     };
   }, []);
 
