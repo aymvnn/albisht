@@ -42,7 +42,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           <Logo height={44} variant="dark" priority className="transition-opacity duration-500 group-hover:opacity-80" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 type-roman-light text-[0.68rem] text-[color:var(--color-ink-soft)]">
+        <nav className="hidden lg:flex items-center gap-8 type-roman-light text-[0.92rem] text-[color:var(--color-ink-soft)]">
           {nav.slice(0, 5).map((item) => (
             <Link
               key={item.href}
@@ -51,23 +51,23 @@ export function SiteHeader({ lang }: { lang: Lang }) {
             >
               {item.label}
               {pathname.endsWith(item.href) && (
-                <span className="absolute inset-x-0 -bottom-px h-px bg-[color:var(--color-zari)]" />
+                <span className="absolute inset-x-0 -bottom-0.5 h-px bg-[color:var(--color-zari)]" />
               )}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link
             href={otherHref}
-            className="type-roman force-latin text-[0.68rem] text-[color:var(--color-ink-warm)] hover:text-[color:var(--color-zari-deep)] transition-colors"
+            className="type-roman force-latin text-[0.92rem] text-[color:var(--color-ink-warm)] hover:text-[color:var(--color-zari-deep)] transition-colors"
             aria-label={`Switch language to ${otherLang}`}
           >
             {lang === "ar" ? "EN" : "ع"}
           </Link>
           <Link
             href={`/${lang}/consult`}
-            className="hidden md:inline-block px-4 py-2 border border-[color:var(--color-ink-soft)]/30 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500 type-roman text-[0.68rem]"
+            className="hidden md:inline-block px-5 py-2.5 border border-[color:var(--color-ink-soft)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500 type-roman text-[0.92rem]"
             style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
           >
             {lang === "ar" ? "الاستشارة" : "Consult"}

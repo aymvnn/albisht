@@ -132,7 +132,7 @@ export function BishtReveal({ lang }: { lang: Lang }) {
         }}
       >
         <div
-          className="transition-all"
+          className="relative transition-all"
           style={{
             transform: opening
               ? "scale(1.08) translateY(-30px)"
@@ -142,15 +142,35 @@ export function BishtReveal({ lang }: { lang: Lang }) {
             transitionTimingFunction: "var(--ease-ceremonial)",
           }}
         >
-          <Logo height={150} variant="light" />
-          <p
-            className={`mt-12 ${
-              lang === "ar" ? "type-arabic" : "type-serif"
-            } text-[color:var(--color-zari)] text-lg md:text-xl italic tracking-wide max-w-md mx-auto`}
-            style={{ opacity: 0.95 }}
-          >
-            {phrase}
-          </p>
+          {/* Soft dark radial glow behind logo + phrase — so the white logo
+              and gold phrase read against the busy gold brocade band. */}
+          <div
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            style={{
+              width: "min(720px, 92vw)",
+              height: "min(520px, 78vh)",
+              background:
+                "radial-gradient(ellipse at center, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.18) 65%, transparent 100%)",
+              filter: "blur(8px)",
+              zIndex: 0,
+            }}
+          />
+          <div className="relative" style={{ zIndex: 1 }}>
+            <Logo height={150} variant="light" />
+            <p
+              className={`mt-12 ${
+                lang === "ar" ? "type-arabic" : "type-serif"
+              } text-[color:var(--color-zari)] text-xl md:text-2xl italic tracking-wide max-w-md mx-auto`}
+              style={{
+                opacity: 1,
+                textShadow:
+                  "0 0 22px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.9)",
+              }}
+            >
+              {phrase}
+            </p>
+          </div>
         </div>
 
         {/* Prompt: subtle, only in closed state */}

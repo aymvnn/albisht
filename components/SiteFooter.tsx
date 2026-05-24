@@ -9,10 +9,12 @@ export function SiteFooter({ lang }: { lang: Lang }) {
   const year = localizedNumeral(2026, lang);
 
   return (
-    <footer className="surface-bisht relative z-10 mt-32">
-      {/* Brand signature silk-and-zari ribbon spanning the top of the footer */}
-      <div className="relative h-24 md:h-32 overflow-hidden -mb-px">
-        <SilkRibbon variant="horizontal" className="absolute inset-x-0 -bottom-4 w-full h-auto" />
+    <footer className="surface-bisht relative z-10">
+      {/* Brand signature silk-and-zari ribbon spanning the top of the footer.
+          Anchored to the very top edge so the previous dark section bleeds
+          straight into the ribbon — no white gap between dark sections. */}
+      <div className="relative h-20 md:h-28 overflow-hidden -mt-1 -mb-px">
+        <SilkRibbon variant="horizontal" className="absolute inset-x-0 inset-y-0 w-full h-full" />
       </div>
 
       <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-20">

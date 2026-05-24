@@ -2,7 +2,6 @@ import Link from "next/link";
 import { INVITATION } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
 import { Logo } from "./Logo";
-import { SilkRibbon } from "./SilkRibbon";
 
 export function InvitationSection({ lang }: { lang: Lang }) {
   const inv = INVITATION[lang];
@@ -17,10 +16,6 @@ export function InvitationSection({ lang }: { lang: Lang }) {
             "radial-gradient(ellipse 60% 50% at center, rgba(210, 142, 41, 0.12) 0%, transparent 70%)",
         }}
       />
-      {/* Brand signature silk-zari ribbon — bottom corner, subtle */}
-      <div className="absolute -bottom-12 right-0 left-0 h-40 md:h-56 pointer-events-none">
-        <SilkRibbon variant="horizontal" intensity="subtle" className="absolute inset-x-0 bottom-0 w-full h-auto" />
-      </div>
       <div className="relative mx-auto max-w-[var(--container-text)] px-6 md:px-12 text-center">
         <div className="flex justify-center mb-14">
           <Logo height={110} variant="light" />
