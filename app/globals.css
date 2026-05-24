@@ -218,6 +218,27 @@
     text-transform: lowercase;
   }
 
+  /* === Nav links — own utility, NOT small-caps ===
+     Small-caps make nav labels look ~30% smaller than their declared font-size.
+     For the primary nav we want presence: medium weight, real case, modest
+     tracking, ~17px size. Visually larger than the eyebrow labels because
+     navigation is functional and must read instantly. */
+  .type-nav {
+    font-family: var(--font-roman);
+    font-weight: 500;
+    font-size: 1.08rem;
+    letter-spacing: 0.04em;
+    font-feature-settings: "kern", "liga", "calt", "onum";
+    text-transform: none;
+  }
+
+  html[dir="rtl"] .type-nav {
+    font-family: var(--font-arabic);
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: 0;
+  }
+
   .type-serif {
     font-family: var(--font-serif);
     font-weight: 400;
@@ -461,12 +482,13 @@ html[dir="rtl"] .surface-bisht .type-roman-light {
   font-size: 1rem;
 }
 
-/* In RTL mode, Latin brand wordmarks like "ALBISHT" should still use Cinzel */
+/* In RTL mode, Latin labels like "EN" / "ALBISHT" should still use Roman face
+   instead of falling through to Arabic. Inherit size from the parent so utility
+   classes like .type-nav control the final pixel value. */
 html[dir="rtl"] .force-latin {
   font-family: var(--font-roman) !important;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
 }
 

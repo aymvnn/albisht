@@ -7,6 +7,7 @@ import type { Lang } from "./i18n";
 export const NAV = {
   ar: [
     { href: "/atelier", label: "المرسم" },
+    { href: "/packages", label: "الباقات" },
     { href: "/celebrations", label: "المناسبات" },
     { href: "/services", label: "الخدمات" },
     { href: "/heritage", label: "التراث" },
@@ -16,6 +17,7 @@ export const NAV = {
   ],
   en: [
     { href: "/atelier", label: "Atelier" },
+    { href: "/packages", label: "Packages" },
     { href: "/celebrations", label: "Celebrations" },
     { href: "/services", label: "Services" },
     { href: "/heritage", label: "Heritage" },
@@ -330,3 +332,51 @@ export const CONSULT = {
     },
   },
 };
+
+/**
+ * PACKAGES — five wedding-package tiers offered to clients.
+ * Source: ALBISHT Mens Packages 2026 brochure (provided by client).
+ * Each package is editable here in one place — edit name, price, or any
+ * inclusion line and the /packages page picks up the change automatically.
+ *
+ * Structure per package:
+ *   id          — stable slug for analytics + deep links
+ *   tier        — display tier (silver / gold / platinum / vip / top-vip)
+ *   name        — display name (AR is Thuluth-rendered)
+ *   priceQAR    — price in Qatari Riyal (integer)
+ *   sections    — grouped inclusions: hall, lobby, hospitality, photography, exterior
+ *   highlight   — one short line that summarises what makes this tier special
+ *   photo       — hero photo for the section
+ */
+export const PACKAGES_META = {
+  ar: {
+    eyebrow: "الباقات",
+    title: "خمسُ باقاتٍ لِلصالة.",
+    intro:
+      "نَعرِض خمسَ باقاتٍ كاملة، تَختلف في حجم الديكور، عدد المَقهويين، نوعية التصوير، وفَخامة الضيافة. كلٌّ منها كاملة بذاتها — لا حاجة لإضافات.",
+    cta: "احجز هذه الباقة",
+    priceLabel: "ريال قطري",
+    sectionLabels: {
+      hall: "تجهيزات داخل القاعة",
+      lobby: "جلسات خارج القاعة (اللوبي)",
+      hospitality: "الضيافة",
+      photography: "التصوير",
+      exterior: "تجهيزات خارج القاعة",
+    },
+  },
+  en: {
+    eyebrow: "Packages",
+    title: "Five packages for the hall.",
+    intro:
+      "We offer five complete packages, varying in decor scale, server count, photography depth and hospitality lavishness. Each is whole in itself — no add-ons needed.",
+    cta: "Reserve this package",
+    priceLabel: "QAR",
+    sectionLabels: {
+      hall: "Inside the hall",
+      lobby: "Lobby seating",
+      hospitality: "Hospitality",
+      photography: "Photography",
+      exterior: "Outside the hall",
+    },
+  },
+} as const;

@@ -42,8 +42,8 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           <Logo height={44} variant="dark" priority className="transition-opacity duration-500 group-hover:opacity-80" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8 type-roman-light text-[0.92rem] text-[color:var(--color-ink-soft)]">
-          {nav.slice(0, 5).map((item) => (
+        <nav className="hidden lg:flex items-center gap-7 type-nav text-[color:var(--color-ink-soft)]">
+          {nav.slice(0, 6).map((item) => (
             <Link
               key={item.href}
               href={`/${lang}${item.href}`}
@@ -57,17 +57,17 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <Link
             href={otherHref}
-            className="type-roman force-latin text-[0.92rem] text-[color:var(--color-ink-warm)] hover:text-[color:var(--color-zari-deep)] transition-colors"
+            className="type-nav force-latin text-[color:var(--color-ink-warm)] hover:text-[color:var(--color-zari-deep)] transition-colors"
             aria-label={`Switch language to ${otherLang}`}
           >
             {lang === "ar" ? "EN" : "ع"}
           </Link>
           <Link
             href={`/${lang}/consult`}
-            className="hidden md:inline-block px-5 py-2.5 border border-[color:var(--color-ink-soft)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500 type-roman text-[0.92rem]"
+            className="hidden md:inline-block px-6 py-3 border border-[color:var(--color-ink-soft)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500 type-nav"
             style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
           >
             {lang === "ar" ? "الاستشارة" : "Consult"}
