@@ -25,16 +25,21 @@ export const NAV = {
   ],
 } as const;
 
+/**
+ * Headlines may contain `*word*` markers to italicise+gold-emphasise a single
+ * word inside an otherwise upright line. Use sparingly — one word per line.
+ * Rendered via <FormatHeadline> in headline contexts.
+ */
 export const HERO = {
   ar: {
     eyebrow: "البِشت ـ صالة الرجال",
-    headline: "حَفلٌ يُذكر،\nلا يُقارن.",
+    headline: "حَفلٌ *يُذكر*،\nلا *يُقارن*.",
     subline: "ثلاث مئة مناسبة في العام. لا تتكرر اثنتان.",
     cta: "تَكرّم بالتواصل",
   },
   en: {
     eyebrow: "ALBISHT — Men's Hall Atelier",
-    headline: "A wedding remembered.\nNever compared.",
+    headline: "A wedding *remembered.*\nNever *compared.*",
     subline: "Three hundred ceremonies a year. No two alike.",
     cta: "Begin the conversation",
   },
@@ -205,7 +210,7 @@ export const FOOTER = {
 export const ATELIER = {
   ar: {
     eyebrow: "المرسم",
-    headline: "ما الذي يَفعله البِشت.",
+    headline: "ما الذي *يَفعله* البِشت.",
     intro:
       "ALBISHT ليس مُنظّمَ حفلات. ALBISHT هو المَرسَم القَطَري المُتخصِّص بصالة الرجال في حفل الزواج — لا أكثر، ولا أقل. تَخصُّصٌ واحد، يُؤدّى على مستوى الديوان.",
     principles: [
@@ -244,7 +249,7 @@ export const ATELIER = {
   },
   en: {
     eyebrow: "The Atelier",
-    headline: "What the bisht does.",
+    headline: "What the bisht *does.*",
     intro:
       "ALBISHT is not a wedding planner. ALBISHT is the Qatari atelier specialised in the men's hall of the wedding — no more, no less. One craft, performed at Diwan level.",
     principles: [

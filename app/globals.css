@@ -149,27 +149,110 @@
     font-weight: 400;
     line-height: 0.95;
     letter-spacing: -0.01em;
+    /* Old-style numerals + standard ligatures for editorial feel */
+    font-feature-settings: "kern", "liga", "calt", "onum", "dlig";
+  }
+
+  /* Italic display — for emphasised stand-out words inside a headline.
+     EB Garamond's italic has true Aldine character; use this only for the
+     one or two words that should "ring" inside an otherwise upright line. */
+  .type-display-italic {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+    color: var(--color-zari);
+    font-feature-settings: "kern", "liga", "swsh", "dlig";
+  }
+
+  /* Inline italic accent inside a heading — gold, smaller letter-spacing,
+     no underline. Use for a single word in a phrase: "A wedding <i>remembered.</i>" */
+  .word-italic {
+    font-style: italic;
+    color: var(--color-zari);
+    font-feature-settings: "swsh", "dlig";
   }
 
   .type-roman {
     font-family: var(--font-roman);
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    /* True small caps via OpenType — EB Garamond ships real designed small caps.
+       Combined with 'cpsp' for tracking-aware spacing. */
+    font-variant-caps: all-small-caps;
+    font-feature-settings: "smcp", "c2sc", "cpsp", "onum";
+    text-transform: lowercase; /* defer the casing to font-variant-caps */
   }
 
   .type-roman-light {
     font-family: var(--font-roman);
-    font-weight: 300;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    font-variant-caps: all-small-caps;
+    font-feature-settings: "smcp", "c2sc", "cpsp", "onum";
+    text-transform: lowercase;
   }
-
 
   .type-serif {
     font-family: var(--font-serif);
     font-weight: 400;
     line-height: 1.55;
+    /* Old-style figures + ligatures in body copy — fluwelen numerals */
+    font-feature-settings: "kern", "liga", "calt", "onum", "dlig";
+  }
+
+  /* Drop-cap: a single large italic letter at the start of a paragraph or
+     long-read chapter. Pairs with .prose-ceremonial. Place inside a paragraph
+     as <span class="drop-cap">T</span>he rest of the text… */
+  .drop-cap {
+    float: left;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-zari);
+    font-size: 5.5em;
+    line-height: 0.85;
+    margin: 0.18em 0.12em 0.05em 0;
+    padding: 0;
+    font-feature-settings: "swsh", "dlig";
+  }
+
+  html[dir="rtl"] .drop-cap {
+    float: right;
+    margin: 0.18em 0 0.05em 0.12em;
+  }
+
+  /* Tabular figures for UI / numbers in tabular contexts. */
+  .nums-tabular {
+    font-feature-settings: "tnum", "lnum";
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Lining figures (caps-aligned) — for headlines / dates that need vertical
+     balance with surrounding caps. Override .type-display when needed. */
+  .nums-lining {
+    font-feature-settings: "lnum";
+    font-variant-numeric: lining-nums;
+  }
+
+  /* Old-style figures — already default on display/serif. Use to force them
+     when an ancestor forces lining figures. */
+  .nums-oldstyle {
+    font-feature-settings: "onum";
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  /* Pull-quote: a single massive italic phrase hanging in the margin or full
+     bleed across a section. EB Garamond italic + brand-gold + zari hairline rule. */
+  .pull-quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-zari);
+    line-height: 1.05;
+    letter-spacing: -0.012em;
+    font-feature-settings: "swsh", "dlig", "onum";
   }
 
   .type-arabic-display {

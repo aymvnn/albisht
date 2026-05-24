@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { HERO } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
+import { FormatHeadline } from "./FormatHeadline";
 
 export function HomeHero({ lang }: { lang: Lang }) {
   const h = HERO[lang];
@@ -73,10 +74,9 @@ export function HomeHero({ lang }: { lang: Lang }) {
               animationDelay: "0.5s",
               maxWidth: "20ch",
               lineHeight: lang === "ar" ? "1.3" : "0.95",
-              whiteSpace: "pre-line",
             }}
           >
-            {h.headline}
+            <FormatHeadline text={h.headline} />
           </h1>
           <div
             className="mt-10 flex flex-wrap items-center gap-6 reveal-up"

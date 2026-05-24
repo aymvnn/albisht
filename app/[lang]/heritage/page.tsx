@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { LANGS, type Lang } from "@/lib/i18n";
+import { PullQuote } from "@/components/PullQuote";
 
 export default async function HeritagePage({
   params,
@@ -68,6 +69,14 @@ export default async function HeritagePage({
                 : "In Qatar, most men own only a single bisht — worn on the wedding day, then folded into the family wardrobe. The bisht is not a garment. It is the testimony of a moment that does not return."
             }
           />
+          <PullQuote
+            lang={lang}
+            text={
+              lang === "ar"
+                ? "ليس البِشت ثَوبًا، بل شَهادةٌ على لحظةٍ لا تَتَكرَّر."
+                : "The bisht is not a garment. It is the testimony of a moment that does not return."
+            }
+          />
           <Chapter
             n="03"
             title={lang === "ar" ? "بِشتُ الزَّفاف في قطر" : "The wedding bisht of Qatar"}
@@ -93,10 +102,12 @@ export default async function HeritagePage({
 }
 
 function Chapter({ n, title, body }: { n: string; title: string; body: string }) {
+  const first = body.charAt(0);
+  const rest = body.slice(1);
   return (
     <section className="mb-24 grid grid-cols-1 md:grid-cols-12 gap-6">
       <div className="md:col-span-2">
-        <p className="type-roman text-[0.7rem] text-[color:var(--color-zari-deep)] sticky top-32">
+        <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] sticky top-32">
           {n}
         </p>
       </div>
@@ -104,7 +115,10 @@ function Chapter({ n, title, body }: { n: string; title: string; body: string })
         <h2 className="type-display text-3xl md:text-4xl text-[color:var(--color-ink)] mb-6">
           {title}
         </h2>
-        <p className="text-[color:var(--color-ink-soft)] text-lg leading-relaxed">{body}</p>
+        <p className="text-[color:var(--color-ink-soft)] text-lg leading-relaxed">
+          <span className="drop-cap">{first}</span>
+          {rest}
+        </p>
       </div>
     </section>
   );

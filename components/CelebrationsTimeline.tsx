@@ -29,27 +29,35 @@ export function CelebrationsTimeline({ lang }: { lang: Lang }) {
   }, []);
 
   return (
-    <section ref={ref} className="relative py-32 md:py-44 surface-pearl">
+    <section ref={ref} className="relative py-40 md:py-56 surface-pearl">
       <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-24">
-          <div className="md:col-span-5">
-            <div className="seal-divider type-roman text-[0.7rem] text-[color:var(--color-ink-warm)] mb-8">
-              <span>{data.label}</span>
+        {/* Asymmetric header — eyebrow tucked in one corner, headline hugs the
+            opposite edge, intro paragraph dropped to the bottom-right. */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-y-20 mb-32">
+          <div className="md:col-span-3">
+            <div className="flex items-center gap-3">
+              <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
+              <span className="type-roman text-[0.78rem] text-[color:var(--color-ink-warm)]">
+                {data.label}
+              </span>
             </div>
-            <h2
-              className={`${
-                lang === "ar" ? "type-arabic-display" : "type-display"
-              } text-[color:var(--color-ink)]`}
-              style={{ fontSize: "var(--text-h2)" }}
-            >
-              {data.title}
-            </h2>
           </div>
-          <div className="md:col-span-6 md:col-start-7 flex items-end">
+          <h2
+            className={`${
+              lang === "ar" ? "type-arabic-display" : "type-display"
+            } text-[color:var(--color-ink)] md:col-span-9`}
+            style={{
+              fontSize: "clamp(2.8rem, 2rem + 3.6vw, 5.5rem)",
+              lineHeight: lang === "ar" ? "1.4" : "1",
+            }}
+          >
+            {data.title}
+          </h2>
+          <div className="md:col-span-6 md:col-start-7">
             <p
               className={`${
                 lang === "ar" ? "type-arabic" : "type-serif"
-              } text-[color:var(--color-ink-warm)] text-lg leading-relaxed max-w-md`}
+              } text-[color:var(--color-ink-warm)] text-lg leading-relaxed max-w-md italic`}
             >
               {data.intro}
             </p>

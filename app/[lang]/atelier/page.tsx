@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { ATELIER } from "@/lib/copy";
+import { FormatHeadline } from "@/components/FormatHeadline";
 
 export default async function AtelierPage({
   params,
@@ -28,7 +29,7 @@ export default async function AtelierPage({
               } text-[color:var(--color-ink)]`}
               style={{ fontSize: "var(--text-h1)" }}
             >
-              {c.headline}
+              <FormatHeadline text={c.headline} />
             </h1>
           </div>
           <div className="md:col-span-4 md:col-start-9 flex items-end">

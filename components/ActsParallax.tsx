@@ -37,22 +37,34 @@ export function ActsParallax({ lang }: { lang: Lang }) {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 md:py-44 surface-bisht overflow-hidden"
+      className="relative py-24 md:py-36 surface-bisht overflow-hidden"
     >
-      <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 mb-20 md:mb-28">
-        <div className="seal-divider type-roman text-[0.7rem] text-[color:var(--color-zari)] mb-10">
-          <span>{data.label}</span>
+      <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 mb-16 md:mb-24">
+        {/* Off-centre header — eyebrow on one side, big phrase on the other,
+            sliced apart by negative space. */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-4">
+              <span className="block w-12 h-px bg-[color:var(--color-zari)]" />
+              <span className="type-roman text-[0.78rem] text-[color:var(--color-zari)]">
+                {data.label}
+              </span>
+            </div>
+          </div>
+          <p
+            className={`${
+              lang === "ar" ? "type-arabic-display" : "type-display"
+            } text-[color:var(--color-pearl)] md:col-span-8`}
+            style={{
+              fontSize: "clamp(2.4rem, 1.8rem + 3.2vw, 5rem)",
+              lineHeight: lang === "ar" ? "1.4" : "1",
+            }}
+          >
+            {lang === "ar"
+              ? "ثَلاثُ لَحظاتٍ تَصنَع المَساء."
+              : "Three moments shape the evening."}
+          </p>
         </div>
-        <p
-          className={`${
-            lang === "ar" ? "type-arabic-display" : "type-display"
-          } text-[color:var(--color-pearl)] max-w-2xl`}
-          style={{ fontSize: "var(--text-h2)" }}
-        >
-          {lang === "ar"
-            ? "ثَلاثُ لَحظاتٍ تَصنَع المَساء."
-            : "Three moments shape the evening."}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-px gap-y-12 md:gap-y-0">
