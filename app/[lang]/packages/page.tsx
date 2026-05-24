@@ -5,6 +5,7 @@ import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
 import { PACKAGES_META } from "@/lib/copy";
 import { PACKAGES } from "@/lib/packages";
 import type { Package } from "@/lib/packages";
+import { ContactCallout } from "@/components/ContactCallout";
 
 export default async function PackagesPage({
   params,
@@ -59,28 +60,8 @@ export default async function PackagesPage({
         <PackageBlock key={pkg.id} pkg={pkg} index={i} lang={lang} meta={meta} />
       ))}
 
-      {/* === Closing CTA === */}
-      <section className="relative py-32 md:py-44 surface-pearl text-center">
-        <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
-          <p
-            className={`${
-              isAr ? "type-arabic" : "type-serif"
-            } text-[color:var(--color-ink-warm)] text-xl italic mb-10`}
-          >
-            {isAr
-              ? "هل تَرغب باقةً مُخَصَّصة؟ نَضع كلَّ تفصيلٍ بِيَدِك."
-              : "Want a tailored package? Every detail is yours to compose."}
-          </p>
-          <Link
-            href={`/${lang}/consult`}
-            className="inline-flex items-center gap-3 type-roman text-[0.8rem] text-[color:var(--color-zari-deep)] hover:text-[color:var(--color-zari)] transition-colors"
-          >
-            <span className="w-10 h-px bg-current" />
-            <span>{isAr ? "تَكرّم بالتواصل" : "Begin the conversation"}</span>
-            <span className="flip-rtl">→</span>
-          </Link>
-        </div>
-      </section>
+      {/* === Closing CTA — the full ContactCallout with both phones + letter === */}
+      <ContactCallout lang={lang} variant="dark" />
     </>
   );
 }

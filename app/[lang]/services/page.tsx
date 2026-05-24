@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { PlaceholderSection } from "@/components/PlaceholderSection";
+import { ContactCallout } from "@/components/ContactCallout";
 
 const PHASES = {
   ar: [
@@ -76,6 +77,8 @@ export default async function ServicesPage({
           </ol>
         </div>
       </section>
+
+      <ContactCallout lang={lang} variant="dark" />
     </>
   );
 }

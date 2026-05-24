@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { ATELIER } from "@/lib/copy";
 import { FormatHeadline } from "@/components/FormatHeadline";
+import { ContactCallout } from "@/components/ContactCallout";
 
 export default async function AtelierPage({
   params,
@@ -154,6 +155,8 @@ export default async function AtelierPage({
           </ul>
         </div>
       </section>
+
+      <ContactCallout lang={lang} variant="dark" />
     </>
   );
 }

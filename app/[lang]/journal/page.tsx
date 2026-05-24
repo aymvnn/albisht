@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
+import { ContactCallout } from "@/components/ContactCallout";
 
 const ENTRIES = {
   ar: [
@@ -119,6 +120,8 @@ export default async function JournalPage({
           </ul>
         </div>
       </section>
+
+      <ContactCallout lang={lang} variant="inline" />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { FOOTER, NAV } from "@/lib/copy";
 import { type Lang, localizedNumeral } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
+import { PHONES, EMAIL } from "@/lib/contact";
 
 export function SiteFooter({ lang }: { lang: Lang }) {
   const f = FOOTER[lang];
@@ -40,16 +41,19 @@ export function SiteFooter({ lang }: { lang: Lang }) {
             ))}
           </nav>
 
-          <div className="md:col-span-3 space-y-3 text-[color:var(--color-mist)] text-sm">
+          <div className="md:col-span-3 space-y-5 text-[color:var(--color-mist)] text-sm">
             <p className={lang === "ar" ? "type-arabic" : "type-serif"}>{f.address}</p>
             <p className="type-serif">
-              <a href="mailto:hello@albisht.qa" className="hover:text-[color:var(--color-zari)]">
-                hello@albisht.qa
+              <a href={`mailto:${EMAIL}`} className="hover:text-[color:var(--color-zari)]">
+                {EMAIL}
               </a>
             </p>
-            <p className="type-roman text-[0.68rem] tracking-[0.3em]">
-              +{lang === "ar" ? "٩٧٤ ٤٤٤٤ ١٢٣٤" : "974 4444 1234"}
-            </p>
+
+            {/* Two department phone numbers — labelled, tap-to-call */}
+            <div className="space-y-3 pt-2">
+              <PhoneLine number={PHONES.mens} lang={lang} />
+              <PhoneLine number={PHONES.womens} lang={lang} />
+            </div>
           </div>
         </div>
 
@@ -63,5 +67,40 @@ export function SiteFooter({ lang }: { lang: Lang }) {
         </div>
       </div>
     </footer>
+  );
+}
+
+function PhoneLine({
+  number,
+  lang,
+}: {
+  number: { tel: string; display: string; label: Record<Lang, string> };
+  lang: Lang;
+}) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span
+        className={lang === "ar" ? "type-arabic" : "type-serif"}
+        style={{
+          color: "var(--color-zari)",
+          fontSize: "0.78rem",
+          letterSpacing: lang === "ar" ? 0 : "0.05em",
+        }}
+      >
+        {number.label[lang]}
+      </span>
+      <a
+        href={`tel:${number.tel}`}
+        className="hover:text-[color:var(--color-zari)] transition-colors"
+        style={{
+          fontFamily: "var(--font-roman)",
+          fontSize: "0.92rem",
+          letterSpacing: "0.04em",
+          fontVariantNumeric: "lining-nums tabular-nums",
+        }}
+      >
+        {number.display}
+      </a>
+    </div>
   );
 }

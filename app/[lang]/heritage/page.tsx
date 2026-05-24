@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { PullQuote } from "@/components/PullQuote";
+import { ContactCallout } from "@/components/ContactCallout";
 
 export default async function HeritagePage({
   params,
@@ -97,6 +98,8 @@ export default async function HeritagePage({
           />
         </div>
       </article>
+
+      <ContactCallout lang={lang} variant="dark" />
     </>
   );
 }
