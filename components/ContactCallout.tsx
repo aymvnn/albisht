@@ -4,10 +4,14 @@ import type { Lang } from "@/lib/i18n";
 
 /**
  * The ContactCallout block — placed at the end of long pages where the
- * visitor has just read enough to want to act. Offers three actions:
- *   1. Write the full letter   → /consult
- *   2. Call the men's hall     → tel: link
- *   3. Call the women's hall   → tel: link
+ * visitor has just read enough to want to act.
+ *
+ * Visual hierarchy reflects the brand reality:
+ *   PRIMARY (equal weight, side-by-side):
+ *     1. Write the full letter   → /consult
+ *     2. Call the men's hall     → tel: link  (where the full atelier service lives)
+ *   SECONDARY (smaller, below the primary row, with a "selected services" note):
+ *     3. Call for women — selected services
  *
  * Variants:
  *   "dark"   — sits on the bisht-black surface (use on light-bg pages)
@@ -26,7 +30,6 @@ export function ContactCallout({
   const isDark = variant === "dark";
   const isInline = variant === "inline";
 
-  // Color tokens per variant — dark surface = pearl text, light surface = ink
   const text = isDark ? "var(--color-pearl)" : "var(--color-ink)";
   const muted = isDark ? "var(--color-mist)" : "var(--color-ink-warm)";
   const surface =
@@ -78,10 +81,10 @@ export function ContactCallout({
           </div>
         </div>
 
-        {/* Three CTAs — equal-weight grid, hairline-rule separator between each */}
+        {/* PRIMARY row — two equal CTAs: letter + men's hall phone */}
         <div
-          className="grid grid-cols-1 md:grid-cols-3 border-y"
-          style={{ borderColor: `${muted}`, opacity: 1 }}
+          className="grid grid-cols-1 md:grid-cols-2 border-y"
+          style={{ borderColor: muted }}
         >
           {/* 1. Letter CTA */}
           <Link
@@ -93,12 +96,12 @@ export function ContactCallout({
               className="type-roman"
               style={{ color: "var(--color-zari)", fontSize: "0.76rem" }}
             >
-              {isAr ? "01" : "01"}
+              01
             </span>
             <span
               className={isAr ? "type-arabic-display" : "type-display"}
               style={{
-                fontSize: "clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem)",
+                fontSize: "clamp(1.8rem, 1.4rem + 1.6vw, 2.4rem)",
                 color: text,
                 lineHeight: isAr ? "1.45" : "1.05",
               }}
@@ -109,34 +112,33 @@ export function ContactCallout({
               className={`mt-3 inline-flex items-center gap-2 ${
                 isAr ? "type-arabic" : "type-serif"
               }`}
-              style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
+              style={{ color: "var(--color-zari)", fontSize: "0.98rem" }}
             >
               <span className="block w-8 h-px bg-current group-hover:w-12 transition-all duration-500" />
               <span className="flip-rtl">→</span>
             </span>
           </Link>
 
-          {/* 2. Men's hall phone */}
-          <PhoneCta
+          {/* 2. Men's hall — primary phone */}
+          <PrimaryPhoneCta
             number={PHONES.mens}
             lang={lang}
             text={text}
             muted={muted}
             isAr={isAr}
-            order="02"
             callPrefix={c.callPrefix}
-            withRightBorder
           />
+        </div>
 
-          {/* 3. Women's hall phone */}
-          <PhoneCta
+        {/* SECONDARY row — women's selected services, smaller, with note */}
+        <div className="pt-8 md:pt-10">
+          <SecondaryPhoneRow
             number={PHONES.womens}
             lang={lang}
-            text={text}
             muted={muted}
+            text={text}
+            note={c.secondaryNote}
             isAr={isAr}
-            order="03"
-            callPrefix={c.callPrefix}
           />
         </div>
       </div>
@@ -144,61 +146,112 @@ export function ContactCallout({
   );
 }
 
-function PhoneCta({
+function PrimaryPhoneCta({
   number,
   lang,
   text,
   muted,
   isAr,
-  order,
   callPrefix,
-  withRightBorder = false,
 }: {
-  number: { tel: string; display: string; label: Record<Lang, string> };
+  number: typeof PHONES.mens;
   lang: Lang;
   text: string;
   muted: string;
   isAr: boolean;
-  order: string;
   callPrefix: string;
-  withRightBorder?: boolean;
 }) {
   return (
     <a
       href={`tel:${number.tel}`}
-      className={`group relative flex flex-col gap-3 py-12 md:py-16 px-6 md:px-10 transition-colors ${
-        withRightBorder ? "md:border-e" : ""
-      } border-t md:border-t-0`}
+      className="group relative flex flex-col gap-3 py-12 md:py-16 px-6 md:px-10 transition-colors border-t md:border-t-0"
       style={{ borderColor: muted, color: text }}
     >
       <span
         className="type-roman"
         style={{ color: "var(--color-zari)", fontSize: "0.76rem" }}
       >
-        {order}
+        02
       </span>
       <span
         className={isAr ? "type-arabic-display" : "type-display"}
         style={{
-          fontSize: "clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem)",
+          fontSize: "clamp(1.8rem, 1.4rem + 1.6vw, 2.4rem)",
           color: text,
           lineHeight: isAr ? "1.45" : "1.05",
         }}
       >
         {`${callPrefix} ${number.label[lang]}`}
       </span>
+      {number.note?.[lang] && (
+        <span
+          className={isAr ? "type-arabic" : "type-serif"}
+          style={{ color: muted, fontSize: "0.95rem", fontStyle: "italic" }}
+        >
+          {number.note[lang]}
+        </span>
+      )}
       <span
-        className="force-latin"
+        className="force-latin mt-1"
         style={{
           color: "var(--color-zari)",
-          fontSize: "1.05rem",
+          fontSize: "1.1rem",
           letterSpacing: "0.04em",
           fontVariantNumeric: "lining-nums tabular-nums",
-          marginTop: "0.4rem",
         }}
       >
         {number.display}
       </span>
+    </a>
+  );
+}
+
+function SecondaryPhoneRow({
+  number,
+  lang,
+  text,
+  muted,
+  note,
+  isAr,
+}: {
+  number: typeof PHONES.womens;
+  lang: Lang;
+  text: string;
+  muted: string;
+  note: string;
+  isAr: boolean;
+}) {
+  return (
+    <a
+      href={`tel:${number.tel}`}
+      className="group flex flex-col md:flex-row md:items-baseline gap-y-3 md:gap-x-6 py-6 md:py-8 transition-colors"
+      style={{ color: text }}
+    >
+      <span
+        className={isAr ? "type-arabic" : "type-serif"}
+        style={{ color: muted, fontSize: "0.95rem", fontStyle: "italic" }}
+      >
+        {note}
+      </span>
+      <span
+        className="force-latin group-hover:text-[color:var(--color-zari)] transition-colors"
+        style={{
+          color: text,
+          fontSize: "1.15rem",
+          letterSpacing: "0.04em",
+          fontVariantNumeric: "lining-nums tabular-nums",
+        }}
+      >
+        {number.display}
+      </span>
+      {number.note?.[lang] && (
+        <span
+          className={isAr ? "type-arabic" : "type-serif"}
+          style={{ color: muted, fontSize: "0.85rem", fontStyle: "italic" }}
+        >
+          ({number.note[lang]})
+        </span>
+      )}
     </a>
   );
 }

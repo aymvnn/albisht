@@ -17,8 +17,10 @@ export type ContactNumber = {
   display: string;
   /** Latin label per language (e.g. "Men's Hall" / "صالة الرجال") */
   label: Record<Lang, string>;
-  /** Short note shown under the number (e.g. "WhatsApp + voice") */
+  /** Short note shown under the number (e.g. scope / hours) */
   note?: Record<Lang, string>;
+  /** "primary" = full atelier service, "secondary" = limited / selected services */
+  weight: "primary" | "secondary";
 };
 
 export const PHONES: { mens: ContactNumber; womens: ContactNumber } = {
@@ -29,14 +31,24 @@ export const PHONES: { mens: ContactNumber; womens: ContactNumber } = {
       ar: "صالة الرجال",
       en: "Men's Hall",
     },
+    note: {
+      ar: "كامل خدمات الصالة + الباقات",
+      en: "Full hall services + packages",
+    },
+    weight: "primary",
   },
   womens: {
     tel: "+97450008019",
     display: "+974 5000 8019",
     label: {
-      ar: "صالة السيدات",
-      en: "Women's Hall",
+      ar: "للسيدات",
+      en: "For women",
     },
+    note: {
+      ar: "خدمات مختارة",
+      en: "Selected services",
+    },
+    weight: "secondary",
   },
 };
 
@@ -51,18 +63,20 @@ export const LOCATION = {
 export const CALLOUT = {
   ar: {
     eyebrow: "للتواصل",
-    title: "ثلاث طرق للوصول إلينا.",
+    title: "تَواصَل مَعنا.",
     intro:
-      "اِكتُب الرسالة الكاملة، أو اِتصل مباشرةً بصالة الرجال أو السيدات. كلُّ مكالمة تَصِل إلى مَن يَعرف الإجابة.",
+      "اِكتُب الرسالة الكاملة لِلاستفسارات المُفَصَّلة، أو اِتصل مُباشَرةً بِصالة الرجال — حَيثُ تَكتَمِل خِدمتنا.",
     letter: "اكتب الرسالة",
     callPrefix: "اتصل بـ",
+    secondaryNote: "للسيدات — خدمات مُختارة:",
   },
   en: {
     eyebrow: "Reach us",
-    title: "Three ways to reach us.",
+    title: "Reach us.",
     intro:
-      "Write the full letter, or call the men's or women's hall directly. Every call reaches the person who knows the answer.",
+      "Write the full letter for detailed enquiries, or call the men's hall directly — where the full atelier lives.",
     letter: "Write the letter",
     callPrefix: "Call",
+    secondaryNote: "For women — selected services:",
   },
 };

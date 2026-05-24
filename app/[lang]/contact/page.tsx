@@ -36,7 +36,7 @@ export default async function ContactPage({
               lineHeight: isAr ? "1.4" : "1",
             }}
           >
-            {isAr ? "بابان." : "Two doors."}
+            {isAr ? "البَاب." : "The door."}
           </h1>
           <div className="md:col-span-7 md:col-start-6">
             <p
@@ -45,37 +45,108 @@ export default async function ContactPage({
               } text-[color:var(--color-ink-warm)] text-lg md:text-xl italic leading-relaxed max-w-2xl`}
             >
               {isAr
-                ? "صالة الرجال وصالة السيدات — كلٌّ بِخَطِّها المباشر. اِتصل بمن يَعرف الإجابة، أو اِكتُب الرسالة الكاملة."
-                : "The men's hall and the women's hall — each on its own direct line. Call whoever knows the answer, or write the full letter."}
+                ? "صالة الرجال هي مَرسَمُنا الكامل — الباقات، التَجهيز، الضيافة، التَوثيق. للسيدات، نَعرِض خدماتٍ مُختارة."
+                : "The men's hall is our full atelier — packages, production, hospitality, documentation. For women, we offer selected services."}
             </p>
           </div>
         </div>
       </section>
 
-      {/* === Two department CTAs — equal weight, hairline rule === */}
-      <section className="relative surface-pearl">
+      {/* === PRIMARY: Men's hall — full-width block === */}
+      <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 border-y"
-            style={{ borderColor: "var(--color-ink-warm)" }}
-          >
-            <DepartmentBlock
-              department={PHONES.mens}
-              lang={lang}
-              withRightBorder
-              photo="/photos/majlis/calligraphy-wood-wall.jpg"
-            />
-            <DepartmentBlock
-              department={PHONES.womens}
-              lang={lang}
-              photo="/photos/hall/hero-pearl-court.jpg"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-12 py-20 md:py-32 items-center">
+            <div className="md:col-span-5">
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/photos/majlis/calligraphy-wood-wall.jpg"
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="md:col-span-7 flex flex-col gap-6">
+              <p className="type-roman text-[0.82rem] text-[color:var(--color-zari)]">
+                {isAr ? "الخط الرئيسي" : "Primary line"}
+              </p>
+              <h2
+                className={isAr ? "type-arabic-display" : "type-display"}
+                style={{
+                  fontSize: "clamp(2.4rem, 1.8rem + 2.4vw, 4rem)",
+                  color: "var(--color-ink)",
+                  lineHeight: isAr ? "1.4" : "1.02",
+                }}
+              >
+                {PHONES.mens.label[lang]}
+              </h2>
+              <p
+                className={`${isAr ? "type-arabic" : "type-serif"} italic`}
+                style={{
+                  fontSize: "1.1rem",
+                  color: "var(--color-ink-warm)",
+                  maxWidth: "32rem",
+                }}
+              >
+                {PHONES.mens.note?.[lang]}
+              </p>
+              <a
+                href={`tel:${PHONES.mens.tel}`}
+                className="inline-flex items-baseline gap-4 mt-4 hover:text-[color:var(--color-zari-deep)] transition-colors"
+                style={{
+                  fontFamily: "var(--font-roman)",
+                  fontSize: "clamp(1.6rem, 1.2rem + 1.4vw, 2rem)",
+                  color: "var(--color-zari)",
+                  letterSpacing: "0.04em",
+                  fontVariantNumeric: "lining-nums tabular-nums",
+                }}
+              >
+                {PHONES.mens.display}
+                <span className="text-[0.7em] flip-rtl">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* === SECONDARY: Women — compact strip === */}
+      <section className="relative surface-marble border-t border-[color:var(--color-ink-warm)]/30">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-14 md:py-20">
+          <div className="flex flex-col md:flex-row md:items-baseline gap-y-4 md:gap-x-8">
+            <div className="md:basis-1/3">
+              <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] mb-1">
+                {isAr ? "للسيدات" : "For women"}
+              </p>
+              <p
+                className={`${isAr ? "type-arabic" : "type-serif"} italic`}
+                style={{
+                  fontSize: "1rem",
+                  color: "var(--color-ink-warm)",
+                }}
+              >
+                {isAr ? "خدمات مُختارة فقط" : "Selected services only"}
+              </p>
+            </div>
+            <a
+              href={`tel:${PHONES.womens.tel}`}
+              className="hover:text-[color:var(--color-zari-deep)] transition-colors"
+              style={{
+                fontFamily: "var(--font-roman)",
+                fontSize: "1.3rem",
+                color: "var(--color-zari)",
+                letterSpacing: "0.04em",
+                fontVariantNumeric: "lining-nums tabular-nums",
+              }}
+            >
+              {PHONES.womens.display}
+            </a>
           </div>
         </div>
       </section>
 
       {/* === The letter CTA + address + email === */}
-      <section className="relative py-32 md:py-44 surface-marble">
+      <section className="relative py-32 md:py-44 surface-pearl">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-7">
             <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] mb-8">
@@ -135,69 +206,6 @@ export default async function ContactPage({
         </div>
       </section>
     </>
-  );
-}
-
-function DepartmentBlock({
-  department,
-  lang,
-  withRightBorder = false,
-  photo,
-}: {
-  department: { tel: string; display: string; label: Record<Lang, string> };
-  lang: Lang;
-  withRightBorder?: boolean;
-  photo: string;
-}) {
-  const isAr = lang === "ar";
-  return (
-    <div
-      className={`group relative py-16 md:py-24 px-6 md:px-12 ${
-        withRightBorder ? "md:border-e" : ""
-      } border-t md:border-t-0`}
-      style={{ borderColor: "var(--color-ink-warm)" }}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-        <div className="md:col-span-2 relative aspect-[4/3] overflow-hidden">
-          <Image
-            src={photo}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 25vw"
-            className="object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
-          />
-        </div>
-        <div className="md:col-span-3 flex flex-col gap-5">
-          <p className="type-roman text-[0.76rem] text-[color:var(--color-zari)]">
-            {isAr ? "الخط المباشر" : "Direct line"}
-          </p>
-          <p
-            className={isAr ? "type-arabic-display" : "type-display"}
-            style={{
-              fontSize: "clamp(1.8rem, 1.4rem + 1.6vw, 2.6rem)",
-              color: "var(--color-ink)",
-              lineHeight: isAr ? "1.4" : "1.05",
-            }}
-          >
-            {department.label[lang]}
-          </p>
-          <a
-            href={`tel:${department.tel}`}
-            className="hover:text-[color:var(--color-zari-deep)] transition-colors"
-            style={{
-              fontFamily: "var(--font-roman)",
-              fontSize: "1.4rem",
-              color: "var(--color-zari)",
-              letterSpacing: "0.04em",
-              fontVariantNumeric: "lining-nums tabular-nums",
-              marginTop: "0.5rem",
-            }}
-          >
-            {department.display}
-          </a>
-        </div>
-      </div>
-    </div>
   );
 }
 

@@ -49,11 +49,12 @@ export function SiteFooter({ lang }: { lang: Lang }) {
               </a>
             </p>
 
-            {/* Two department phone numbers — labelled, tap-to-call */}
-            <div className="space-y-3 pt-2">
+            {/* Primary: men's hall — the full atelier */}
+            <div className="pt-3">
               <PhoneLine number={PHONES.mens} lang={lang} />
-              <PhoneLine number={PHONES.womens} lang={lang} />
             </div>
+            {/* Secondary: women — selected services, smaller + muted */}
+            <SecondaryPhoneLine number={PHONES.womens} lang={lang} />
           </div>
         </div>
 
@@ -74,7 +75,7 @@ function PhoneLine({
   number,
   lang,
 }: {
-  number: { tel: string; display: string; label: Record<Lang, string> };
+  number: typeof PHONES.mens;
   lang: Lang;
 }) {
   return (
@@ -83,7 +84,7 @@ function PhoneLine({
         className={lang === "ar" ? "type-arabic" : "type-serif"}
         style={{
           color: "var(--color-zari)",
-          fontSize: "0.78rem",
+          fontSize: "0.82rem",
           letterSpacing: lang === "ar" ? 0 : "0.05em",
         }}
       >
@@ -94,7 +95,38 @@ function PhoneLine({
         className="hover:text-[color:var(--color-zari)] transition-colors"
         style={{
           fontFamily: "var(--font-roman)",
-          fontSize: "0.92rem",
+          fontSize: "1rem",
+          letterSpacing: "0.04em",
+          fontVariantNumeric: "lining-nums tabular-nums",
+        }}
+      >
+        {number.display}
+      </a>
+    </div>
+  );
+}
+
+function SecondaryPhoneLine({
+  number,
+  lang,
+}: {
+  number: typeof PHONES.womens;
+  lang: Lang;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-3 pt-2 text-[color:var(--color-mist)]/70">
+      <span
+        className={lang === "ar" ? "type-arabic" : "type-serif"}
+        style={{ fontSize: "0.75rem", fontStyle: "italic" }}
+      >
+        {lang === "ar" ? "للسيدات (خدمات مختارة)" : "For women (selected services)"}
+      </span>
+      <a
+        href={`tel:${number.tel}`}
+        className="hover:text-[color:var(--color-zari)] transition-colors"
+        style={{
+          fontFamily: "var(--font-roman)",
+          fontSize: "0.82rem",
           letterSpacing: "0.04em",
           fontVariantNumeric: "lining-nums tabular-nums",
         }}
