@@ -101,7 +101,7 @@ export default async function JournalPage({
                   </p>
                   <h2
                     className={`${
-                      lang === "ar" ? "type-arabic-display" : "type-display"
+                      lang === "ar" ? "type-arabic-headline" : "type-display"
                     } text-[color:var(--color-ink)] text-2xl md:text-3xl mb-3 group-hover:text-[color:var(--color-zari-deep)] transition-colors`}
                   >
                     {e.title}

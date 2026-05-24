@@ -7,9 +7,22 @@
    - Gold gradient: #E29F29 → #F6B62B
    - Black:         #000000     (pure, not tinted)
    - White logos use pure white on photos/dark surfaces, no gold accents
-   - Type: Adobe Arabic — approximated with EB Garamond (Latin) + Markazi Text (Arabic)
+   - Type body:     EB Garamond (Latin) + Markazi Text (Arabic)
+   - Type display:  DecoType Thuluth II  — classical Arabic ceremonial script
+                    used ONLY for the largest Arabic display headlines.
    - Signature motif: black-silk + gold-zari ribbon swoosh
    ============================================================ */
+
+/* DecoType Thuluth II — self-hosted classical Thuluth calligraphy.
+   Reserved for ceremonial Arabic display headlines. Far too ornate to read
+   below ~40px, so never use it for body or small-caps labels. */
+@font-face {
+  font-family: "DecoType Thuluth";
+  src: url("/fonts/decotype-thuluth-ii.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
   /* === Color tokens === */
@@ -40,6 +53,10 @@
   --font-display: "EB Garamond", "Garamond", "Times New Roman", serif;
   --font-roman: "EB Garamond", "Garamond", "Times New Roman", serif;
   --font-serif: "EB Garamond", "Garamond", "Times New Roman", serif;
+  /* Arabic display headings — ceremonial Thuluth (use ONLY at >= 40px).
+     Falls back to Markazi Text where the .ttf is still loading. */
+  --font-arabic-display: "DecoType Thuluth", "Markazi Text", "Amiri", serif;
+  /* Arabic body / sub-display — clean Naskh, readable at all sizes. */
   --font-arabic: "Markazi Text", "Amiri", serif;
   --font-arabic-body: "Markazi Text", "Amiri", serif;
 
@@ -174,6 +191,13 @@
     font-feature-settings: "swsh", "dlig";
   }
 
+  /* RTL fallback: Arabic calligraphy (Thuluth, Naskh, Diwani) does NOT take
+     italic — synthetic obliquing breaks the script. Use colour alone for
+     emphasis. The asterisk-marker words still render in brand-gold. */
+  html[dir="rtl"] .word-italic {
+    font-style: normal;
+  }
+
   .type-roman {
     font-family: var(--font-roman);
     font-weight: 500;
@@ -255,10 +279,23 @@
     font-feature-settings: "swsh", "dlig", "onum";
   }
 
+  /* Big ceremonial Arabic display — DecoType Thuluth. Use ONLY at >= 40px.
+     The script is far too ornate at smaller sizes; legibility collapses. */
   .type-arabic-display {
+    font-family: var(--font-arabic-display);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0;
+    /* Disable old-style figures on Thuluth — it doesn't ship them, and forcing
+       OpenType features the font lacks can cause hinting glitches. */
+    font-feature-settings: normal;
+  }
+
+  /* Medium Arabic headline — refined Naskh (Markazi Text). Use 18–36px. */
+  .type-arabic-headline {
     font-family: var(--font-arabic);
-    font-weight: 700;
-    line-height: 1.6;
+    font-weight: 600;
+    line-height: 1.7;
     letter-spacing: 0;
   }
 

@@ -108,7 +108,7 @@ export function ActsParallax({ lang }: { lang: Lang }) {
               <h3
                 className={`${
                   lang === "ar"
-                    ? "type-arabic-display text-3xl md:text-4xl"
+                    ? "type-arabic-headline text-3xl md:text-4xl"
                     : "type-display text-3xl md:text-4xl"
                 } text-[color:var(--color-pearl)] mb-4`}
               >
