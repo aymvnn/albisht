@@ -50,7 +50,7 @@ export function ContactCallout({
               />
               <span
                 className="type-roman"
-                style={{ color: "var(--color-zari)", fontSize: "0.82rem" }}
+                style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
               >
                 {c.eyebrow}
               </span>
@@ -94,7 +94,7 @@ export function ContactCallout({
           >
             <span
               className="type-roman"
-              style={{ color: "var(--color-zari)", fontSize: "0.76rem" }}
+              style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
             >
               01
             </span>
@@ -169,7 +169,7 @@ function PrimaryPhoneCta({
     >
       <span
         className="type-roman"
-        style={{ color: "var(--color-zari)", fontSize: "0.76rem" }}
+        style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
       >
         02
       </span>

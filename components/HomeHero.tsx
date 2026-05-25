@@ -60,7 +60,7 @@ export function HomeHero({ lang }: { lang: Lang }) {
       <div className="absolute inset-0 flex flex-col justify-end pb-24 md:pb-32">
         <div className="mx-auto max-w-[var(--container-wide)] w-full px-6 md:px-12">
           <p
-            className="type-roman text-[0.7rem] md:text-[0.75rem] text-[color:var(--color-zari-bright)] mb-6 reveal-up"
+            className="type-roman text-[0.95rem] md:text-[1rem] text-[color:var(--color-zari-bright)] mb-6 reveal-up"
             style={{ animationDelay: "0.2s" }}
           >
             {h.eyebrow}
@@ -85,15 +85,15 @@ export function HomeHero({ lang }: { lang: Lang }) {
             <p
               className={`${
                 lang === "ar" ? "type-arabic" : "type-serif"
-              } text-[color:var(--color-pearl)]/85 italic text-lg max-w-md`}
+              } text-[color:var(--color-pearl)]/90 italic text-xl md:text-2xl max-w-md`}
             >
               {h.subline}
             </p>
             <Link
               href={`/${lang}/consult`}
-              className="group inline-flex items-center gap-3 type-roman text-[0.72rem] text-[color:var(--color-zari)] hover:text-[color:var(--color-zari-bright)] transition-colors"
+              className="group inline-flex items-center gap-4 px-7 py-4 border border-[color:var(--color-zari)]/50 hover:border-[color:var(--color-zari-bright)] hover:bg-[color:var(--color-zari)]/8 transition-all duration-500 type-roman text-[1rem] text-[color:var(--color-zari)] hover:text-[color:var(--color-zari-bright)]"
+              style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
             >
-              <span className="inline-block w-10 h-px bg-current group-hover:w-16 transition-all duration-500 ease-out" />
               <span>{h.cta}</span>
               <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">
                 →
@@ -105,7 +105,7 @@ export function HomeHero({ lang }: { lang: Lang }) {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal-up" style={{ animationDelay: "1.6s" }}>
-        <span className="type-roman text-[0.62rem] tracking-[0.4em] text-[color:var(--color-pearl)]/60">
+        <span className="type-roman text-[0.85rem] tracking-[0.35em] text-[color:var(--color-pearl)]/75">
           {lang === "ar" ? "تابِع" : "Continue"}
         </span>
         <span className="w-px h-12 bg-gradient-to-b from-[color:var(--color-pearl)]/0 via-[color:var(--color-zari)]/60 to-[color:var(--color-pearl)]/0" />

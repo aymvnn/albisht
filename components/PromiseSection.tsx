@@ -19,7 +19,7 @@ export function PromiseSection({ lang }: { lang: Lang }) {
         >
           <div className="flex items-center gap-4 max-w-md">
             <span className="block w-16 h-px bg-[color:var(--color-zari)]" />
-            <span className="type-roman text-[0.78rem] text-[color:var(--color-zari)]">
+            <span className="type-roman text-[0.95rem] text-[color:var(--color-zari)]">
               {p.title}
             </span>
           </div>

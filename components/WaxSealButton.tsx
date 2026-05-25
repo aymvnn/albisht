@@ -100,7 +100,7 @@ export function WaxSealButton({
 
       {/* Label below the seal */}
       <span
-        className="absolute inset-x-0 -bottom-12 type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] tracking-[0.3em] transition-opacity duration-500"
+        className="absolute inset-x-0 -bottom-14 type-roman text-[1rem] text-[color:var(--color-zari-deep)] tracking-[0.25em] transition-opacity duration-500"
         style={{ opacity: pressed ? 0 : 1 }}
       >
         {pending ? "..." : label}

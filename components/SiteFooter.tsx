@@ -29,7 +29,7 @@ export function SiteFooter({ lang }: { lang: Lang }) {
             </p>
           </div>
 
-          <nav className="md:col-span-4 grid grid-cols-2 gap-x-6 gap-y-3 type-roman-light text-[0.7rem] text-[color:var(--color-mist)]">
+          <nav className="md:col-span-4 grid grid-cols-2 gap-x-6 gap-y-4 type-nav text-[color:var(--color-mist)]">
             {NAV[lang].map((item) => (
               <Link
                 key={item.href}
@@ -41,7 +41,7 @@ export function SiteFooter({ lang }: { lang: Lang }) {
             ))}
           </nav>
 
-          <div className="md:col-span-3 space-y-5 text-[color:var(--color-mist)] text-sm">
+          <div className="md:col-span-3 space-y-5 text-[color:var(--color-mist)] text-base">
             <p className={lang === "ar" ? "type-arabic" : "type-serif"}>{f.address}</p>
             <p className="type-serif">
               <a href={`mailto:${EMAIL}`} className="hover:text-[color:var(--color-zari)]">
@@ -59,10 +59,10 @@ export function SiteFooter({ lang }: { lang: Lang }) {
         </div>
 
         <div className="mt-16 pt-8 border-t border-[color:var(--color-mist)]/15 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="type-roman-light text-[0.66rem] text-[color:var(--color-mist)]/60">
+          <p className="type-roman-light text-[0.86rem] text-[color:var(--color-mist)]/80">
             © {year} ALBISHT · {f.rights}
           </p>
-          <p className="type-roman text-[0.66rem] text-[color:var(--color-zari)]/80">
+          <p className="type-roman text-[0.86rem] text-[color:var(--color-zari)]">
             Doha · {lang === "ar" ? "قطر" : "Qatar"}
           </p>
         </div>

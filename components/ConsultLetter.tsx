@@ -72,11 +72,11 @@ export function ConsultLetter({ lang }: { lang: Lang }) {
         {/* Letter paper */}
         <div className="relative surface-pearl border border-[color:var(--color-mist)]/40 px-8 md:px-20 py-16 md:py-24 shadow-[0_60px_120px_-40px_oklch(0.135_0.005_60_/_0.25)]">
           {/* Decorative seal in corner */}
-          <div className="absolute top-6 right-6 type-roman text-[0.62rem] text-[color:var(--color-zari-deep)] tracking-[0.3em] opacity-60">
+          <div className="absolute top-6 right-6 type-roman text-[0.82rem] text-[color:var(--color-zari-deep)] tracking-[0.3em] opacity-75">
             البِشت · ALBISHT
           </div>
 
-          <p className="type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] mb-10">
+          <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-10">
             {c.eyebrow}
           </p>
 
@@ -107,7 +107,7 @@ export function ConsultLetter({ lang }: { lang: Lang }) {
           <p
             className={`${
               lang === "ar" ? "type-arabic" : "type-serif"
-            } text-[color:var(--color-ink-soft)] text-base leading-relaxed mb-16 max-w-lg`}
+            } text-[color:var(--color-ink-soft)] text-lg leading-relaxed mb-16 max-w-lg`}
           >
             {c.body}
           </p>
@@ -156,7 +156,7 @@ function Field({
 }) {
   return (
     <label className="block group">
-      <span className="type-roman text-[0.66rem] text-[color:var(--color-ink-warm)] tracking-[0.3em] block mb-3">
+      <span className="type-roman text-[0.92rem] text-[color:var(--color-ink-warm)] tracking-[0.2em] block mb-3">
         {label}
         {required && <span className="text-[color:var(--color-zari-deep)] ms-1">·</span>}
       </span>
@@ -183,7 +183,7 @@ function FieldTextArea({
 }) {
   return (
     <label className="block group">
-      <span className="type-roman text-[0.66rem] text-[color:var(--color-ink-warm)] tracking-[0.3em] block mb-3">
+      <span className="type-roman text-[0.92rem] text-[color:var(--color-ink-warm)] tracking-[0.2em] block mb-3">
         {label}{" "}
         {hint && (
           <span className="text-[color:var(--color-ink-warm)]/60 tracking-normal italic ms-1">

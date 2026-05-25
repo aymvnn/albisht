@@ -14,7 +14,7 @@ export function PlaceholderSection({
   return (
     <section className="relative min-h-[80svh] surface-marble flex items-center pt-32 pb-32">
       <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
-        <p className="type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] mb-8">
+        <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
           {eyebrow}
         </p>
         <h1

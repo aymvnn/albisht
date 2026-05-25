@@ -22,7 +22,7 @@ export default async function ContactPage({
           <div className="md:col-span-3">
             <div className="flex items-center gap-3">
               <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.82rem] text-[color:var(--color-zari-deep)]">
+              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)]">
                 {isAr ? "التواصل" : "Contact"}
               </span>
             </div>
@@ -68,7 +68,7 @@ export default async function ContactPage({
               </div>
             </div>
             <div className="md:col-span-7 flex flex-col gap-6">
-              <p className="type-roman text-[0.82rem] text-[color:var(--color-zari)]">
+              <p className="type-roman text-[0.95rem] text-[color:var(--color-zari)]">
                 {isAr ? "الخط الرئيسي" : "Primary line"}
               </p>
               <h2
@@ -115,7 +115,7 @@ export default async function ContactPage({
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-14 md:py-20">
           <div className="flex flex-col md:flex-row md:items-baseline gap-y-4 md:gap-x-8">
             <div className="md:basis-1/3">
-              <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] mb-1">
+              <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-1">
                 {isAr ? "للسيدات" : "For women"}
               </p>
               <p
@@ -149,7 +149,7 @@ export default async function ContactPage({
       <section className="relative py-32 md:py-44 surface-pearl">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-7">
-            <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] mb-8">
+            <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
               {isAr ? "الرسالة" : "The letter"}
             </p>
             <h2
@@ -170,7 +170,7 @@ export default async function ContactPage({
               className="group inline-flex items-center gap-4 px-7 py-4 border border-[color:var(--color-ink-warm)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500"
               style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
             >
-              <span className="type-roman text-[0.86rem]">
+              <span className="type-roman text-[1rem]">
                 {isAr ? "اكتب الرسالة" : "Write the letter"}
               </span>
               <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">
@@ -220,7 +220,7 @@ function Block({
 }) {
   return (
     <div>
-      <p className="type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] mb-2">
+      <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-2">
         {label}
       </p>
       {href ? (

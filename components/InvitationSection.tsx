@@ -20,7 +20,7 @@ export function InvitationSection({ lang }: { lang: Lang }) {
         <div className="flex justify-center mb-14">
           <Logo height={110} variant="light" />
         </div>
-        <p className="type-roman text-[0.72rem] text-[color:var(--color-zari)] mb-8">
+        <p className="type-roman text-[0.95rem] text-[color:var(--color-zari)] mb-8">
           {inv.title}
         </p>
         <h2
@@ -43,7 +43,7 @@ export function InvitationSection({ lang }: { lang: Lang }) {
           className="group inline-flex items-center gap-4 px-10 py-5 border border-[color:var(--color-zari)]/40 hover:border-[color:var(--color-zari)] hover:bg-[color:var(--color-zari)]/5 transition-all duration-700"
           style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
         >
-          <span className="type-roman text-[0.74rem] text-[color:var(--color-zari)]">
+          <span className="type-roman text-[1rem] text-[color:var(--color-zari)]">
             {inv.cta}
           </span>
           <span className="text-[color:var(--color-zari)] flip-rtl group-hover:translate-x-1 transition-transform duration-500">

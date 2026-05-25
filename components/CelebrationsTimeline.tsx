@@ -37,7 +37,7 @@ export function CelebrationsTimeline({ lang }: { lang: Lang }) {
           <div className="md:col-span-3">
             <div className="flex items-center gap-3">
               <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.78rem] text-[color:var(--color-ink-warm)]">
+              <span className="type-roman text-[0.95rem] text-[color:var(--color-ink-warm)]">
                 {data.label}
               </span>
             </div>
@@ -95,19 +95,19 @@ export function CelebrationsTimeline({ lang }: { lang: Lang }) {
                   i % 2 === 1 ? "md:order-1 md:col-start-2" : "md:col-start-9"
                 }`}
               >
-                <div className="space-y-1 mb-6 type-roman text-[0.7rem] text-[color:var(--color-zari-deep)]">
+                <div className="space-y-2 mb-7 type-roman text-[0.9rem] text-[color:var(--color-zari-deep)]">
                   <p>{lang === "ar" ? localizedNumeral(0, lang).slice(0, 0) : ""}{it.when}</p>
                   <p className="text-[color:var(--color-ink-warm)] tracking-[0.3em]">
                     {it.where}
                   </p>
-                  <p className="text-[color:var(--color-ink-warm)]/70 tracking-[0.2em]">
+                  <p className="text-[color:var(--color-ink-warm)]/85 tracking-[0.2em]">
                     {it.guests}
                   </p>
                 </div>
                 <p
                   className={`${
                     lang === "ar" ? "type-arabic" : "type-serif"
-                  } text-[color:var(--color-ink-soft)] text-base md:text-lg leading-relaxed max-w-md italic`}
+                  } text-[color:var(--color-ink-soft)] text-lg md:text-xl leading-relaxed max-w-md italic`}
                 >
                   {it.note}
                 </p>
@@ -119,13 +119,15 @@ export function CelebrationsTimeline({ lang }: { lang: Lang }) {
         <div className="mt-32 text-center">
           <Link
             href={`/${lang}/celebrations`}
-            className="inline-flex items-center gap-3 type-roman text-[0.7rem] text-[color:var(--color-ink-warm)] hover:text-[color:var(--color-zari-deep)] transition-colors"
+            className="group inline-flex items-center gap-4 px-7 py-4 border border-[color:var(--color-ink-warm)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500 type-roman text-[1rem] text-[color:var(--color-ink-warm)]"
+            style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
           >
-            <span className="w-10 h-px bg-current" />
             <span>
               {lang === "ar" ? "اقرأ المزيد من المناسبات" : "View the full archive"}
             </span>
-            <span className="flip-rtl">→</span>
+            <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">
+              →
+            </span>
           </Link>
         </div>
       </div>

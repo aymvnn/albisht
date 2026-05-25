@@ -66,7 +66,7 @@ export default async function JournalPage({
     <>
       <section className="relative pt-40 pb-20 surface-marble">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <p className="type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] mb-8">
+          <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
             {lang === "ar" ? "اليوميّات" : "Journal"}
           </p>
           <h1
@@ -97,7 +97,7 @@ export default async function JournalPage({
                       className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
                     />
                   </div>
-                  <p className="type-roman text-[0.66rem] text-[color:var(--color-zari-deep)] mb-3">
+                  <p className="type-roman text-[0.92rem] text-[color:var(--color-zari-deep)] mb-3">
                     {e.kicker}
                   </p>
                   <h2
@@ -110,7 +110,7 @@ export default async function JournalPage({
                   <p
                     className={`${
                       lang === "ar" ? "type-arabic" : "type-serif"
-                    } text-[color:var(--color-ink-warm)] leading-relaxed`}
+                    } text-[color:var(--color-ink-warm)] text-lg leading-relaxed`}
                   >
                     {e.excerpt}
                   </p>

@@ -46,7 +46,7 @@ export function ActsParallax({ lang }: { lang: Lang }) {
           <div className="md:col-span-4">
             <div className="flex items-center gap-4">
               <span className="block w-12 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.78rem] text-[color:var(--color-zari)]">
+              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari)]">
                 {data.label}
               </span>
             </div>
@@ -95,10 +95,10 @@ export function ActsParallax({ lang }: { lang: Lang }) {
               />
               {/* zari corner mark */}
               <div className="absolute top-6 left-6 right-6 flex items-center justify-between text-[color:var(--color-zari)]">
-                <span className="type-roman text-[0.66rem] tracking-[0.4em] opacity-80">
+                <span className="type-roman text-[0.86rem] tracking-[0.35em] opacity-80">
                   {localizedNumeral(i + 1, lang).padStart(2, "0")}
                 </span>
-                <span className="type-roman text-[0.6rem] tracking-[0.5em] opacity-50">
+                <span className="type-roman text-[0.82rem] tracking-[0.4em] opacity-85">
                   {item.kicker}
                 </span>
               </div>
@@ -117,7 +117,7 @@ export function ActsParallax({ lang }: { lang: Lang }) {
               <p
                 className={`${
                   lang === "ar" ? "type-arabic" : "type-serif"
-                } text-[color:var(--color-mist)] text-base leading-relaxed max-w-sm`}
+                } text-[color:var(--color-mist)] text-lg leading-relaxed max-w-sm`}
               >
                 {item.line}
               </p>

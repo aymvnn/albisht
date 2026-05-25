@@ -54,7 +54,7 @@ export default async function ServicesPage({
           <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
             {phases.map((p, i) => (
               <li key={i} className="group flex gap-8 items-start pb-12 border-b border-[color:var(--color-mist)]/30">
-                <span className="type-roman text-[0.7rem] text-[color:var(--color-zari-deep)] flex-shrink-0 mt-2">
+                <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] flex-shrink-0 mt-2">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1">
@@ -65,10 +65,10 @@ export default async function ServicesPage({
                   >
                     {p.ar}
                   </h3>
-                  <p className="type-roman text-[0.66rem] text-[color:var(--color-ink-warm)] mb-5">
+                  <p className="type-roman text-[0.92rem] text-[color:var(--color-ink-warm)] mb-5">
                     {p.en}
                   </p>
-                  <p className="type-serif text-[color:var(--color-ink-soft)] leading-relaxed">
+                  <p className="type-serif text-[color:var(--color-ink-soft)] text-lg leading-relaxed">
                     {p.body}
                   </p>
                 </div>

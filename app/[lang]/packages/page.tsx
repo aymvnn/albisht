@@ -27,7 +27,7 @@ export default async function PackagesPage({
           <div className="md:col-span-3">
             <div className="flex items-center gap-3">
               <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)]">
+              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)]">
                 {meta.eyebrow}
               </span>
             </div>
@@ -150,7 +150,7 @@ function PackageBlock({
               className="type-roman mt-2"
               style={{
                 color: mutedColor,
-                fontSize: "0.78rem",
+                fontSize: "0.95rem",
               }}
             >
               {meta.priceLabel}
@@ -187,7 +187,7 @@ function PackageBlock({
                   className="type-roman"
                   style={{
                     color: "var(--color-zari)",
-                    fontSize: "0.86rem",
+                    fontSize: "1rem",
                   }}
                 >
                   {meta.sectionLabels[section.key]}
@@ -198,7 +198,7 @@ function PackageBlock({
                   <li
                     key={j}
                     className={`${isAr ? "type-arabic" : "type-serif"} leading-relaxed flex gap-3 items-start`}
-                    style={{ color: textColor, fontSize: "1.05rem" }}
+                    style={{ color: textColor, fontSize: "1.15rem" }}
                   >
                     <span
                       className="block mt-2 w-1 h-1 rounded-full flex-shrink-0"
@@ -223,7 +223,7 @@ function PackageBlock({
               transitionTimingFunction: "var(--ease-ceremonial)",
             }}
           >
-            <span className="type-roman" style={{ fontSize: "0.86rem" }}>
+            <span className="type-roman" style={{ fontSize: "1rem" }}>
               {meta.cta}
             </span>
             <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">

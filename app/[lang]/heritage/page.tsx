@@ -17,7 +17,7 @@ export default async function HeritagePage({
     <>
       <section className="relative pt-40 pb-20 surface-marble">
         <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
-          <p className="type-roman text-[0.72rem] text-[color:var(--color-zari-deep)] mb-8">
+          <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
             {lang === "ar" ? "التراث" : "Heritage"}
           </p>
           <h1
@@ -110,7 +110,7 @@ function Chapter({ n, title, body }: { n: string; title: string; body: string })
   return (
     <section className="mb-24 grid grid-cols-1 md:grid-cols-12 gap-6">
       <div className="md:col-span-2">
-        <p className="type-roman text-[0.78rem] text-[color:var(--color-zari-deep)] sticky top-32">
+        <p className="type-roman text-[1.05rem] text-[color:var(--color-zari-deep)] sticky top-32">
           {n}
         </p>
       </div>
