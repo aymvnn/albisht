@@ -1,28 +1,28 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
-import { PlaceholderSection } from "@/components/PlaceholderSection";
 import { ContactCallout } from "@/components/ContactCallout";
 
 const PHASES = {
   ar: [
-    { ar: "التشاور", en: "Consultation", body: "الجلسة الأولى. في البيت أو في فندق الديوان." },
-    { ar: "التصميم", en: "Composition", body: "اللون، الخَطّاط، البِشت، الأَزهار." },
-    { ar: "التراث", en: "Heritage craft", body: "خَتم العائلة، الدعوة المَخطوطة، الفضة المَنقوشة." },
-    { ar: "الكَرَم", en: "Hospitality", body: "القهوة، التَّمر، بَخور العود، عَطر الضيف." },
-    { ar: "القاعة", en: "The men's hall", body: "المَكان، الكَوشة، المَشربيّات، الكروم." },
-    { ar: "الموسيقى", en: "Music", body: "العود والقانون. لا غَير." },
-    { ar: "اليوم", en: "The day", body: "الجَدوَل، البروتوكول، الاستقبال على مستوى الديوان." },
-    { ar: "الذاكرة", en: "Memory", body: "الألبوم، هَدايا الشُكر، الرسالة الختامية." },
+    { ar: "التشاور", en: "Consultation", body: "الجلسة الأولى. في البيت أو في فندق الديوان.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
+    { ar: "التصميم", en: "Composition", body: "اللون، الخَطّاط، البِشت، الأَزهار.", photo: "/photos/hall/velvet-blue-arch.jpg" },
+    { ar: "التراث", en: "Heritage craft", body: "خَتم العائلة، الدعوة المَخطوطة، الفضة المَنقوشة.", photo: "/photos/majlis/calligraphy-wood-wall.jpg" },
+    { ar: "الكَرَم", en: "Hospitality", body: "القهوة، التَّمر، بَخور العود، عَطر الضيف.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
+    { ar: "القاعة", en: "The men's hall", body: "المَكان، الكَوشة، المَشربيّات، الكروم.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
+    { ar: "الموسيقى", en: "Music", body: "العود والقانون. لا غَير.", photo: "/photos/craft/red-carpet-dark.jpg" },
+    { ar: "اليوم", en: "The day", body: "الجَدوَل، البروتوكول، الاستقبال على مستوى الديوان.", photo: "/photos/craft/server-shemagh-cups.jpg" },
+    { ar: "الذاكرة", en: "Memory", body: "الألبوم، هَدايا الشُكر، الرسالة الختامية.", photo: "/photos/majlis/sheikh-portrait.jpg" },
   ],
   en: [
-    { ar: "التشاور", en: "Consultation", body: "The first conversation. At home, or at the palace hotel." },
-    { ar: "التصميم", en: "Composition", body: "Colour, the calligrapher, the bisht, the flowers." },
-    { ar: "التراث", en: "Heritage craft", body: "Family seal, hand-written invitation, engraved silver." },
-    { ar: "الكَرَم", en: "Hospitality", body: "Coffee, dates, oud-bakhoor, perfume for the guest." },
-    { ar: "القاعة", en: "The men's hall", body: "The venue, the kosha, mashrabiya screens, the chandeliers." },
-    { ar: "الموسيقى", en: "Music", body: "Oud and qanun. Nothing else." },
-    { ar: "اليوم", en: "The day", body: "The timeline, the protocol, Diwan-level reception." },
-    { ar: "الذاكرة", en: "Memory", body: "The album, gifts of thanks, the closing letter." },
+    { ar: "التشاور", en: "Consultation", body: "The first conversation. At home, or at the palace hotel.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
+    { ar: "التصميم", en: "Composition", body: "Colour, the calligrapher, the bisht, the flowers.", photo: "/photos/hall/velvet-blue-arch.jpg" },
+    { ar: "التراث", en: "Heritage craft", body: "Family seal, hand-written invitation, engraved silver.", photo: "/photos/majlis/calligraphy-wood-wall.jpg" },
+    { ar: "الكَرَم", en: "Hospitality", body: "Coffee, dates, oud-bakhoor, perfume for the guest.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
+    { ar: "القاعة", en: "The men's hall", body: "The venue, the kosha, mashrabiya screens, the chandeliers.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
+    { ar: "الموسيقى", en: "Music", body: "Oud and qanun. Nothing else.", photo: "/photos/craft/red-carpet-dark.jpg" },
+    { ar: "اليوم", en: "The day", body: "The timeline, the protocol, Diwan-level reception.", photo: "/photos/craft/server-shemagh-cups.jpg" },
+    { ar: "الذاكرة", en: "Memory", body: "The album, gifts of thanks, the closing letter.", photo: "/photos/majlis/sheikh-portrait.jpg" },
   ],
 };
 
@@ -35,50 +35,162 @@ export default async function ServicesPage({
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
   const phases = PHASES[lang];
+  const isAr = lang === "ar";
 
   return (
     <>
-      <PlaceholderSection
-        lang={lang}
-        eyebrow={lang === "ar" ? "الخدمات" : "Services"}
-        title={lang === "ar" ? "البروتوكول." : "The protocol."}
-        body={
-          lang === "ar"
-            ? "ثَمانية فُصول، يُسَلَّم كلٌّ منها بيَدِنا، ولا يَخرُج من تَحت أَيدينا حتى يَكتَمِل."
-            : "Eight chapters, each delivered by our hand. Nothing leaves us before it is complete."
-        }
-      />
+      {/* === Hero with photo === */}
+      <section className="relative pt-40 pb-20 md:pt-52 md:pb-28 surface-marble overflow-hidden">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-y-14 md:gap-x-16 items-center">
+          <div className="md:col-span-6">
+            <div className="flex items-center gap-3 mb-8">
+              <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
+              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)]">
+                {isAr ? "الخدمات" : "Services"}
+              </span>
+            </div>
+            <h1
+              className={`${isAr ? "type-arabic-display" : "type-display"} text-[color:var(--color-ink)] mb-10`}
+              style={{
+                fontSize: "clamp(3rem, 2.4rem + 4vw, 6rem)",
+                lineHeight: isAr ? "1.4" : "1",
+              }}
+            >
+              {isAr ? "البروتوكول." : "The protocol."}
+            </h1>
+            <p
+              className={`${isAr ? "type-arabic" : "type-serif"} text-[color:var(--color-ink-warm)] text-xl leading-relaxed italic max-w-lg`}
+            >
+              {isAr
+                ? "ثَمانية فُصول، يُسَلَّم كلٌّ منها بيَدِنا، ولا يَخرُج من تَحت أَيدينا حتى يَكتَمِل."
+                : "Eight chapters, each delivered by our hand. Nothing leaves us before it is complete."}
+            </p>
+          </div>
+          <div className="md:col-span-6">
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <Image
+                src="/photos/hall/hero-pearl-court.jpg"
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <section className="relative surface-pearl py-32 md:py-44">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
-            {phases.map((p, i) => (
-              <li key={i} className="group flex gap-8 items-start pb-12 border-b border-[color:var(--color-mist)]/30">
-                <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] flex-shrink-0 mt-2">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="flex-1">
-                  <h3
-                    className={`${
-                      lang === "ar" ? "type-arabic-display text-4xl" : "type-display text-4xl"
-                    } text-[color:var(--color-ink)] mb-2`}
-                  >
-                    {p.ar}
-                  </h3>
-                  <p className="type-roman text-[0.92rem] text-[color:var(--color-ink-warm)] mb-5">
-                    {p.en}
-                  </p>
-                  <p className="type-serif text-[color:var(--color-ink-soft)] text-lg leading-relaxed">
-                    {p.body}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
+      {/* === Phases — alternating photo/text rows === */}
+      <section className="relative surface-pearl">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-28 md:py-40 space-y-28 md:space-y-40">
+          {phases.slice(0, 4).map((p, i) => (
+            <PhaseRow key={i} phase={p} index={i} lang={lang} reversed={i % 2 === 1} />
+          ))}
+        </div>
+      </section>
+
+      {/* === Mid-page intermezzo — fullbleed photo === */}
+      <section className="relative surface-bisht">
+        <div className="relative aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden">
+          <Image
+            src="/photos/majlis/night-majlis-outdoor.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.30) 100%)",
+            }}
+          />
+        </div>
+      </section>
+
+      {/* === Phases 5–8 === */}
+      <section className="relative surface-pearl">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-28 md:py-40 space-y-28 md:space-y-40">
+          {phases.slice(4).map((p, i) => (
+            <PhaseRow
+              key={i + 4}
+              phase={p}
+              index={i + 4}
+              lang={lang}
+              reversed={(i + 4) % 2 === 1}
+            />
+          ))}
         </div>
       </section>
 
       <ContactCallout lang={lang} variant="dark" />
     </>
+  );
+}
+
+function PhaseRow({
+  phase,
+  index,
+  lang,
+  reversed,
+}: {
+  phase: { ar: string; en: string; body: string; photo: string };
+  index: number;
+  lang: Lang;
+  reversed: boolean;
+}) {
+  const isAr = lang === "ar";
+  return (
+    <article className="grid grid-cols-1 md:grid-cols-12 gap-y-10 md:gap-x-16 items-center">
+      <div className={`md:col-span-6 ${reversed ? "md:order-2" : ""}`}>
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <Image
+            src={phase.photo}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+      </div>
+      <div
+        className={`md:col-span-5 ${
+          reversed ? "md:order-1 md:col-start-2" : "md:col-start-8"
+        } flex flex-col gap-5`}
+      >
+        <p
+          className="type-display"
+          style={{
+            fontSize: "clamp(2.5rem, 1.8rem + 2.6vw, 4.5rem)",
+            color: "var(--color-zari)",
+            lineHeight: 1,
+            fontVariantNumeric: "lining-nums",
+            opacity: 0.7,
+          }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </p>
+        <h3
+          className={isAr ? "type-arabic-display" : "type-display"}
+          style={{
+            fontSize: "clamp(2.4rem, 1.8rem + 2.4vw, 4rem)",
+            color: "var(--color-ink)",
+            lineHeight: isAr ? "1.4" : "1.05",
+          }}
+        >
+          {phase.ar}
+        </h3>
+        <p className="type-roman text-[1rem] text-[color:var(--color-ink-warm)]">
+          {phase.en}
+        </p>
+        <p
+          className={`${isAr ? "type-arabic" : "type-serif"} text-[color:var(--color-ink-soft)] text-lg md:text-xl leading-relaxed italic max-w-md`}
+        >
+          {phase.body}
+        </p>
+      </div>
+    </article>
   );
 }

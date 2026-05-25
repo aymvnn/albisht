@@ -78,6 +78,22 @@ export default async function HeritagePage({
                 : "The bisht is not a garment. It is the testimony of a moment that does not return."
             }
           />
+        </div>
+      </article>
+
+      {/* Intermezzo — second fullbleed photo break */}
+      <section className="relative h-[55svh] min-h-[380px] overflow-hidden">
+        <Image
+          src="/photos/craft/red-carpet-dark.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+      </section>
+
+      <article className="relative surface-pearl py-20 md:py-32 prose-ceremonial">
+        <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
           <Chapter
             n="03"
             title={lang === "ar" ? "بِشتُ الزَّفاف في قطر" : "The wedding bisht of Qatar"}

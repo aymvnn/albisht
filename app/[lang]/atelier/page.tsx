@@ -45,34 +45,64 @@ export default async function AtelierPage({
         </div>
       </section>
 
-      {/* Principles */}
+      {/* Principles — three cards with photo backdrop per principle */}
       <section className="relative py-32 md:py-44 surface-pearl">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <div className="seal-divider type-roman text-[0.7rem] mb-20 max-w-md mx-auto">
+          <div className="seal-divider type-roman text-[0.95rem] mb-20 max-w-md mx-auto">
             <span>{lang === "ar" ? "ثلاثة مبادئ" : "Three principles"}</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20">
-            {c.principles.map((p, i) => (
-              <div key={i} className="space-y-6">
-                <p
-                  className={`${
-                    lang === "ar" ? "type-arabic-display text-5xl" : "type-display text-5xl"
-                  } text-[color:var(--color-zari-deep)]`}
-                >
-                  {p.ar}
-                </p>
-                <p className="type-roman text-[0.92rem] text-[color:var(--color-ink-warm)]">
-                  — {p.en}
-                </p>
-                <p
-                  className={`${
-                    lang === "ar" ? "type-arabic" : "type-serif"
-                  } text-[color:var(--color-ink-soft)] text-lg leading-relaxed`}
-                >
-                  {p.body}
-                </p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
+            {c.principles.map((p, i) => {
+              const photos = [
+                "/photos/craft/server-shemagh-cups.jpg",
+                "/photos/hall/olive-tree-light.jpg",
+                "/photos/craft/sweets-silver-platter.jpg",
+              ];
+              return (
+                <article key={i} className="group flex flex-col gap-8">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
+                      src={photos[i]}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.65) 100%)",
+                      }}
+                    />
+                    <p
+                      className={`absolute inset-x-6 bottom-6 ${
+                        lang === "ar" ? "type-arabic-display" : "type-display"
+                      } text-[color:var(--color-zari)]`}
+                      style={{
+                        fontSize: "clamp(2.5rem, 1.8rem + 2vw, 3.5rem)",
+                        lineHeight: lang === "ar" ? "1.4" : "1",
+                        textShadow: "0 2px 16px rgba(0,0,0,0.7)",
+                      }}
+                    >
+                      {p.ar}
+                    </p>
+                  </div>
+                  <div className="space-y-4 px-1">
+                    <p className="type-roman text-[1rem] text-[color:var(--color-zari-deep)]">
+                      {p.en}
+                    </p>
+                    <p
+                      className={`${
+                        lang === "ar" ? "type-arabic" : "type-serif"
+                      } text-[color:var(--color-ink-soft)] text-lg leading-relaxed`}
+                    >
+                      {p.body}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
