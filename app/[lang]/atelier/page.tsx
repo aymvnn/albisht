@@ -4,6 +4,7 @@ import { LANGS, type Lang } from "@/lib/i18n";
 import { ATELIER } from "@/lib/copy";
 import { FormatHeadline } from "@/components/FormatHeadline";
 import { ContactCallout } from "@/components/ContactCallout";
+import { PageHero } from "@/components/PageHero";
 
 export default async function AtelierPage({
   params,
@@ -17,38 +18,17 @@ export default async function AtelierPage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 surface-marble">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
-          <div className="md:col-span-7">
-            <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
-              {c.eyebrow}
-            </p>
-            <h1
-              className={`${
-                lang === "ar" ? "type-arabic-display" : "type-display"
-              } text-[color:var(--color-ink)]`}
-              style={{ fontSize: "var(--text-h1)" }}
-            >
-              <FormatHeadline text={c.headline} />
-            </h1>
-          </div>
-          <div className="md:col-span-4 md:col-start-9 flex items-end">
-            <p
-              className={`${
-                lang === "ar" ? "type-arabic" : "type-serif"
-              } text-[color:var(--color-ink-warm)] text-lg leading-relaxed`}
-            >
-              {c.intro}
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        lang={lang}
+        eyebrow={c.eyebrow}
+        title={<FormatHeadline text={c.headline} />}
+        intro={c.intro}
+      />
 
       {/* Principles — three cards with photo backdrop per principle */}
-      <section className="relative py-32 md:py-44 surface-pearl">
+      <section className="relative py-16 md:py-24 surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <div className="seal-divider type-roman text-[0.95rem] mb-20 max-w-md mx-auto">
+          <div className="seal-divider type-roman text-[0.95rem] mb-14 max-w-md mx-auto">
             <span>{lang === "ar" ? "ثلاثة مبادئ" : "Three principles"}</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
@@ -125,7 +105,7 @@ export default async function AtelierPage({
               }}
             />
           </div>
-          <div className="flex items-center px-6 md:px-16 py-20 md:py-32">
+          <div className="flex items-center px-6 md:px-16 py-16 md:py-24">
             <div className="max-w-md">
               <p className="type-roman text-[0.95rem] text-[color:var(--color-zari)] mb-8">
                 {c.network.label}
@@ -151,7 +131,7 @@ export default async function AtelierPage({
       </section>
 
       {/* Terms */}
-      <section className="relative py-32 md:py-44 surface-pearl">
+      <section className="relative py-20 md:py-28 surface-pearl">
         <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
           <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-6">
             {c.terms.label}

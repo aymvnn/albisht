@@ -41,9 +41,9 @@
   --color-zari-mid: #E29F29;        /* bottom of the gradient */
   --color-olive: oklch(0.42 0.045 130);
   --color-crystal: oklch(0.98 0.02 86);
-  /* Sealing-wax red (from brand book wax-seal mockups) */
-  --color-seal-wax: #6E1F1F;
-  --color-seal-wax-deep: #4A1313;
+  /* (Removed) seal-wax red tokens — those were Pearl-Court fiction, not in
+     the Zajel brand book. The consult-page submit seal is now gold + black
+     per the canonical brand pairing (see WaxSealButton.tsx). */
 
   /* === Type families ===
      Adobe Arabic alternatives — keep two families, one per script.
@@ -53,9 +53,12 @@
   --font-display: "EB Garamond", "Garamond", "Times New Roman", serif;
   --font-roman: "EB Garamond", "Garamond", "Times New Roman", serif;
   --font-serif: "EB Garamond", "Garamond", "Times New Roman", serif;
-  /* Arabic display headings — ceremonial Thuluth (use ONLY at >= 40px).
-     Falls back to Markazi Text where the .ttf is still loading. */
-  --font-arabic-display: "DecoType Thuluth", "Markazi Text", "Amiri", serif;
+  /* Arabic display headings — DecoType Thuluth (ceremonial calligraphic).
+     Use ONLY for ceremonial page titles where the calligraphic flair is
+     intentional. Do not use for multi-line headline stacks (it looks
+     fragmented there). Falls back to Amiri 700 if the self-hosted .ttf
+     hasn't loaded yet, then Markazi Text. */
+  --font-arabic-display: "DecoType Thuluth", "Amiri", "Markazi Text", serif;
   /* Arabic body / sub-display — clean Naskh, readable at all sizes. */
   --font-arabic: "Markazi Text", "Amiri", serif;
   --font-arabic-body: "Markazi Text", "Amiri", serif;
@@ -300,16 +303,32 @@
     font-feature-settings: "swsh", "dlig", "onum";
   }
 
-  /* Big ceremonial Arabic display — DecoType Thuluth. Use ONLY at >= 40px.
-     The script is far too ornate at smaller sizes; legibility collapses. */
+  /* Ceremonial Arabic display — DecoType Thuluth at weight 400 (the only
+     weight it ships in). Use for the single ceremonial page title on a
+     page (hero h1 on /heritage, /packages, /atelier). Do NOT use for
+     multi-line headline stacks — Thuluth's thin strokes and floating
+     tashkeel look fragmented in repetition. For those, use
+     .type-arabic-prose-display instead. */
   .type-arabic-display {
     font-family: var(--font-arabic-display);
     font-weight: 400;
     line-height: 1.55;
     letter-spacing: 0;
-    /* Disable old-style figures on Thuluth — it doesn't ship them, and forcing
-       OpenType features the font lacks can cause hinting glitches. */
+    /* Disable old-style figures — Thuluth doesn't ship them. */
     font-feature-settings: normal;
+  }
+
+  /* Display-weight Naskh for cleaner large headline copy where Thuluth's
+     calligraphic complexity would compete with the meaning. Amiri 700
+     reads crisp at clamp-display sizes and integrates tashkeel into the
+     letter forms instead of letting them float. Use for: PromiseSection,
+     subline-style large copy on home, ceremonial multi-line stacks. */
+  .type-arabic-prose-display {
+    font-family: "Amiri", "Markazi Text", serif;
+    font-weight: 700;
+    line-height: 1.75;
+    letter-spacing: 0;
+    font-feature-settings: "kern", "liga", "calt";
   }
 
   /* Medium Arabic headline — refined Naskh (Markazi Text). Use 18–36px. */
@@ -433,6 +452,409 @@
     70% { transform: rotate(-1.5deg); }
   }
 
+  /* ============================================================
+     BRAND BUTTON — the site-wide bordered-gold CTA. Sweep-fill on hover,
+     text inverts to ink, a small lift + a warm gold ground shadow.
+     Apply to any <a> or <button> that should read as a primary CTA:
+        className="btn-brand group inline-flex items-center gap-4 px-7 py-4 border ..."
+     The component must include a child <span class="btn-brand-arrow"> for
+     the arrow's micro-animation to fire.
+     ============================================================ */
+  .btn-brand {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-color: rgba(210, 142, 41, 0.55);
+    color: var(--color-zari);
+    /* Universal readable type-size + tracking. Components can still override
+       with text-[...] utilities for special cases, but by default every CTA
+       across the site uses this calibrated size for consistency. */
+    font-size: clamp(1.05rem, 0.98rem + 0.25vw, 1.18rem);
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    line-height: 1.2;
+    /* Slightly more breathing room than the previous 16px / py-4. */
+    padding-block: 1.05rem;
+    padding-inline: 2rem;
+    transition:
+      color 520ms var(--ease-ceremonial),
+      border-color 520ms var(--ease-ceremonial),
+      transform 520ms var(--ease-ceremonial),
+      box-shadow 520ms var(--ease-ceremonial);
+    will-change: transform;
+  }
+  /* Arabic-language buttons get slightly bigger and no Latin tracking
+     (joining Naskh letters should not be artificially spaced). */
+  html[dir="rtl"] .btn-brand {
+    font-size: clamp(1.15rem, 1.05rem + 0.3vw, 1.3rem);
+    letter-spacing: 0;
+  }
+
+  /* ============================================================
+     NAV LINKS — header navigation items.
+     On hover: gold hairline draws from centre outward + text colour
+     brightens. Active route gets the hairline at full width by default.
+     ============================================================ */
+  .nav-link {
+    position: relative;
+    padding-block: 0.5rem;
+    transition: color 380ms var(--ease-ceremonial);
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    width: 0;
+    height: 1.5px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      #D28E29 25%,
+      #F6B62B 50%,
+      #D28E29 75%,
+      transparent 100%
+    );
+    transform: translateX(-50%);
+    transition: width 400ms var(--ease-ceremonial);
+    pointer-events: none;
+  }
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: var(--color-zari-bright) !important;
+  }
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after,
+  .nav-link[data-active="true"]::after {
+    width: 100%;
+  }
+  /* Active state — keep the hairline drawn permanently */
+  .nav-link[data-active="true"] {
+    color: var(--color-zari) !important;
+  }
+
+  /* ============================================================
+     MOBILE DRAWER — the luxe full-screen menu on small viewports.
+     Each item is a numbered ceremonial line; on hover the label
+     brightens, an underline draws from the leading edge, and the
+     whole row drifts inward.
+     ============================================================ */
+  .drawer-link {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding-block: 0.6rem;
+    transition: transform 420ms var(--ease-ceremonial);
+  }
+  .drawer-link::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 2.6rem;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      #D28E29 0%,
+      #F6B62B 50%,
+      transparent 100%
+    );
+    transition: width 460ms var(--ease-ceremonial);
+    pointer-events: none;
+  }
+  html[dir="rtl"] .drawer-link::after {
+    background: linear-gradient(
+      270deg,
+      #D28E29 0%,
+      #F6B62B 50%,
+      transparent 100%
+    );
+  }
+  .drawer-link:hover,
+  .drawer-link:focus-visible {
+    transform: translateX(8px);
+  }
+  html[dir="rtl"] .drawer-link:hover,
+  html[dir="rtl"] .drawer-link:focus-visible {
+    transform: translateX(-8px);
+  }
+  .drawer-link:hover::after,
+  .drawer-link:focus-visible::after,
+  .drawer-link[data-active="true"]::after {
+    width: calc(100% - 2.6rem);
+  }
+  .drawer-num {
+    font-family: var(--font-roman);
+    font-weight: 500;
+    font-size: 0.82rem;
+    letter-spacing: 0.28em;
+    color: rgba(210, 142, 41, 0.65);
+    min-width: 1.6rem;
+    font-variant-numeric: lining-nums tabular-nums;
+    transition: color 420ms var(--ease-ceremonial);
+  }
+  .drawer-label {
+    font-size: clamp(1.45rem, 1.15rem + 1.5vw, 2rem);
+    font-weight: 500;
+    color: var(--color-pearl);
+    line-height: 1.25;
+    letter-spacing: 0.005em;
+    transition: color 420ms var(--ease-ceremonial);
+  }
+  html[dir="rtl"] .drawer-label {
+    font-size: clamp(1.55rem, 1.25rem + 1.5vw, 2.15rem);
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+  .drawer-link:hover .drawer-label,
+  .drawer-link:focus-visible .drawer-label,
+  .drawer-link[data-active="true"] .drawer-label {
+    color: var(--color-zari-bright);
+  }
+  .drawer-link:hover .drawer-num,
+  .drawer-link:focus-visible .drawer-num,
+  .drawer-link[data-active="true"] .drawer-num {
+    color: var(--color-zari);
+  }
+
+  /* Drawer close button — gold-bordered circle. On hover the gradient
+     fills the disc and the × turns black, matching .btn-brand's
+     sweep-fill behaviour. */
+  .drawer-close {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    border: 1px solid rgba(210, 142, 41, 0.55);
+    color: var(--color-zari);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      color 420ms var(--ease-ceremonial),
+      border-color 420ms var(--ease-ceremonial),
+      transform 420ms var(--ease-ceremonial);
+  }
+  .drawer-close::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #E29F29 0%, #F6B62B 100%);
+    transform: scale(0);
+    transition: transform 420ms var(--ease-ceremonial);
+    z-index: -1;
+  }
+  .drawer-close:hover,
+  .drawer-close:focus-visible {
+    color: var(--color-ink);
+    border-color: transparent;
+    transform: rotate(90deg);
+  }
+  .drawer-close:hover::before,
+  .drawer-close:focus-visible::before {
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link::after { transition: none; }
+    .drawer-link,
+    .drawer-link::after,
+    .drawer-close,
+    .drawer-close::before { transition: none; }
+    .drawer-link:hover { transform: none; }
+    .drawer-close:hover { transform: none; }
+  }
+
+  /* Compact variant — same hover behaviour and brand styling, smaller
+     padding + font for use in dense contexts (header nav, in-line CTAs). */
+  .btn-brand--sm {
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    padding-block: 0.7rem;
+    padding-inline: 1.4rem;
+  }
+  html[dir="rtl"] .btn-brand--sm {
+    font-size: 1.05rem;
+    letter-spacing: 0;
+  }
+  .btn-brand::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #E29F29 0%, #F6B62B 55%, #E29F29 100%);
+    transform-origin: var(--btn-sweep-origin, left);
+    transform: scaleX(0);
+    transition: transform 520ms var(--ease-ceremonial);
+    z-index: -1;
+  }
+  html[dir="rtl"] .btn-brand {
+    --btn-sweep-origin: right;
+  }
+  .btn-brand:hover::before,
+  .btn-brand:focus-visible::before {
+    transform: scaleX(1);
+  }
+  .btn-brand:hover,
+  .btn-brand:focus-visible {
+    color: var(--color-ink);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 32px -10px rgba(226, 159, 41, 0.45),
+      0 4px 12px -4px rgba(0, 0, 0, 0.25);
+  }
+  .btn-brand:active {
+    transform: translateY(0);
+    transition-duration: 180ms;
+  }
+  .btn-brand-arrow {
+    display: inline-block;
+    transition:
+      transform 520ms var(--ease-ceremonial),
+      font-weight 520ms var(--ease-ceremonial);
+  }
+  .btn-brand:hover .btn-brand-arrow,
+  .btn-brand:focus-visible .btn-brand-arrow {
+    transform: translateX(8px);
+    font-weight: 700;
+  }
+  html[dir="rtl"] .btn-brand:hover .btn-brand-arrow,
+  html[dir="rtl"] .btn-brand:focus-visible .btn-brand-arrow {
+    transform: translateX(-8px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-brand,
+    .btn-brand::before,
+    .btn-brand-arrow {
+      transition: none !important;
+    }
+    .btn-brand:hover,
+    .btn-brand:focus-visible {
+      transform: none;
+    }
+  }
+
+  /* ============================================================
+     CONTACT CALLOUT — hover micro-animations and entrance reveal.
+     Defined here (not in styled-jsx) so the styles survive HMR and
+     don't depend on the component's hydration order.
+     ============================================================ */
+
+  /* Entrance reveal — own animation, declared outside the @layer
+     keyframes scope so the animation name resolves reliably. Same
+     visual recipe as .reveal-up but with explicit from/to keyframes. */
+  .cc-rise {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cc-rise 1100ms var(--ease-ceremonial) forwards;
+  }
+
+  /* Letter CTA — gold gradient sweeps in from the start edge */
+  .cc-letter-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .cc-letter-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #E29F29 0%, #F6B62B 100%);
+    transform-origin: var(--cc-sweep-origin, left);
+    transform: scaleX(0);
+    transition: transform 620ms var(--ease-ceremonial);
+    z-index: -1;
+  }
+  .cc-letter-cta:hover::before,
+  .cc-letter-cta:focus-visible::before {
+    transform: scaleX(1);
+  }
+  .cc-letter-cta:hover,
+  .cc-letter-cta:focus-visible {
+    color: var(--color-ink) !important;
+    border-color: transparent !important;
+  }
+  .cc-letter-cta .cc-cta-arrow {
+    transition: transform 620ms var(--ease-ceremonial);
+  }
+  .cc-letter-cta:hover .cc-cta-arrow,
+  .cc-letter-cta:focus-visible .cc-cta-arrow {
+    transform: translateX(6px);
+  }
+  html[dir="rtl"] .cc-letter-cta:hover .cc-cta-arrow,
+  html[dir="rtl"] .cc-letter-cta:focus-visible .cc-cta-arrow {
+    transform: translateX(-6px);
+  }
+
+  /* Phone number — gold underline draws in from the centre on hover,
+     a gold dot fades in beside it. */
+  .cc-phone-line {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding-bottom: 0.45rem;
+  }
+  .cc-phone-line::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-zari);
+    transform: translateX(-50%);
+    transition: width 600ms var(--ease-ceremonial);
+  }
+  .cc-phone-line:hover::after,
+  .cc-phone-line:focus-visible::after {
+    width: 100%;
+  }
+  .cc-phone-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--color-zari);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 500ms var(--ease-ceremonial),
+                transform 500ms var(--ease-ceremonial);
+  }
+  .cc-phone-line:hover .cc-phone-dot,
+  .cc-phone-line:focus-visible .cc-phone-dot {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Door card — subtle warm halo fades in behind the card on hover */
+  .cc-door {
+    position: relative;
+  }
+  .cc-door::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(226, 159, 41, 0.08) 0%,
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 700ms var(--ease-ceremonial);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .cc-door:hover::before,
+  .cc-door:focus-within::before {
+    opacity: 1;
+  }
+
   /* === Reduced motion fallbacks === */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -459,6 +881,17 @@
   /* === Hide scrollbar but keep scrollable === */
   .scrollbar-hidden { scrollbar-width: none; }
   .scrollbar-hidden::-webkit-scrollbar { display: none; }
+}
+
+/* ============================================================
+   ANIMATIONS — declared outside @layer base so animation-name lookups
+   resolve regardless of cascade-layer ordering (a Tailwind v4 quirk).
+   ============================================================ */
+@keyframes cc-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============================================================

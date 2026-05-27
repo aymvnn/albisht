@@ -1,11 +1,18 @@
 import type { Lang } from "./i18n";
 
 /**
- * The five wedding packages for ALBISHT's men's hall service.
- * Source: ALBISHT Mens Packages 2026 brochure (provided by client).
+ * ALBISHT product lines — two distinct offerings, sourced from the two
+ * official package PDFs in the project root.
  *
- * This file lives separate from copy.ts because of its volume — editing a
- * single bullet here doesn't require scrolling past 400 lines of unrelated copy.
+ *   1. PACKAGES (this file)        — Men's hall: five full-ceremony tiers
+ *                                    Source: باقات البشت الرجالية 2026.pdf
+ *   2. WOMENS_HOSPITALITY +        — Women's atelier: capacity-tier
+ *      WOMENS_BEVERAGES (below)     hospitality service + beverage menu.
+ *                                    Source: باقات البشت النسائية.pdf
+ *
+ * The two product lines are intentionally different in structure:
+ *   - Men's = full all-inclusive ceremony packages (price per event)
+ *   - Women's = catering-style hospitality + drinks by guest count
  *
  * To change a package: edit name / price / any bullet in any section. The
  * /packages page reads the array order, so reordering here reorders on the site.
@@ -36,7 +43,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "الباقة الفِضِّية",
       priceQAR: 39000,
       highlight: "البداية الكاملة — كل ما تحتاجه قاعةُ الرجال، بلا زيادة ولا نُقصان.",
-      photo: "/photos/hall/ballroom-blue-floor.jpg",
+      photo: "/photos/hall/sunny-marquetry-lounge.jpg",
       sections: [
         {
           key: "hall",
@@ -102,7 +109,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "الباقة الذَّهَبية",
       priceQAR: 50000,
       highlight: "خطوة فوق الفضية — ستاج تشريفة، حواجز مضيئة، تصوير متحرك.",
-      photo: "/photos/hall/blue-chairs-gold.jpg",
+      photo: "/photos/hall/blue-chairs-row-florals.jpg",
       sections: [
         {
           key: "hall",
@@ -169,7 +176,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "الباقة البِلاتينيوم",
       priceQAR: 55000,
       highlight: "ضيافة موسعة، عصائر فريش بخمس نكهات، ألبوم ديجيتال للعروس.",
-      photo: "/photos/hall/mashrabiya-chandelier.jpg",
+      photo: "/photos/hall/twin-arch-blue-velvet.jpg",
       sections: [
         {
           key: "hall",
@@ -242,7 +249,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "باقة الـ VIP",
       priceQAR: 65000,
       highlight: "الكوكتيل الكامل، ضيافة فاخرة، فاكهة مشكلة عند كل VIP.",
-      photo: "/photos/hall/velvet-blue-arch.jpg",
+      photo: "/photos/hall/throne-blue-gold-roses.jpg",
       sections: [
         {
           key: "hall",
@@ -310,7 +317,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "باقة الـ TOP VIP",
       priceQAR: 70000,
       highlight: "أقصى ما نُقدّمه — كاملُ صالة الاستقبال، ضيافة على أعلى مستوى، تَوثيق سينمائي.",
-      photo: "/photos/majlis/sheikh-portrait.jpg",
+      photo: "/photos/majlis/sheikh-blue-drape.jpg",
       sections: [
         {
           key: "hall",
@@ -382,7 +389,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "The Silver Package",
       priceQAR: 39000,
       highlight: "A complete start — everything the men's hall needs, no add-ons required.",
-      photo: "/photos/hall/ballroom-blue-floor.jpg",
+      photo: "/photos/hall/sunny-marquetry-lounge.jpg",
       sections: [
         {
           key: "hall",
@@ -448,7 +455,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "The Gold Package",
       priceQAR: 50000,
       highlight: "A step above Silver — honour stage, illuminated barriers, motion-camera coverage.",
-      photo: "/photos/hall/blue-chairs-gold.jpg",
+      photo: "/photos/hall/blue-chairs-row-florals.jpg",
       sections: [
         {
           key: "hall",
@@ -515,7 +522,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "The Platinum Package",
       priceQAR: 55000,
       highlight: "Expanded hospitality, five fresh-juice flavours, a digital album for the groom.",
-      photo: "/photos/hall/mashrabiya-chandelier.jpg",
+      photo: "/photos/hall/twin-arch-blue-velvet.jpg",
       sections: [
         {
           key: "hall",
@@ -588,7 +595,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "The VIP Package",
       priceQAR: 65000,
       highlight: "Full cocktail spread, premium hospitality, mixed-fruit station at every VIP table.",
-      photo: "/photos/hall/velvet-blue-arch.jpg",
+      photo: "/photos/hall/throne-blue-gold-roses.jpg",
       sections: [
         {
           key: "hall",
@@ -656,7 +663,7 @@ export const PACKAGES: Record<Lang, Package[]> = {
       name: "The TOP VIP Package",
       priceQAR: 70000,
       highlight: "The pinnacle — full reception hall, peak hospitality, cinematic documentation.",
-      photo: "/photos/majlis/sheikh-portrait.jpg",
+      photo: "/photos/majlis/sheikh-blue-drape.jpg",
       sections: [
         {
           key: "hall",
@@ -721,4 +728,126 @@ export const PACKAGES: Record<Lang, Package[]> = {
       ],
     },
   ],
+};
+
+/* ============================================================================
+   WOMEN'S ATELIER — hospitality + beverage service
+   Source: باقات البشت النسائية.pdf
+   Phone: +974 5000 8019   (separate from the men's atelier number)
+
+   Structure: per-capacity tiers (25, 30, 40, 50, 70, 90, 100, 150 persons for
+   hospitality; 20, 25, 30, 40, 50, 70, 100, 150 for beverage trays).
+   Prices not published on the website — quoted on enquiry.
+   ============================================================================ */
+
+export type WomensCapacityTier = {
+  capacity: number;
+  /** Short note shown under the capacity number on the page */
+  note?: { ar: string; en: string };
+};
+
+/** Hospitality (ضيافة نسائية) tiers — selection of sweets and savouries by guest count */
+export const WOMENS_HOSPITALITY: WomensCapacityTier[] = [
+  { capacity: 25 },
+  { capacity: 30 },
+  { capacity: 40 },
+  { capacity: 50 },
+  { capacity: 70 },
+  { capacity: 90 },
+  { capacity: 100 },
+  { capacity: 150 },
+];
+
+/** Beverage trays (قائمة المشروبات) — by guest count */
+export const WOMENS_BEVERAGES: WomensCapacityTier[] = [
+  { capacity: 20 },
+  { capacity: 25 },
+  { capacity: 30 },
+  { capacity: 40 },
+  { capacity: 50 },
+  { capacity: 70 },
+  { capacity: 100 },
+  { capacity: 150 },
+];
+
+/** Beverage menu categories — what's actually on offer */
+export type BeverageCategory = {
+  name: { ar: string; en: string };
+  items: { ar: string; en: string }[];
+};
+
+export const WOMENS_BEVERAGE_CATEGORIES: BeverageCategory[] = [
+  {
+    name: { ar: "عصائر طازجة", en: "Fresh juices" },
+    items: [
+      { ar: "ليمون نعناع", en: "Lemon mint" },
+      { ar: "برتقال", en: "Orange" },
+      { ar: "فراولة", en: "Strawberry" },
+      { ar: "مانجو", en: "Mango" },
+      { ar: "أناناس", en: "Pineapple" },
+    ],
+  },
+  {
+    name: { ar: "موهيتو", en: "Mojito" },
+    items: [
+      { ar: "موهيتو كلاسيكي", en: "Classic mojito" },
+      { ar: "موهيتو فراولة", en: "Strawberry mojito" },
+      { ar: "موهيتو نعناع", en: "Mint mojito" },
+    ],
+  },
+  {
+    name: { ar: "المشروبات الساخنة", en: "Hot drinks" },
+    items: [
+      { ar: "قهوة قطرية", en: "Qatari coffee" },
+      { ar: "شاي أحمر", en: "Black tea" },
+      { ar: "شاي كرك", en: "Karak tea" },
+      { ar: "شاي مغربي", en: "Moroccan tea" },
+      { ar: "كابتشينو", en: "Cappuccino" },
+      { ar: "نسكافيه", en: "Nescafé" },
+    ],
+  },
+];
+
+/** Page-level copy for the women's section on /packages */
+export const WOMENS_META: Record<
+  Lang,
+  {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    hospitalityTitle: string;
+    beveragesTitle: string;
+    perPerson: string;
+    perTray: string;
+    enquireLabel: string;
+    phoneLabel: string;
+    menuTitle: string;
+  }
+> = {
+  ar: {
+    eyebrow: "للسيدات",
+    title: "الضيافة النسائية",
+    intro:
+      "للسيدات نُقدّم خدمة الضيافة والمشروبات حسب عدد الضيوف — أعدادٌ من خمسة وعشرين شخصاً إلى مئة وخمسين، وقائمةُ مشروباتٍ مفصّلة.",
+    hospitalityTitle: "الضيافة حسب العدد",
+    beveragesTitle: "قائمة المشروبات",
+    perPerson: "شخص",
+    perTray: "صينية",
+    enquireLabel: "للاستفسار",
+    phoneLabel: "هاتف صالة السيدات",
+    menuTitle: "ما يَتوفّر",
+  },
+  en: {
+    eyebrow: "For women",
+    title: "Women's hospitality",
+    intro:
+      "For the women's atelier we offer hospitality and beverage service by guest count — capacities from twenty-five up to one hundred and fifty, with a detailed drinks menu.",
+    hospitalityTitle: "Hospitality by capacity",
+    beveragesTitle: "Beverage menu",
+    perPerson: "guests",
+    perTray: "trays",
+    enquireLabel: "Enquire",
+    phoneLabel: "Women's atelier phone",
+    menuTitle: "What's offered",
+  },
 };

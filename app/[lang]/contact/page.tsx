@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { PHONES, EMAIL, LOCATION, INSTAGRAM } from "@/lib/contact";
+import { PageHero } from "@/components/PageHero";
 
 export default async function ContactPage({
   params,
@@ -16,46 +17,21 @@ export default async function ContactPage({
 
   return (
     <>
-      {/* === Hero — asymmetric === */}
-      <section className="relative pt-40 pb-20 md:pt-52 md:pb-24 surface-marble">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-y-12">
-          <div className="md:col-span-3">
-            <div className="flex items-center gap-3">
-              <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)]">
-                {isAr ? "التواصل" : "Contact"}
-              </span>
-            </div>
-          </div>
-          <h1
-            className={`${
-              isAr ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink)] md:col-span-9`}
-            style={{
-              fontSize: "clamp(3rem, 2.4rem + 4vw, 6rem)",
-              lineHeight: isAr ? "1.4" : "1",
-            }}
-          >
-            {isAr ? "البَاب." : "The door."}
-          </h1>
-          <div className="md:col-span-7 md:col-start-6">
-            <p
-              className={`${
-                isAr ? "type-arabic" : "type-serif"
-              } text-[color:var(--color-ink-warm)] text-lg md:text-xl italic leading-relaxed max-w-2xl`}
-            >
-              {isAr
-                ? "صالة الرجال هي مَرسَمُنا الكامل — الباقات، التَجهيز، الضيافة، التَوثيق. للسيدات، نَعرِض خدماتٍ مُختارة."
-                : "The men's hall is our full atelier — packages, production, hospitality, documentation. For women, we offer selected services."}
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        lang={lang}
+        eyebrow={isAr ? "التواصل" : "Contact"}
+        title={isAr ? "البَاب." : "The door."}
+        intro={
+          isAr
+            ? "صالة الرجال هي مَرسَمُنا الكامل — الباقات، التَجهيز، الضيافة، التَوثيق. للسيدات، نَعرِض خدماتٍ مُختارة."
+            : "The men's hall is our full atelier — packages, production, hospitality, documentation. For women, we offer selected services."
+        }
+      />
 
       {/* === PRIMARY: Men's hall — full-width block === */}
-      <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]">
+      <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-12 py-20 md:py-32 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-10 py-14 md:py-20 items-center">
             <div className="md:col-span-5">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
@@ -111,8 +87,8 @@ export default async function ContactPage({
       </section>
 
       {/* === SECONDARY: Women — compact strip === */}
-      <section className="relative surface-marble border-t border-[color:var(--color-ink-warm)]/30">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-14 md:py-20">
+      <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-10 md:py-14">
           <div className="flex flex-col md:flex-row md:items-baseline gap-y-4 md:gap-x-8">
             <div className="md:basis-1/3">
               <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-1">
@@ -146,7 +122,7 @@ export default async function ContactPage({
       </section>
 
       {/* === The letter CTA + address + email === */}
-      <section className="relative py-32 md:py-44 surface-pearl">
+      <section className="relative py-20 md:py-28 surface-pearl">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-7">
             <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
@@ -167,15 +143,10 @@ export default async function ContactPage({
             </p>
             <Link
               href={`/${lang}/consult`}
-              className="group inline-flex items-center gap-4 px-7 py-4 border border-[color:var(--color-ink-warm)]/40 hover:border-[color:var(--color-zari)] hover:text-[color:var(--color-zari-deep)] transition-all duration-500"
-              style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
+              className="btn-brand inline-flex items-center gap-4 border"
             >
-              <span className="type-roman text-[1rem]">
-                {isAr ? "اكتب الرسالة" : "Write the letter"}
-              </span>
-              <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">
-                →
-              </span>
+              <span>{isAr ? "اكتب الرسالة" : "Write the letter"}</span>
+              <span className="btn-brand-arrow flip-rtl">→</span>
             </Link>
           </div>
 

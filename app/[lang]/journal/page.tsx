@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { ContactCallout } from "@/components/ContactCallout";
+import { PageHero } from "@/components/PageHero";
 
 const ENTRIES = {
   ar: [
@@ -18,14 +19,14 @@ const ENTRIES = {
       title: "لِماذا لا DJ",
       excerpt:
         "العود والقانون. وإذا اقتَضى الحال، صَوتٌ بَدوي. كلُّ ما عدا ذلك، ضَجيج.",
-      photo: "/photos/majlis/night-majlis-outdoor.jpg",
+      photo: "/photos/craft/chocolate-server-portrait.jpg",
     },
     {
       kicker: "بروتوكول",
       title: "أَربعَةُ أيّامٍ من الزَّواج القَطَري، مَشروحَة",
       excerpt:
         "الخِطبة، الجاهة، العَقد، الزَّفاف. كلُّ ليلةٍ لها وَجهٌ، ولها لِباس، ولها صَمت.",
-      photo: "/photos/hall/velvet-blue-arch.jpg",
+      photo: "/photos/craft/gilded-table-flowers.jpg",
     },
   ],
   en: [
@@ -40,14 +41,14 @@ const ENTRIES = {
       kicker: "Music",
       title: "Why no DJ",
       excerpt: "Oud and qanun. If the occasion asks, a Bedouin voice. Everything else is noise.",
-      photo: "/photos/majlis/night-majlis-outdoor.jpg",
+      photo: "/photos/craft/chocolate-server-portrait.jpg",
     },
     {
       kicker: "Protocol",
       title: "The four days of a Qatari wedding, explained",
       excerpt:
         "Khitba, jaha, agd, zafaf. Each night has its face, its dress, and its silence.",
-      photo: "/photos/hall/velvet-blue-arch.jpg",
+      photo: "/photos/craft/gilded-table-flowers.jpg",
     },
   ],
 };
@@ -64,25 +65,22 @@ export default async function JournalPage({
 
   return (
     <>
-      <section className="relative pt-40 pb-20 surface-marble">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-          <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
-            {lang === "ar" ? "اليوميّات" : "Journal"}
-          </p>
-          <h1
-            className={`${
-              lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink)] max-w-3xl`}
-            style={{ fontSize: "var(--text-h1)" }}
-          >
-            {lang === "ar"
-              ? "ما نَكتُبه بين حَفلٍ وحَفل."
-              : "What we write between weddings."}
-          </h1>
-        </div>
-      </section>
+      <PageHero
+        lang={lang}
+        eyebrow={lang === "ar" ? "اليوميّات" : "Journal"}
+        title={
+          lang === "ar"
+            ? "ما نَكتُبه بين حَفلٍ وحَفل."
+            : "What we write between weddings."
+        }
+        intro={
+          lang === "ar"
+            ? "ثلاثُ مقالاتٍ مُختارة عن الحِرفة، الصَّمت، والبروتوكول القَطَري — ما نَكتُبه بين مُناسبةٍ ومُناسبة."
+            : "Three selected essays on craft, silence, and Qatari protocol — what we write between one celebration and the next."
+        }
+      />
 
-      <section className="relative surface-pearl py-20 md:py-32">
+      <section className="relative surface-pearl py-14 md:py-20 border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {entries.map((e, i) => (

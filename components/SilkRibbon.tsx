@@ -1,5 +1,5 @@
 /**
- * The ALBISHT signature decorative motif: a flowing black-silk + gold-zari ribbon.
+ * The ALBISHT signature decorative motif: a flowing gold-zari ribbon.
  *
  * Used throughout the official brand identity book on:
  *  - Back of business cards
@@ -7,9 +7,13 @@
  *  - Folder covers
  *  - Coffee cups / mugs / paper bags
  *
- * Two black silk "bands" curve diagonally; between them a denser bundle of gold
- * zari threads sweeps in parallel. The whole motif suggests the bisht in motion —
- * the cloak as it parts, the embroidery catching the light.
+ * Rendered as a single gold band that sweeps across the canvas. On dark
+ * surfaces the band reads as a pure gold flow — no background "box" of
+ * silk-black behind it (those black silk layers had been baked in to the
+ * earlier brand-print mockups, but on a digital dark surface they showed
+ * up as faint grey shapes that made the ribbon look "pasted on"). The
+ * band is rendered with transparent surroundings so it flows as part of
+ * the surface it sits on.
  *
  * Rendered as a pure SVG so it stays crisp at any size and remains a tiny payload.
  */
@@ -24,9 +28,9 @@ export function SilkRibbon({
   /** "subtle" reduces opacity for use behind text; "normal" full presence. */
   intensity?: "subtle" | "normal";
 }) {
-  const opacity = intensity === "subtle" ? 0.55 : 1;
+  const opacity = intensity === "subtle" ? 0.7 : 1;
 
-  // Two layouts share the same fill recipe; only the path geometry differs.
+  // Diagonal variant — gold zari band on transparent ground
   if (variant === "diagonal") {
     return (
       <svg
@@ -37,19 +41,7 @@ export function SilkRibbon({
         style={{ opacity }}
       >
         <Defs />
-        {/* Upper black silk band */}
-        <path
-          d="M -40 320 C 120 200, 280 160, 460 90 C 520 70, 580 50, 640 30 L 640 -40 L -40 -40 Z"
-          fill="url(#silk-black-grad)"
-        />
-        <path
-          d="M -40 320 C 120 200, 280 160, 460 90 C 520 70, 580 50, 640 30"
-          stroke="url(#silk-highlight)"
-          strokeWidth="2"
-          fill="none"
-          opacity="0.55"
-        />
-        {/* Gold zari band */}
+        {/* Gold zari band — single flowing element, transparent surroundings */}
         <path
           d="M -40 380 C 140 250, 320 210, 500 130 C 560 105, 600 95, 640 90 L 640 60 C 600 65, 560 80, 500 100 C 320 175, 140 215, -40 340 Z"
           fill="url(#zari-band-grad)"
@@ -58,18 +50,20 @@ export function SilkRibbon({
         <g opacity="0.5" mask="url(#zari-mask-diag)">
           <DiagonalHatch />
         </g>
-        {/* Lower black silk band (catches the gold) */}
+        {/* Hairline highlight along the top edge of the band — catches light */}
         <path
-          d="M -40 440 C 160 320, 340 270, 520 180 C 580 155, 620 145, 640 140 L 640 440 Z"
-          fill="url(#silk-black-grad)"
-          opacity="0.85"
+          d="M -40 380 C 140 250, 320 210, 500 130 C 560 105, 600 95, 640 90"
+          stroke="url(#silk-highlight)"
+          strokeWidth="1"
+          fill="none"
+          opacity="0.6"
         />
         <ZariMaskDef variant="diagonal" />
       </svg>
     );
   }
 
-  // horizontal (default) — for footer / divider bands
+  // Horizontal (default) — gold zari band, transparent surroundings
   return (
     <svg
       viewBox="0 0 1200 200"
@@ -79,31 +73,22 @@ export function SilkRibbon({
       style={{ opacity }}
     >
       <Defs />
-      {/* Upper black silk wave */}
-      <path
-        d="M -20 70 C 200 30, 400 110, 600 70 C 800 30, 1000 110, 1220 70 L 1220 -20 L -20 -20 Z"
-        fill="url(#silk-black-grad)"
-      />
-      <path
-        d="M -20 70 C 200 30, 400 110, 600 70 C 800 30, 1000 110, 1220 70"
-        stroke="url(#silk-highlight)"
-        strokeWidth="1.6"
-        fill="none"
-        opacity="0.55"
-      />
-      {/* Gold zari band — the centre of the swoosh */}
+      {/* Gold zari band — the flowing swoosh, on transparent ground */}
       <path
         d="M -20 120 C 200 80, 400 160, 600 120 C 800 80, 1000 160, 1220 120 L 1220 90 C 1000 130, 800 50, 600 90 C 400 130, 200 50, -20 90 Z"
         fill="url(#zari-band-grad)"
       />
+      {/* Zari weave detail — diagonal strokes within the band */}
       <g opacity="0.5" mask="url(#zari-mask-horiz)">
         <DiagonalHatch />
       </g>
-      {/* Lower black silk wave (anchors the bottom edge) */}
+      {/* Hairline highlight along the band's top — micro light catch */}
       <path
-        d="M -20 180 C 200 150, 400 220, 600 180 C 800 140, 1000 220, 1220 180 L 1220 220 L -20 220 Z"
-        fill="url(#silk-black-grad)"
-        opacity="0.9"
+        d="M -20 90 C 200 50, 400 130, 600 90 C 800 50, 1000 130, 1220 90"
+        stroke="url(#silk-highlight)"
+        strokeWidth="1"
+        fill="none"
+        opacity="0.55"
       />
       <ZariMaskDef variant="horizontal" />
     </svg>

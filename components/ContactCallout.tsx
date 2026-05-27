@@ -1,22 +1,29 @@
 import Link from "next/link";
+import Image from "next/image";
 import { CALLOUT, PHONES } from "@/lib/contact";
 import type { Lang } from "@/lib/i18n";
+import { SilkRibbon } from "./SilkRibbon";
 
 /**
- * The ContactCallout block — placed at the end of long pages where the
- * visitor has just read enough to want to act.
+ * ContactCallout — the ceremonial closing block.
  *
- * Visual hierarchy reflects the brand reality:
- *   PRIMARY (equal weight, side-by-side):
- *     1. Write the full letter   → /consult
- *     2. Call the men's hall     → tel: link  (where the full atelier service lives)
- *   SECONDARY (smaller, below the primary row, with a "selected services" note):
- *     3. Call for women — selected services
+ * COMPOSITION (back-to-front):
+ *   • Ink-bisht surface
+ *   • Calligraphic ALBISHT mark watermark (4% opacity) behind the title
+ *   • Warm radial glow centered on the title
+ *   • Gold gradient hairline + silk-ribbon flourish at the top edge
  *
- * Variants:
- *   "dark"   — sits on the bisht-black surface (use on light-bg pages)
- *   "light"  — sits on the pearl surface (use on dark-bg pages)
- *   "inline" — minimal hairline strip inside a longer flow (no surface change)
+ * TWO DOORS (equal weight):
+ *   1. The letter → /consult — gold-bordered CTA with a sweep-fill hover
+ *   2. By phone — both numbers stacked, each with a gold underline that
+ *      draws on hover and a small gold dot that fades in
+ *
+ * ANIMATIONS:
+ *   • Each block uses the global `.cc-rise` CSS animation (defined in
+ *     globals.css). Per-element `animation-delay` inline styles stagger
+ *     the entrance.
+ *   • All hover micro-animations are pure CSS (defined in globals.css under
+ *     .cc-letter-cta / .cc-phone-line / .cc-phone-dot / .cc-door)
  */
 export function ContactCallout({
   lang,
@@ -31,227 +38,393 @@ export function ContactCallout({
   const isInline = variant === "inline";
 
   const text = isDark ? "var(--color-pearl)" : "var(--color-ink)";
-  const muted = isDark ? "var(--color-mist)" : "var(--color-ink-warm)";
+  // Brighter muted on dark surfaces — pure --color-mist (oklch 0.74) reads
+  // too quietly against the ink-bisht ground when the copy is small or
+  // italic. A warm cream at 82% opacity holds presence without shouting.
+  const muted = isDark
+    ? "rgba(245, 240, 230, 0.82)"
+    : "var(--color-ink-warm)";
   const surface =
-    variant === "dark" ? "surface-bisht" : variant === "light" ? "surface-pearl" : "";
+    variant === "dark"
+      ? "surface-bisht"
+      : variant === "light"
+      ? "surface-pearl"
+      : "";
 
   return (
     <section
-      className={`relative ${isInline ? "py-20 md:py-28" : "py-32 md:py-44"} ${surface}`}
+      className={`contact-callout relative overflow-hidden ${
+        isInline ? "py-14 md:py-20" : "pt-20 pb-20 md:pt-28 md:pb-24"
+      } ${surface}`}
     >
-      <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
-        {/* Asymmetric header — eyebrow / headline */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-10 md:gap-y-12 mb-16 md:mb-20">
-          <div className="md:col-span-3">
-            <div className="flex items-center gap-3">
-              <span
-                className="block w-10 h-px"
-                style={{ background: "var(--color-zari)" }}
-              />
-              <span
-                className="type-roman"
-                style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
-              >
-                {c.eyebrow}
-              </span>
-            </div>
-          </div>
-          <h2
-            className={`${isAr ? "type-arabic-display" : "type-display"} md:col-span-9`}
+      {/* ---------- DECORATIVE LAYERS ---------- */}
+      {isDark && (
+        <>
+          {/* Gold gradient hairline at the very top edge */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px z-10"
             style={{
-              fontSize: "clamp(2.4rem, 1.8rem + 2.8vw, 4.5rem)",
-              lineHeight: isAr ? "1.4" : "1",
-              color: text,
+              background:
+                "linear-gradient(90deg, transparent 0%, #D28E29 28%, #F6B62B 50%, #D28E29 72%, transparent 100%)",
+              opacity: 0.9,
             }}
+          />
+
+          {/* Silk-ribbon flourish tucked under the hairline */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-20 md:h-24 overflow-hidden pointer-events-none"
+            style={{ opacity: 0.35 }}
           >
-            {c.title}
-          </h2>
-          <div className="md:col-span-7 md:col-start-6">
-            <p
-              className={`${isAr ? "type-arabic" : "type-serif"} italic`}
-              style={{
-                fontSize: "1.1rem",
-                color: muted,
-                lineHeight: 1.7,
-                maxWidth: "44rem",
-              }}
-            >
-              {c.intro}
-            </p>
+            <SilkRibbon
+              variant="horizontal"
+              intensity="subtle"
+              className="absolute -top-6 inset-x-0 w-full h-32 md:h-40"
+            />
+          </div>
+
+          {/* Calligraphic mark watermark behind the title — anchors the
+              block in the brand identity without adding noise. */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-36 md:top-44 flex justify-center pointer-events-none"
+            style={{ opacity: 0.045 }}
+          >
+            <Image
+              src="/logo-light.png"
+              alt=""
+              width={1200}
+              height={660}
+              priority={false}
+              className="max-w-[760px] w-[80vw] h-auto"
+            />
+          </div>
+
+          {/* Warm radial glow for depth */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 45% at 50% 28%, rgba(226,159,41,0.10) 0%, transparent 70%)",
+            }}
+          />
+        </>
+      )}
+
+      {/* ---------- CONTENT ---------- */}
+      <div className="relative z-20 mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
+        {/* Eyebrow with hairlines */}
+        <div
+          className="cc-rise flex justify-center mb-7 md:mb-10"
+          style={{ animationDelay: "0ms" }}
+        >
+          <div className="flex items-center gap-4">
+            <span
+              aria-hidden
+              className="block h-px bg-[color:var(--color-zari)]"
+              style={{ width: "clamp(28px, 4vw, 64px)" }}
+            />
+            <span className="type-roman text-[0.85rem] text-[color:var(--color-zari)]">
+              {c.eyebrow}
+            </span>
+            <span
+              aria-hidden
+              className="block h-px bg-[color:var(--color-zari)]"
+              style={{ width: "clamp(28px, 4vw, 64px)" }}
+            />
           </div>
         </div>
 
-        {/* PRIMARY row — two equal CTAs: letter + men's hall phone */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 border-y"
-          style={{ borderColor: muted }}
+        {/* Centred Thuluth title */}
+        <h2
+          className={`cc-rise ${
+            isAr ? "type-arabic-display" : "type-display"
+          } text-center mx-auto`}
+          style={{
+            fontSize: isAr
+              ? "clamp(2.6rem, 1.9rem + 3.2vw, 5.25rem)"
+              : "clamp(2.5rem, 1.9rem + 3vw, 5rem)",
+            lineHeight: isAr ? "1.4" : "1.02",
+            letterSpacing: isAr ? "0" : "-0.015em",
+            color: text,
+            maxWidth: "20ch",
+            animationDelay: "120ms",
+          }}
         >
-          {/* 1. Letter CTA */}
-          <Link
-            href={`/${lang}/consult`}
-            className="group relative flex flex-col gap-3 py-12 md:py-16 px-6 md:px-10 transition-colors md:border-e"
-            style={{ borderColor: muted, color: text }}
+          {c.title}
+        </h2>
+
+        {/* Intro */}
+        <p
+          className={`cc-rise ${
+            isAr ? "type-arabic" : "type-serif"
+          } mx-auto text-center italic leading-relaxed mt-6 md:mt-8`}
+          style={{
+            color: muted,
+            maxWidth: "46ch",
+            fontSize: "clamp(1.05rem, 0.95rem + 0.4vw, 1.2rem)",
+            lineHeight: isAr ? "1.85" : "1.55",
+            animationDelay: "240ms",
+          }}
+        >
+          {c.intro}
+        </p>
+
+        {/* Mid ornament: dot · gold rule · dot */}
+        <div
+          className="cc-rise flex justify-center mt-10 md:mt-14 mb-8 md:mb-12"
+          style={{ animationDelay: "380ms" }}
+        >
+          <Ornament />
+        </div>
+
+        {/* ---------- TWO DOORS ---------- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 relative">
+          {/* Vertical gold hairline between the doors (desktop) */}
+          <div
+            aria-hidden
+            className="hidden md:block absolute top-2 bottom-2 start-1/2 -translate-x-1/2 w-px pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(180deg, transparent 0%, var(--color-zari) 22%, var(--color-zari) 78%, transparent 100%)",
+              opacity: 0.5,
+            }}
+          />
+          {/* Stitch centred on the divider */}
+          <div
+            aria-hidden
+            className="hidden md:block absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           >
             <span
-              className="type-roman"
-              style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
-            >
-              01
-            </span>
-            <span
-              className={isAr ? "type-arabic-display" : "type-display"}
-              style={{
-                fontSize: "clamp(1.8rem, 1.4rem + 1.6vw, 2.4rem)",
-                color: text,
-                lineHeight: isAr ? "1.45" : "1.05",
-              }}
-            >
-              {c.letter}
-            </span>
-            <span
-              className={`mt-3 inline-flex items-center gap-2 ${
-                isAr ? "type-arabic" : "type-serif"
-              }`}
-              style={{ color: "var(--color-zari)", fontSize: "0.98rem" }}
-            >
-              <span className="block w-8 h-px bg-current group-hover:w-12 transition-all duration-500" />
-              <span className="flip-rtl">→</span>
-            </span>
-          </Link>
+              className="block w-1 h-1 rounded-full"
+              style={{ background: "var(--color-zari)" }}
+            />
+          </div>
 
-          {/* 2. Men's hall — primary phone */}
-          <PrimaryPhoneCta
-            number={PHONES.mens}
-            lang={lang}
+          {/* DOOR 1 — THE LETTER */}
+          <Door
+            kind="letter"
+            href={`/${lang}/consult`}
+            title={c.letter}
+            description={
+              isAr
+                ? "للاستفسارات المُفَصَّلة — التاريخ، عَدَد الضيوف، الباقة. نَرُد خلال ثلاثة أيام."
+                : "For detailed enquiries — the date, the number of guests, the chosen package. We reply within three days."
+            }
+            actionLabel={
+              isAr ? "اكتب الرسالة الكاملة" : "Write the full letter"
+            }
             text={text}
             muted={muted}
             isAr={isAr}
-            callPrefix={c.callPrefix}
+            animationDelay="500ms"
+          />
+
+          {/* DOOR 2 — BY PHONE */}
+          <Door
+            kind="phone"
+            title={isAr ? "أو اِتصِل" : "Or call"}
+            description={
+              isAr
+                ? "للاتصال المباشر بصالة الرجال — كامل خدمات الأَتيليه. للسيدات خَطٌّ مُختار للضيافة والمشروبات."
+                : "Direct line to the men's atelier — the full ALBISHT service. For the women's atelier, a parallel line for hospitality and beverage."
+            }
+            text={text}
+            muted={muted}
+            isAr={isAr}
+            animationDelay="600ms"
+            phones={[
+              {
+                key: "mens",
+                role: isAr ? "صالة الرجال" : "Men's atelier",
+                note: PHONES.mens.note?.[lang] ?? "",
+                display: PHONES.mens.display,
+                tel: PHONES.mens.tel,
+                primary: true,
+              },
+              {
+                key: "womens",
+                role: isAr ? "صالة السيدات" : "Women's atelier",
+                note: PHONES.womens.note?.[lang] ?? "",
+                display: PHONES.womens.display,
+                tel: PHONES.womens.tel,
+                primary: false,
+              },
+            ]}
           />
         </div>
 
-        {/* SECONDARY row — women's selected services, smaller, with note */}
-        <div className="pt-8 md:pt-10">
-          <SecondaryPhoneRow
-            number={PHONES.womens}
-            lang={lang}
-            muted={muted}
-            text={text}
-            note={c.secondaryNote}
-            isAr={isAr}
-          />
+        {/* Bottom ornament */}
+        <div
+          className="cc-rise flex justify-center mt-12 md:mt-16"
+          style={{ animationDelay: "780ms" }}
+        >
+          <Ornament />
         </div>
       </div>
     </section>
   );
 }
 
-function PrimaryPhoneCta({
-  number,
-  lang,
-  text,
-  muted,
-  isAr,
-  callPrefix,
-}: {
-  number: typeof PHONES.mens;
-  lang: Lang;
-  text: string;
-  muted: string;
-  isAr: boolean;
-  callPrefix: string;
-}) {
+/* -------------------------------------------------------------------------- */
+
+function Ornament() {
   return (
-    <a
-      href={`tel:${number.tel}`}
-      className="group relative flex flex-col gap-3 py-12 md:py-16 px-6 md:px-10 transition-colors border-t md:border-t-0"
-      style={{ borderColor: muted, color: text }}
+    <div
+      aria-hidden
+      className="flex items-center gap-3"
+      style={{ color: "var(--color-zari)", opacity: 0.85 }}
     >
       <span
-        className="type-roman"
-        style={{ color: "var(--color-zari)", fontSize: "0.95rem" }}
-      >
-        02
-      </span>
+        className="block w-1.5 h-1.5 rounded-full"
+        style={{ background: "currentColor" }}
+      />
       <span
-        className={isAr ? "type-arabic-display" : "type-display"}
+        className="block h-px"
         style={{
-          fontSize: "clamp(1.8rem, 1.4rem + 1.6vw, 2.4rem)",
-          color: text,
-          lineHeight: isAr ? "1.45" : "1.05",
+          width: "clamp(56px, 9vw, 120px)",
+          background:
+            "linear-gradient(90deg, transparent 0%, currentColor 30%, currentColor 70%, transparent 100%)",
         }}
-      >
-        {`${callPrefix} ${number.label[lang]}`}
-      </span>
-      {number.note?.[lang] && (
-        <span
-          className={isAr ? "type-arabic" : "type-serif"}
-          style={{ color: muted, fontSize: "0.95rem", fontStyle: "italic" }}
-        >
-          {number.note[lang]}
-        </span>
-      )}
+      />
       <span
-        className="force-latin mt-1"
-        style={{
-          color: "var(--color-zari)",
-          fontSize: "1.1rem",
-          letterSpacing: "0.04em",
-          fontVariantNumeric: "lining-nums tabular-nums",
-        }}
-      >
-        {number.display}
-      </span>
-    </a>
+        className="block w-1.5 h-1.5 rounded-full"
+        style={{ background: "currentColor" }}
+      />
+    </div>
   );
 }
 
-function SecondaryPhoneRow({
-  number,
-  lang,
-  text,
-  muted,
-  note,
-  isAr,
-}: {
-  number: typeof PHONES.womens;
-  lang: Lang;
+/* -------------------------------------------------------------------------- */
+
+type DoorPhone = {
+  key: string;
+  role: string;
+  note: string;
+  display: string;
+  tel: string;
+  primary: boolean;
+};
+
+function Door(props: {
+  kind: "letter" | "phone";
+  title: string;
+  description: string;
   text: string;
   muted: string;
-  note: string;
   isAr: boolean;
+  animationDelay: string;
+  /* letter only */
+  href?: string;
+  actionLabel?: string;
+  /* phone only */
+  phones?: DoorPhone[];
 }) {
+  const { kind, title, description, text, muted, isAr, animationDelay } = props;
+
   return (
-    <a
-      href={`tel:${number.tel}`}
-      className="group flex flex-col md:flex-row md:items-baseline gap-y-3 md:gap-x-6 py-6 md:py-8 transition-colors"
-      style={{ color: text }}
+    <div
+      className="cc-door cc-rise text-center px-2 md:px-10 py-4 md:py-6"
+      style={{ animationDelay }}
     >
-      <span
-        className={isAr ? "type-arabic" : "type-serif"}
-        style={{ color: muted, fontSize: "0.95rem", fontStyle: "italic" }}
-      >
-        {note}
-      </span>
-      <span
-        className="force-latin group-hover:text-[color:var(--color-zari)] transition-colors"
+      <h3
+        className={isAr ? "type-arabic-display" : "type-display"}
         style={{
+          fontSize: isAr
+            ? "clamp(2rem, 1.5rem + 2vw, 3.5rem)"
+            : "clamp(2rem, 1.5rem + 2vw, 3.5rem)",
           color: text,
-          fontSize: "1.15rem",
-          letterSpacing: "0.04em",
-          fontVariantNumeric: "lining-nums tabular-nums",
+          lineHeight: isAr ? "1.45" : "1.05",
+          letterSpacing: isAr ? "0" : "-0.01em",
+          marginBottom: "0.6em",
         }}
       >
-        {number.display}
-      </span>
-      {number.note?.[lang] && (
-        <span
-          className={isAr ? "type-arabic" : "type-serif"}
-          style={{ color: muted, fontSize: "0.85rem", fontStyle: "italic" }}
+        {title}
+      </h3>
+      <p
+        className={`${isAr ? "type-arabic" : "type-serif"} italic mx-auto`}
+        style={{
+          color: muted,
+          fontSize: "clamp(1rem, 0.92rem + 0.3vw, 1.1rem)",
+          lineHeight: isAr ? "1.85" : "1.6",
+          maxWidth: "32ch",
+        }}
+      >
+        {description}
+      </p>
+
+      {kind === "letter" && props.href && props.actionLabel && (
+        <Link
+          href={props.href}
+          className="btn-brand inline-flex items-center gap-4 mt-8 md:mt-10 border"
         >
-          ({number.note[lang]})
-        </span>
+          <span>{props.actionLabel}</span>
+          <span className="btn-brand-arrow flip-rtl">→</span>
+        </Link>
       )}
-    </a>
+
+      {kind === "phone" && props.phones && (
+        <ul className="mt-8 md:mt-10 flex flex-col items-center gap-y-6 md:gap-y-7">
+          {props.phones.map((p, i) => (
+            <li
+              key={p.key}
+              className="flex flex-col items-center gap-1.5"
+              style={{
+                paddingTop: i > 0 ? "1.2rem" : 0,
+                borderTop:
+                  i > 0
+                    ? "1px solid rgba(210, 142, 41, 0.22)"
+                    : "none",
+                width: "min(100%, 28rem)",
+              }}
+            >
+              <span
+                className={`${isAr ? "type-arabic" : "type-roman"}`}
+                style={{
+                  fontSize: isAr ? "1rem" : "0.85rem",
+                  letterSpacing: isAr ? "0" : "0.22em",
+                  color: muted,
+                  textTransform: isAr ? "none" : "uppercase",
+                }}
+              >
+                {p.role}
+              </span>
+              <a
+                href={`tel:${p.tel}`}
+                className="cc-phone-line"
+                style={{
+                  fontFamily: "var(--font-roman)",
+                  fontSize: p.primary
+                    ? "clamp(1.6rem, 1.1rem + 1.6vw, 2.35rem)"
+                    : "clamp(1.3rem, 1rem + 0.9vw, 1.7rem)",
+                  color: "var(--color-zari)",
+                  letterSpacing: "0.05em",
+                  fontVariantNumeric: "lining-nums tabular-nums",
+                  fontWeight: p.primary ? 500 : 400,
+                }}
+              >
+                <span>{p.display}</span>
+                <span aria-hidden className="cc-phone-dot" />
+              </a>
+              {p.note && (
+                <span
+                  className={`${isAr ? "type-arabic" : "type-serif"} italic`}
+                  style={{
+                    color: muted,
+                    fontSize: isAr ? "1.05rem" : "0.95rem",
+                    marginTop: "0.3rem",
+                    lineHeight: isAr ? "1.7" : "1.5",
+                  }}
+                >
+                  {p.note}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

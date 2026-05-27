@@ -39,20 +39,38 @@ export function HomeHero({ lang }: { lang: Lang }) {
         />
       </div>
 
-      {/* Warm pearl overlay — vertical: light top, dark bottom for headline scrim */}
+      {/* Vertical scrim — light at the top, deeply dark across the entire
+          bottom 30% of the hero. The bottom is reliably opaque-black-ish
+          regardless of what the photograph shows underneath, so the
+          gradient never visibly "stops" on a light patch of the photo
+          (olive tree, marquetry doors, floor highlights all get fully
+          suppressed). The fade is continuous from 25% to 100%, no flat
+          plateaus where a seam can appear. */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(180deg, oklch(0.951 0.012 82 / 0.04) 0%, oklch(0.951 0.012 82 / 0.0) 28%, oklch(0.135 0.005 60 / 0.22) 58%, oklch(0.135 0.005 60 / 0.72) 100%)",
+            "linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.72) 72%, rgba(0,0,0,0.88) 85%, rgba(0,0,0,0.96) 100%)",
         }}
       />
-      {/* Soft side vignette + subtle scrim under right (RTL) / left (LTR) where headline lives */}
+      {/* Cinematic side vignette — wraps the corners gently */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 110% 80% at center, transparent 50%, oklch(0.135 0.005 60 / 0.3) 100%)",
+            "radial-gradient(ellipse 125% 95% at center, transparent 58%, rgba(0,0,0,0.40) 100%)",
+        }}
+      />
+      {/* Content-zone soft halo — adds a gentle extra darken under the
+          headline area without creating a visible "spotlight" edge.
+          Widened to 130% × 75% with a fade out at 95% so the falloff is
+          imperceptibly gradual; no hard seam between this patch and the
+          surrounding linear scrim. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 130% 75% at 50% 95%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0) 95%)",
         }}
       />
 
@@ -61,7 +79,10 @@ export function HomeHero({ lang }: { lang: Lang }) {
         <div className="mx-auto max-w-[var(--container-wide)] w-full px-6 md:px-12">
           <p
             className="type-roman text-[0.95rem] md:text-[1rem] text-[color:var(--color-zari-bright)] mb-6 reveal-up"
-            style={{ animationDelay: "0.2s" }}
+            style={{
+              animationDelay: "0.2s",
+              textShadow: "0 1px 8px rgba(0,0,0,0.55), 0 0 24px rgba(0,0,0,0.35)",
+            }}
           >
             {h.eyebrow}
           </p>
@@ -74,6 +95,14 @@ export function HomeHero({ lang }: { lang: Lang }) {
               animationDelay: "0.5s",
               maxWidth: "20ch",
               lineHeight: lang === "ar" ? "1.3" : "0.95",
+              // Layered text-shadow: a fine tight shadow + a softer wide
+              // shadow. The first sharpens each letter against the photo;
+              // the second adds a halo of darkness so even light areas
+              // behind the text don't bleed through. The combination is
+              // imperceptible at full luminance but rescues legibility
+              // wherever the photo behind the text is light.
+              textShadow:
+                "0 1px 2px rgba(0,0,0,0.55), 0 2px 14px rgba(0,0,0,0.65), 0 0 40px rgba(0,0,0,0.45)",
             }}
           >
             <FormatHeadline text={h.headline} />
@@ -86,18 +115,19 @@ export function HomeHero({ lang }: { lang: Lang }) {
               className={`${
                 lang === "ar" ? "type-arabic" : "type-serif"
               } text-[color:var(--color-pearl)]/90 italic text-xl md:text-2xl max-w-md`}
+              style={{
+                textShadow:
+                  "0 1px 3px rgba(0,0,0,0.55), 0 0 18px rgba(0,0,0,0.45)",
+              }}
             >
               {h.subline}
             </p>
             <Link
               href={`/${lang}/consult`}
-              className="group inline-flex items-center gap-4 px-7 py-4 border border-[color:var(--color-zari)]/50 hover:border-[color:var(--color-zari-bright)] hover:bg-[color:var(--color-zari)]/8 transition-all duration-500 type-roman text-[1rem] text-[color:var(--color-zari)] hover:text-[color:var(--color-zari-bright)]"
-              style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
+              className="btn-brand inline-flex items-center gap-4 border"
             >
               <span>{h.cta}</span>
-              <span className="flip-rtl group-hover:translate-x-1 transition-transform duration-500">
-                →
-              </span>
+              <span className="btn-brand-arrow flip-rtl">→</span>
             </Link>
           </div>
         </div>

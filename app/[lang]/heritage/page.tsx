@@ -3,6 +3,7 @@ import Image from "next/image";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { PullQuote } from "@/components/PullQuote";
 import { ContactCallout } from "@/components/ContactCallout";
+import { PageHero } from "@/components/PageHero";
 
 export default async function HeritagePage({
   params,
@@ -15,32 +16,18 @@ export default async function HeritagePage({
 
   return (
     <>
-      <section className="relative pt-40 pb-20 surface-marble">
-        <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
-          <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
-            {lang === "ar" ? "التراث" : "Heritage"}
-          </p>
-          <h1
-            className={`${
-              lang === "ar" ? "type-arabic-display" : "type-display"
-            } text-[color:var(--color-ink)] mb-12`}
-            style={{ fontSize: "var(--text-h1)" }}
-          >
-            {lang === "ar" ? "عن البِشت." : "On the bisht."}
-          </h1>
-          <p
-            className={`${
-              lang === "ar" ? "type-arabic" : "type-serif"
-            } text-[color:var(--color-ink-warm)] text-xl leading-relaxed italic`}
-          >
-            {lang === "ar"
-              ? "ثوبٌ من وَبَر الجَمل، يُلبَس مرّةً واحدةً في العمر. هذه قصته، وقصةُ ما نَفعَله نحن من أجله."
-              : "A cloak of camel hair, worn only once in a lifetime. This is its story — and the story of what we do for it."}
-          </p>
-        </div>
-      </section>
+      <PageHero
+        lang={lang}
+        eyebrow={lang === "ar" ? "التراث" : "Heritage"}
+        title={lang === "ar" ? "عن البِشت." : "On the bisht."}
+        intro={
+          lang === "ar"
+            ? "ثوبٌ من وَبَر الجَمل، يُلبَس مرّةً واحدةً في العمر. هذه قصته، وقصةُ ما نَفعَله نحن من أجله."
+            : "A cloak of camel hair, worn only once in a lifetime. This is its story — and the story of what we do for it."
+        }
+      />
 
-      <section className="relative h-[60svh] min-h-[400px] my-12 overflow-hidden">
+      <section className="relative h-[60svh] min-h-[400px] my-8 md:my-12 overflow-hidden">
         <Image
           src="/photos/majlis/calligraphy-wood-wall.jpg"
           alt=""
@@ -50,7 +37,7 @@ export default async function HeritagePage({
         />
       </section>
 
-      <article className="relative surface-pearl py-20 md:py-32 prose-ceremonial">
+      <article className="relative surface-pearl py-14 md:py-20 prose-ceremonial">
         <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
           <Chapter
             n="01"
@@ -92,7 +79,7 @@ export default async function HeritagePage({
         />
       </section>
 
-      <article className="relative surface-pearl py-20 md:py-32 prose-ceremonial">
+      <article className="relative surface-pearl py-14 md:py-20 prose-ceremonial">
         <div className="mx-auto max-w-[var(--container-text)] px-6 md:px-12">
           <Chapter
             n="03"
@@ -124,7 +111,7 @@ function Chapter({ n, title, body }: { n: string; title: string; body: string })
   const first = body.charAt(0);
   const rest = body.slice(1);
   return (
-    <section className="mb-24 grid grid-cols-1 md:grid-cols-12 gap-6">
+    <section className="mb-16 md:mb-20 grid grid-cols-1 md:grid-cols-12 gap-6">
       <div className="md:col-span-2">
         <p className="type-roman text-[1.05rem] text-[color:var(--color-zari-deep)] sticky top-32">
           {n}

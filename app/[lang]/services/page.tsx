@@ -2,12 +2,13 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
 import { ContactCallout } from "@/components/ContactCallout";
+import { PageHero } from "@/components/PageHero";
 
 const PHASES = {
   ar: [
     { ar: "التشاور", en: "Consultation", body: "الجلسة الأولى. في البيت أو في فندق الديوان.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
-    { ar: "التصميم", en: "Composition", body: "اللون، الخَطّاط، البِشت، الأَزهار.", photo: "/photos/hall/velvet-blue-arch.jpg" },
-    { ar: "التراث", en: "Heritage craft", body: "خَتم العائلة، الدعوة المَخطوطة، الفضة المَنقوشة.", photo: "/photos/majlis/calligraphy-wood-wall.jpg" },
+    { ar: "التصميم", en: "Composition", body: "اللون، الخَطّاط، البِشت، الأَزهار.", photo: "/photos/hall/outdoor-marquetry-roses.jpg" },
+    { ar: "التراث", en: "Heritage craft", body: "خَتم العائلة، الدعوة المَخطوطة، الفضة المَنقوشة.", photo: "/photos/hall/mashrabiya-tall-arch.jpg" },
     { ar: "الكَرَم", en: "Hospitality", body: "القهوة، التَّمر، بَخور العود، عَطر الضيف.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
     { ar: "القاعة", en: "The men's hall", body: "المَكان، الكَوشة، المَشربيّات، الكروم.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
     { ar: "الموسيقى", en: "Music", body: "العود والقانون. لا غَير.", photo: "/photos/craft/red-carpet-dark.jpg" },
@@ -16,8 +17,8 @@ const PHASES = {
   ],
   en: [
     { ar: "التشاور", en: "Consultation", body: "The first conversation. At home, or at the palace hotel.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
-    { ar: "التصميم", en: "Composition", body: "Colour, the calligrapher, the bisht, the flowers.", photo: "/photos/hall/velvet-blue-arch.jpg" },
-    { ar: "التراث", en: "Heritage craft", body: "Family seal, hand-written invitation, engraved silver.", photo: "/photos/majlis/calligraphy-wood-wall.jpg" },
+    { ar: "التصميم", en: "Composition", body: "Colour, the calligrapher, the bisht, the flowers.", photo: "/photos/hall/outdoor-marquetry-roses.jpg" },
+    { ar: "التراث", en: "Heritage craft", body: "Family seal, hand-written invitation, engraved silver.", photo: "/photos/hall/mashrabiya-tall-arch.jpg" },
     { ar: "الكَرَم", en: "Hospitality", body: "Coffee, dates, oud-bakhoor, perfume for the guest.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
     { ar: "القاعة", en: "The men's hall", body: "The venue, the kosha, mashrabiya screens, the chandeliers.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
     { ar: "الموسيقى", en: "Music", body: "Oud and qanun. Nothing else.", photo: "/photos/craft/red-carpet-dark.jpg" },
@@ -39,51 +40,20 @@ export default async function ServicesPage({
 
   return (
     <>
-      {/* === Hero with photo === */}
-      <section className="relative pt-40 pb-20 md:pt-52 md:pb-28 surface-marble overflow-hidden">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-y-14 md:gap-x-16 items-center">
-          <div className="md:col-span-6">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="block w-10 h-px bg-[color:var(--color-zari)]" />
-              <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)]">
-                {isAr ? "الخدمات" : "Services"}
-              </span>
-            </div>
-            <h1
-              className={`${isAr ? "type-arabic-display" : "type-display"} text-[color:var(--color-ink)] mb-10`}
-              style={{
-                fontSize: "clamp(3rem, 2.4rem + 4vw, 6rem)",
-                lineHeight: isAr ? "1.4" : "1",
-              }}
-            >
-              {isAr ? "البروتوكول." : "The protocol."}
-            </h1>
-            <p
-              className={`${isAr ? "type-arabic" : "type-serif"} text-[color:var(--color-ink-warm)] text-xl leading-relaxed italic max-w-lg`}
-            >
-              {isAr
-                ? "ثَمانية فُصول، يُسَلَّم كلٌّ منها بيَدِنا، ولا يَخرُج من تَحت أَيدينا حتى يَكتَمِل."
-                : "Eight chapters, each delivered by our hand. Nothing leaves us before it is complete."}
-            </p>
-          </div>
-          <div className="md:col-span-6">
-            <div className="relative aspect-[4/5] overflow-hidden">
-              <Image
-                src="/photos/hall/hero-pearl-court.jpg"
-                alt=""
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        lang={lang}
+        eyebrow={isAr ? "الخدمات" : "Services"}
+        title={isAr ? "البروتوكول." : "The protocol."}
+        intro={
+          isAr
+            ? "ثَمانية فُصول، يُسَلَّم كلٌّ منها بيَدِنا، ولا يَخرُج من تَحت أَيدينا حتى يَكتَمِل."
+            : "Eight chapters, each delivered by our hand. Nothing leaves us before it is complete."
+        }
+      />
 
       {/* === Phases — alternating photo/text rows === */}
-      <section className="relative surface-pearl">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-28 md:py-40 space-y-28 md:space-y-40">
+      <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-16 md:py-24 space-y-20 md:space-y-28">
           {phases.slice(0, 4).map((p, i) => (
             <PhaseRow key={i} phase={p} index={i} lang={lang} reversed={i % 2 === 1} />
           ))}
@@ -91,10 +61,10 @@ export default async function ServicesPage({
       </section>
 
       {/* === Mid-page intermezzo — fullbleed photo === */}
-      <section className="relative surface-bisht">
+      <section className="relative">
         <div className="relative aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden">
           <Image
-            src="/photos/majlis/night-majlis-outdoor.jpg"
+            src="/photos/craft/chocolate-tray-red-velvet.jpg"
             alt=""
             fill
             sizes="100vw"
@@ -112,7 +82,7 @@ export default async function ServicesPage({
 
       {/* === Phases 5–8 === */}
       <section className="relative surface-pearl">
-        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-28 md:py-40 space-y-28 md:space-y-40">
+        <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-16 md:py-24 space-y-20 md:space-y-28">
           {phases.slice(4).map((p, i) => (
             <PhaseRow
               key={i + 4}

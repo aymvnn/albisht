@@ -40,15 +40,10 @@ export function InvitationSection({ lang }: { lang: Lang }) {
         </p>
         <Link
           href={`/${lang}/consult`}
-          className="group inline-flex items-center gap-4 px-10 py-5 border border-[color:var(--color-zari)]/40 hover:border-[color:var(--color-zari)] hover:bg-[color:var(--color-zari)]/5 transition-all duration-700"
-          style={{ transitionTimingFunction: "var(--ease-ceremonial)" }}
+          className="btn-brand inline-flex items-center gap-4 border"
         >
-          <span className="type-roman text-[1rem] text-[color:var(--color-zari)]">
-            {inv.cta}
-          </span>
-          <span className="text-[color:var(--color-zari)] flip-rtl group-hover:translate-x-1 transition-transform duration-500">
-            →
-          </span>
+          <span>{inv.cta}</span>
+          <span className="btn-brand-arrow flip-rtl">→</span>
         </Link>
       </div>
     </section>
