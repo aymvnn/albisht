@@ -1,19 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { REVEAL_PHRASE } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
-import { Logo } from "./Logo";
 
 /**
  * The Bisht Reveal — the signature opening cinematic.
  *
+ * Per direct brand-owner instruction (2026-05-25):
+ *   "De openingsanimatie moet zonder witte logo en zonder de oranje tekst
+ *    eronder, enkel de animatie."
+ * → The animation is the entire moment. No overlay logo. No overlay phrase.
+ *   The brand identity book (Identity_al bisht_2.pdf) shows the calligraphic
+ *   mark used as a stand-alone seal — not as an overlay on transitional states.
+ *
  * Phases:
- *  - "closed":    The full bisht is rendered closed (two dark panels with thick golden
- *                 zari bands meeting in the centre). Logo + phrase appear over the
- *                 closed cloak. A subtle prompt invites the visitor to scroll/click/tap.
- *  - "opening":   The two panels part outward, gold bands trailing on the inner edges.
- *  - "revealed":  Light pours through; the brand mark settles in dark over the pearl.
+ *  - "closed":    Two dark panels with thick zari (gold-brocade) edging meet
+ *                 in the centre. A faint gold light pulses at the seam,
+ *                 hinting at what lies beyond.
+ *  - "opening":   The panels part outward; a bright golden bloom flashes at
+ *                 the moment of opening.
+ *  - "revealed":  Pearl-light pours through; the bloom fades.
  *  - "done":      The overlay is removed and scroll is released.
  *
  * Triggers (in "closed" phase, whichever first):
@@ -21,13 +27,19 @@ import { Logo } from "./Logo";
  *  - click anywhere on the overlay
  *  - Enter / Space keypress (Esc skips)
  *
- * Plays every time the home page mounts. Only skipped when the user has
- * `prefers-reduced-motion: reduce` set.
+ * Cookie flag `albisht_reveal_seen` is set on first complete play so returning
+ * visitors within the same session do not see the intro repeat.
+ *
+ * Reduced motion: when `prefers-reduced-motion: reduce` is set, the intro is
+ * skipped entirely on mount.
  */
 
-type Phase = "closed" | "opening" | "revealed" | "done";
+type Phase = "closed" | "opening" | "revealed" | "fading" | "done";
 
-export function BishtReveal({ lang }: { lang: Lang }) {
+const REVEAL_COOKIE = "albisht_reveal_seen";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function BishtReveal({ lang: _lang }: { lang: Lang }) {
   const [phase, setPhase] = useState<Phase>("done");
   const startedRef = useRef(false);
 
@@ -38,6 +50,12 @@ export function BishtReveal({ lang }: { lang: Lang }) {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) {
+      setPhase("done");
+      return;
+    }
+
+    // Skip if returning visitor in the same session
+    if (document.cookie.includes(`${REVEAL_COOKIE}=1`)) {
       setPhase("done");
       return;
     }
@@ -58,12 +76,15 @@ export function BishtReveal({ lang }: { lang: Lang }) {
       if (opened) return;
       opened = true;
       setPhase("opening");
-      // sequence to "revealed" then "done"
+      // sequence: opening → revealed → fading → done
       setTimeout(() => setPhase("revealed"), 1600);
+      setTimeout(() => setPhase("fading"), 3200);
       setTimeout(() => {
         setPhase("done");
         document.body.style.overflow = "";
-      }, 3200);
+        // Set session cookie so the reveal plays at most once per session
+        document.cookie = `${REVEAL_COOKIE}=1; path=/; max-age=3600; SameSite=Lax`;
+      }, 4700);
     };
 
     const onScroll = (e: WheelEvent | TouchEvent) => { e.preventDefault?.(); open(); };
@@ -75,6 +96,7 @@ export function BishtReveal({ lang }: { lang: Lang }) {
           opened = true;
           setPhase("done");
           document.body.style.overflow = "";
+          document.cookie = `${REVEAL_COOKIE}=1; path=/; max-age=3600; SameSite=Lax`;
           return;
         }
         open();
@@ -96,7 +118,6 @@ export function BishtReveal({ lang }: { lang: Lang }) {
 
   if (phase === "done") return null;
 
-  const phrase = REVEAL_PHRASE[lang];
   const opening = phase === "opening" || phase === "revealed";
   const lightOn = phase === "revealed";
 
@@ -105,9 +126,28 @@ export function BishtReveal({ lang }: { lang: Lang }) {
       className="fixed inset-0 z-[100] overflow-hidden cursor-pointer select-none"
       role="presentation"
       aria-hidden="true"
+      style={{
+        opacity: phase === "fading" ? 0 : 1,
+        transition: "opacity 1.5s var(--ease-veil)",
+      }}
     >
-      {/* === BEHIND THE CLOAK: the pearl-light world === */}
+      {/* === BEHIND THE CLOAK: the pearl-light world that pours through === */}
       <div className="absolute inset-0 surface-marble" />
+
+      {/* Photographic overlay — zwarte zijde + gouden zari, lichte opacity,
+          rijmt met de bisht-zari-band die de panelen flankeert. Zichtbaar
+          zodra de panelen open splijten; faded uit met de hele overlay. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url(/photos/reveal/reveal-silk-overlay.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.45,
+        }}
+      />
+
+      {/* The "light pouring through" — radial bloom that intensifies at reveal */}
       <div
         className="absolute inset-0"
         style={{
@@ -123,105 +163,105 @@ export function BishtReveal({ lang }: { lang: Lang }) {
       {/* === RIGHT BISHT PANEL === */}
       <BishtPanel side="right" opening={opening} />
 
-      {/* === CENTRE: logo + phrase + prompt during closed state === */}
+      {/* === GOLD BLOOM AT THE SEAM ===
+          During "closed" state, a soft gold light pulses at the centre seam —
+          the brand's signature gold (#D28E29 → #F6B62B gradient) hinting at
+          what lies beyond. At the moment of opening, it bursts bright.
+          During "revealed" it fades into the pearl-light. */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-8"
+        className="absolute inset-y-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
-          opacity: lightOn ? 0 : 1,
-          transition: "opacity 0.9s var(--ease-veil)",
+          width: phase === "closed" ? "min(420px, 56vw)" : "min(720px, 90vw)",
+          background:
+            phase === "closed"
+              ? "radial-gradient(ellipse at center, rgba(246, 182, 43, 0.30) 0%, rgba(226, 159, 41, 0.18) 30%, transparent 70%)"
+              : phase === "opening"
+              ? "radial-gradient(ellipse at center, rgba(255, 240, 200, 0.85) 0%, rgba(246, 182, 43, 0.45) 40%, transparent 75%)"
+              : "radial-gradient(ellipse at center, rgba(255, 247, 224, 0.40) 0%, transparent 60%)",
+          filter: phase === "opening" ? "blur(6px)" : "blur(20px)",
+          opacity:
+            phase === "closed"
+              ? 1
+              : phase === "opening"
+              ? 1
+              : 0.5,
+          transition:
+            "width 0.9s var(--ease-veil), filter 0.6s ease-out, opacity 1.2s var(--ease-veil), background 0.6s ease-out",
+          animation: phase === "closed" ? "seam-breathe 3s ease-in-out infinite" : "none",
+        }}
+      />
+
+      {/* === SEAM HAIRLINE — a single razor-thin bright zari line where the
+          two panels meet, that "wakes" when the panels start to open. */}
+      <div
+        className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          width: "1.5px",
+          background:
+            "linear-gradient(180deg, transparent 0%, #F6B62B 15%, #F6B62B 85%, transparent 100%)",
+          opacity:
+            phase === "closed" ? 0.55 : phase === "opening" ? 0.95 : 0,
+          filter: phase === "opening" ? "drop-shadow(0 0 6px #F6B62B)" : "none",
+          transition: "opacity 0.6s ease-out, filter 0.4s ease-out",
+        }}
+      />
+
+      {/* === Visual-only "tap to enter" indicator: a slow pulsing
+          gold vertical line near the bottom. No text — per brand
+          direction the moment is the animation, not a label. === */}
+      <div
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          opacity: phase === "closed" ? 1 : 0,
+          transition: "opacity 0.8s ease-out",
+          transitionDelay: phase === "closed" ? "0.8s" : "0s",
         }}
       >
-        <div
-          className="relative transition-all"
+        <span
+          className="block"
           style={{
-            transform: opening
-              ? "scale(1.08) translateY(-30px)"
-              : "scale(1)",
-            opacity: opening ? 0 : 1,
-            transitionDuration: "1.4s",
-            transitionTimingFunction: "var(--ease-ceremonial)",
+            width: "1px",
+            height: "44px",
+            background:
+              "linear-gradient(180deg, transparent 0%, #F6B62B 50%, transparent 100%)",
+            animation: "seam-pulse 2.2s ease-in-out infinite",
           }}
-        >
-          {/* Soft dark radial glow behind logo + phrase — so the white logo
-              and gold phrase read against the busy gold brocade band. */}
-          <div
-            aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-            style={{
-              width: "min(720px, 92vw)",
-              height: "min(520px, 78vh)",
-              background:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.18) 65%, transparent 100%)",
-              filter: "blur(8px)",
-              zIndex: 0,
-            }}
-          />
-          <div className="relative" style={{ zIndex: 1 }}>
-            <Logo height={150} variant="light" />
-            <p
-              className={`mt-12 ${
-                lang === "ar" ? "type-arabic" : "type-serif"
-              } text-[color:var(--color-zari)] text-xl md:text-2xl italic tracking-wide max-w-md mx-auto`}
-              style={{
-                opacity: 1,
-                textShadow:
-                  "0 0 22px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.9)",
-              }}
-            >
-              {phrase}
-            </p>
-          </div>
-        </div>
-
-        {/* Prompt: subtle, only in closed state */}
-        <div
-          className="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-3"
-          style={{
-            opacity: phase === "closed" ? 1 : 0,
-            transition: "opacity 0.8s ease-out",
-            transitionDelay: phase === "closed" ? "0.8s" : "0s",
-          }}
-        >
-          <span className="block w-px h-10 bg-gradient-to-b from-[color:var(--color-zari)]/0 via-[color:var(--color-zari)]/70 to-[color:var(--color-zari)]/0" />
-          <span
-            className={`${
-              lang === "ar" ? "type-arabic" : "type-roman"
-            } text-[0.72rem] text-[color:var(--color-zari)]/90 tracking-[0.32em]`}
-            style={{ letterSpacing: lang === "ar" ? 0 : "0.32em" }}
-          >
-            {lang === "ar" ? "اِفتَح ـ بمَسحٍ أو لَمسة" : "Scroll or tap to enter"}
-          </span>
-        </div>
+        />
       </div>
 
-      {/* === FINAL LIGHT REVEAL: dark logo on pearl === */}
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-8"
-        style={{
-          opacity: lightOn ? 1 : 0,
-          transition: "opacity 1.2s var(--ease-veil) 0.3s",
-        }}
-      >
-        <Logo height={120} variant="dark" />
-      </div>
-
-      {/* Skip button — top right corner, fades in after a moment */}
+      {/* Skip button — top right corner, fades in after a moment.
+          Tiny "×" symbol; no English text overlay. */}
       <button
         type="button"
         onClick={(e) => {
           e.stopPropagation();
           setPhase("done");
           document.body.style.overflow = "";
+          document.cookie = `${REVEAL_COOKIE}=1; path=/; max-age=3600; SameSite=Lax`;
         }}
-        className="absolute top-6 right-6 z-[101] type-roman force-latin text-[0.66rem] text-[color:var(--color-pearl)]/55 hover:text-[color:var(--color-zari)] transition-colors px-3 py-2"
+        aria-label="Skip intro"
+        className="absolute top-6 right-6 z-[101] w-9 h-9 flex items-center justify-center text-[color:var(--color-pearl)]/55 hover:text-[color:var(--color-zari-bright)] transition-colors"
         style={{
           opacity: phase === "closed" ? 1 : 0,
           transition: "opacity 0.8s ease-out 1.5s",
           pointerEvents: phase === "closed" ? "auto" : "none",
         }}
       >
-        Skip
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 2L12 12M2 12L12 2" stroke="currentColor" strokeWidth="1" />
+        </svg>
       </button>
+
+      <style jsx>{`
+        @keyframes seam-breathe {
+          0%, 100% { transform: translateX(-50%) scaleY(1); opacity: 0.85; }
+          50% { transform: translateX(-50%) scaleY(1.05); opacity: 1; }
+        }
+        @keyframes seam-pulse {
+          0%, 100% { opacity: 0.4; transform: scaleY(0.9); }
+          50% { opacity: 1; transform: scaleY(1.1); }
+        }
+      `}</style>
     </div>
   );
 }
@@ -288,7 +328,7 @@ function BishtPanel({ side, opening }: { side: "left" | "right"; opening: boolea
         }}
       />
 
-      {/* === Layer 3: THE ZARI BAND ─ thick brocade edging === */}
+      {/* === Layer 3: THE ZARI BAND ─ thick brocade edging, brand-conform gold === */}
       {/* Anchored to the inner edge (right side of left panel; left side of right panel) */}
       <div
         className="absolute top-[6%] bottom-[6%]"
@@ -296,20 +336,21 @@ function BishtPanel({ side, opening }: { side: "left" | "right"; opening: boolea
           [isLeft ? "right" : "left"]: 0,
           width: "min(34px, 5vw)",
           minWidth: "20px",
-          // Brocade gradient: dark gold ↔ bright gold ↔ dark gold across the width
+          // Brocade gradient using the official brand gradient stops:
+          // dark gold #E29F29 ↔ bright gold #F6B62B ↔ dark gold
           background: `
             linear-gradient(${isLeft ? "270deg" : "90deg"},
-              oklch(0.42 0.06 60) 0%,
-              oklch(0.6 0.09 72) 16%,
-              oklch(0.78 0.115 80) 40%,
-              oklch(0.82 0.115 84) 55%,
-              oklch(0.6 0.09 72) 80%,
-              oklch(0.4 0.05 60) 100%
+              #8E6B2E 0%,
+              #D28E29 18%,
+              #E29F29 40%,
+              #F6B62B 55%,
+              #E29F29 75%,
+              #8E6B2E 100%
             )
           `,
           boxShadow: isLeft
-            ? "inset -1px 0 0 oklch(0.88 0.1 84 / 0.7), inset 1px 0 0 oklch(0.45 0.05 60 / 0.6), -2px 0 8px -2px oklch(0.74 0.105 78 / 0.45)"
-            : "inset 1px 0 0 oklch(0.88 0.1 84 / 0.7), inset -1px 0 0 oklch(0.45 0.05 60 / 0.6), 2px 0 8px -2px oklch(0.74 0.105 78 / 0.45)",
+            ? "inset -1px 0 0 rgba(246, 182, 43, 0.7), inset 1px 0 0 rgba(120, 80, 30, 0.6), -2px 0 8px -2px rgba(226, 159, 41, 0.45)"
+            : "inset 1px 0 0 rgba(246, 182, 43, 0.7), inset -1px 0 0 rgba(120, 80, 30, 0.6), 2px 0 8px -2px rgba(226, 159, 41, 0.45)",
         }}
       >
         {/* Brocade weave pattern — diagonal hatching layered on the gradient */}
@@ -318,11 +359,11 @@ function BishtPanel({ side, opening }: { side: "left" | "right"; opening: boolea
           style={{
             backgroundImage: `
               repeating-linear-gradient(45deg,
-                oklch(0.36 0.05 60 / 0.55) 0 1.5px,
+                rgba(80, 50, 15, 0.55) 0 1.5px,
                 transparent 1.5px 3.5px
               ),
               repeating-linear-gradient(-45deg,
-                oklch(0.88 0.1 84 / 0.35) 0 1px,
+                rgba(255, 220, 130, 0.35) 0 1px,
                 transparent 1px 3.5px
               )
             `,
@@ -335,7 +376,7 @@ function BishtPanel({ side, opening }: { side: "left" | "right"; opening: boolea
           style={{
             backgroundImage: `repeating-linear-gradient(180deg,
               transparent 0 6px,
-              oklch(0.92 0.11 86 / 0.4) 6px 7px,
+              rgba(255, 240, 180, 0.4) 6px 7px,
               transparent 7px 12px
             )`,
             mixBlendMode: "screen",
@@ -351,7 +392,7 @@ function BishtPanel({ side, opening }: { side: "left" | "right"; opening: boolea
           [isLeft ? "right" : "left"]: "min(34px, 5vw)",
           width: "1px",
           background:
-            "linear-gradient(180deg, transparent 0%, oklch(0.7 0.1 78 / 0.6) 12%, oklch(0.8 0.11 82 / 0.85) 50%, oklch(0.7 0.1 78 / 0.6) 88%, transparent 100%)",
+            "linear-gradient(180deg, transparent 0%, rgba(210, 142, 41, 0.6) 12%, rgba(246, 182, 43, 0.85) 50%, rgba(210, 142, 41, 0.6) 88%, transparent 100%)",
           transform: isLeft ? "translateX(2px)" : "translateX(-2px)",
         }}
       />
