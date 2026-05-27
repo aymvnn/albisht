@@ -180,7 +180,7 @@ function OverviewCard({
 
         <div
           className="flex items-center justify-between gap-3 pt-4 border-t"
-          style={{ borderColor: "var(--color-ink-warm)", borderTopWidth: 1, borderOpacity: 0.2 }}
+          style={{ borderColor: "color-mix(in oklab, var(--color-ink-warm) 20%, transparent)", borderTopWidth: 1 }}
         >
           <span
             className="type-roman"
