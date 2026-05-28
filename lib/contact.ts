@@ -54,6 +54,16 @@ export const PHONES: { mens: ContactNumber; womens: ContactNumber } = {
 
 export const EMAIL = "hello@albisht.qa";
 export const INSTAGRAM = { handle: "@albishtqtr", url: "https://instagram.com/albishtqtr" };
+export const FACEBOOK = { handle: "albishtqtr", url: "https://facebook.com/albishtqtr" };
+export const TIKTOK = { handle: "albisht.qtr", url: "https://tiktok.com/@albisht.qtr" };
+
+export type SocialLink = { name: "instagram" | "facebook" | "tiktok"; handle: string; url: string };
+export const SOCIALS: SocialLink[] = [
+  { name: "instagram", ...INSTAGRAM },
+  { name: "facebook", ...FACEBOOK },
+  { name: "tiktok", ...TIKTOK },
+];
+
 export const LOCATION = {
   ar: "الدوحة، قطر",
   en: "Doha, Qatar",

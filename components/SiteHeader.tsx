@@ -3,17 +3,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/copy";
-import { type Lang, switchLang, localizedNumeral } from "@/lib/i18n";
+import { type Lang, switchLang, localizedNumeral, localizedDigits } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
 import { PHONES } from "@/lib/contact";
+
+type BishtPhase = "closed" | "opening" | "revealed" | "fading" | "done";
 
 export function SiteHeader({ lang }: { lang: Lang }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [bishtPhase, setBishtPhase] = useState<BishtPhase>("done");
   const nav = NAV[lang];
 
   useEffect(() => {
@@ -22,6 +27,24 @@ export function SiteHeader({ lang }: { lang: Lang }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Portal target needs the document — wait until mounted on the client
+  useEffect(() => { setMounted(true); }, []);
+
+  // Track the BishtReveal phase so we can swap the logo to light while the
+  // panels are closed (background is dark) and hide it while the reveal is
+  // mid-flight, then restore the normal dark logo once the overlay is gone.
+  useEffect(() => {
+    const sync = (p: string | undefined) =>
+      setBishtPhase(((p as BishtPhase) || "done"));
+    sync(document.documentElement.dataset.bishtPhase);
+    const onPhase = (e: Event) => sync((e as CustomEvent).detail);
+    window.addEventListener("bisht-phase", onPhase);
+    return () => window.removeEventListener("bisht-phase", onPhase);
+  }, []);
+
+  const logoVariant: "dark" | "light" = bishtPhase === "closed" ? "light" : "dark";
+  const logoHidden = bishtPhase === "opening" || bishtPhase === "revealed";
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -60,8 +83,17 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           href={`/${lang}`}
           className="flex items-center gap-4 group"
           aria-label="ALBISHT — Home"
+          style={{
+            opacity: logoHidden ? 0 : 1,
+            transition: "opacity 0.6s var(--ease-veil)",
+          }}
         >
-          <Logo height={44} variant="dark" priority className="transition-opacity duration-500 group-hover:opacity-80" />
+          <Logo
+            height={44}
+            variant={logoVariant}
+            priority
+            className="transition-opacity duration-500 group-hover:opacity-80"
+          />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7 type-nav text-[color:var(--color-ink-soft)]">
@@ -112,8 +144,15 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           watermark behind, a warm radial glow centred mid-page, and a
           contact strip below the navigation. Each nav item is numbered
           (00/01/02…) and animates in with stagger. The close button is
-          a gold-bordered disc that fills on hover and rotates 90°. */}
-      {open && (
+          a gold-bordered disc that fills on hover and rotates 90°.
+
+          The drawer is portalled to document.body so it lives at the root
+          stacking context. That matters because the header itself creates
+          its own stacking context (via `backdrop-blur-md` after scroll), and
+          a drawer rendered inside that context was being trapped underneath
+          other fixed elements on mobile — clicking "menu" after scrolling
+          produced no visible drawer. */}
+      {open && mounted && createPortal(
         <div
           className="lg:hidden fixed inset-0 z-[60] surface-bisht overflow-y-auto"
           role="dialog"
@@ -310,7 +349,8 @@ export function SiteHeader({ lang }: { lang: Lang }) {
               </Link>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );
@@ -345,16 +385,18 @@ function PhoneRow({
       <a
         href={`tel:${tel}`}
         className="cc-phone-line"
+        dir="ltr"
         style={{
-          fontFamily: "var(--font-roman)",
+          fontFamily: lang === "ar" ? "var(--font-arabic)" : "var(--font-roman)",
           fontSize: primary ? "1.25rem" : "1.05rem",
           color: "var(--color-zari)",
           letterSpacing: "0.05em",
           fontVariantNumeric: "lining-nums tabular-nums",
           fontWeight: primary ? 500 : 400,
+          unicodeBidi: "isolate",
         }}
       >
-        <span>{display}</span>
+        <span>{localizedDigits(display, lang)}</span>
         <span aria-hidden className="cc-phone-dot" />
       </a>
     </div>

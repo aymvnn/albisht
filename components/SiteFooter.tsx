@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { FOOTER, NAV } from "@/lib/copy";
-import { type Lang, localizedNumeral } from "@/lib/i18n";
+import { type Lang, localizedNumeral, localizedDigits } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
-import { PHONES, EMAIL } from "@/lib/contact";
+import { PHONES, EMAIL, SOCIALS } from "@/lib/contact";
 
 export function SiteFooter({ lang }: { lang: Lang }) {
   const f = FOOTER[lang];
@@ -55,6 +55,9 @@ export function SiteFooter({ lang }: { lang: Lang }) {
             </div>
             {/* Secondary: women — selected services, smaller + muted */}
             <SecondaryPhoneLine number={PHONES.womens} lang={lang} />
+
+            {/* Social channels */}
+            <SocialRow lang={lang} />
           </div>
         </div>
 
@@ -93,14 +96,17 @@ function PhoneLine({
       <a
         href={`tel:${number.tel}`}
         className="hover:text-[color:var(--color-zari)] transition-colors"
+        dir="ltr"
         style={{
-          fontFamily: "var(--font-roman)",
+          fontFamily: lang === "ar" ? "var(--font-arabic)" : "var(--font-roman)",
           fontSize: "1rem",
           letterSpacing: "0.04em",
           fontVariantNumeric: "lining-nums tabular-nums",
+          unicodeBidi: "isolate",
+          display: "inline-block",
         }}
       >
-        {number.display}
+        {localizedDigits(number.display, lang)}
       </a>
     </div>
   );
@@ -124,15 +130,91 @@ function SecondaryPhoneLine({
       <a
         href={`tel:${number.tel}`}
         className="hover:text-[color:var(--color-zari)] transition-colors"
+        dir="ltr"
         style={{
-          fontFamily: "var(--font-roman)",
+          fontFamily: lang === "ar" ? "var(--font-arabic)" : "var(--font-roman)",
           fontSize: "0.82rem",
           letterSpacing: "0.04em",
           fontVariantNumeric: "lining-nums tabular-nums",
+          unicodeBidi: "isolate",
+          display: "inline-block",
         }}
       >
-        {number.display}
+        {localizedDigits(number.display, lang)}
       </a>
     </div>
   );
 }
+
+function SocialRow({ lang }: { lang: Lang }) {
+  const labels: Record<typeof SOCIALS[number]["name"], { ar: string; en: string }> = {
+    instagram: { ar: "إنستغرام", en: "Instagram" },
+    facebook: { ar: "فيسبوك", en: "Facebook" },
+    tiktok: { ar: "تيك توك", en: "TikTok" },
+  };
+  return (
+    <div className="pt-4 flex items-center gap-4">
+      {SOCIALS.map((s) => (
+        <a
+          key={s.name}
+          href={s.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${labels[s.name][lang]} — ${s.handle}`}
+          className="text-[color:var(--color-mist)]/75 hover:text-[color:var(--color-zari)] transition-colors"
+        >
+          <SocialIcon name={s.name} />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function SocialIcon({ name }: { name: SocialLinkName }) {
+  // 20px monoline glyphs — tuned to feel like part of the same engraved
+  // family as the zari hairlines elsewhere on the site (currentColor +
+  // strokeWidth ~1.4). Each icon ships as a single <svg>.
+  const size = 20;
+  if (name === "instagram") {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+      </svg>
+    );
+  }
+  if (name === "facebook") {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M13.5 21v-7.5h2.5l.4-3H13.5V8.6c0-.9.25-1.5 1.55-1.5H17V4.3c-.3 0-1.35-.1-2.55-.1-2.55 0-4.3 1.55-4.3 4.4V10.5H7.5v3H10.15V21h3.35Z"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+  // tiktok
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14 4v9.2a3 3 0 1 1-3-3"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 4c.4 2.2 2 3.8 4 4"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+type SocialLinkName = typeof SOCIALS[number]["name"];

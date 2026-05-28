@@ -43,6 +43,15 @@ export function BishtReveal({ lang: _lang }: { lang: Lang }) {
   const [phase, setPhase] = useState<Phase>("done");
   const startedRef = useRef(false);
 
+  // Broadcast the active phase so the rest of the chrome (notably SiteHeader)
+  // can react — e.g. swap the dark logo for the light variant while the
+  // bisht panels are closed, hide it while the panels are mid-reveal, and
+  // restore it once the overlay has fully faded.
+  useEffect(() => {
+    document.documentElement.dataset.bishtPhase = phase;
+    window.dispatchEvent(new CustomEvent("bisht-phase", { detail: phase }));
+  }, [phase]);
+
   // Decide whether to play or skip the reveal — only on first mount, client side.
   useEffect(() => {
     if (startedRef.current) return;
