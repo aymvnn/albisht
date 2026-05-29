@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { LANGS, type Lang } from "@/lib/i18n";
+import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
 import { ATELIER } from "@/lib/copy";
 import { FormatHeadline } from "@/components/FormatHeadline";
 import { ContactCallout } from "@/components/ContactCallout";
@@ -151,7 +151,9 @@ export default async function AtelierPage({
                 className="flex gap-6 items-baseline pb-6 border-b border-[color:var(--color-mist)]/40 last:border-b-0"
               >
                 <span className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] flex-shrink-0">
-                  {String(i + 1).padStart(2, "0")}
+                  {lang === "ar"
+                    ? localizedNumeral(i + 1, lang).padStart(2, "٠")
+                    : String(i + 1).padStart(2, "0")}
                 </span>
                 <p
                   className={`${

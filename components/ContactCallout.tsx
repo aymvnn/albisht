@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CALLOUT, PHONES } from "@/lib/contact";
-import type { Lang } from "@/lib/i18n";
+import { type Lang, localizedDigits } from "@/lib/i18n";
 import { SilkRibbon } from "./SilkRibbon";
 
 /**
@@ -323,6 +323,7 @@ function Door(props: {
   phones?: DoorPhone[];
 }) {
   const { kind, title, description, text, muted, isAr, animationDelay } = props;
+  const lang: Lang = isAr ? "ar" : "en";
 
   return (
     <div
@@ -394,8 +395,9 @@ function Door(props: {
               <a
                 href={`tel:${p.tel}`}
                 className="cc-phone-line"
+                dir="ltr"
                 style={{
-                  fontFamily: "var(--font-roman)",
+                  fontFamily: isAr ? "var(--font-arabic)" : "var(--font-roman)",
                   fontSize: p.primary
                     ? "clamp(1.6rem, 1.1rem + 1.6vw, 2.35rem)"
                     : "clamp(1.3rem, 1rem + 0.9vw, 1.7rem)",
@@ -403,9 +405,10 @@ function Door(props: {
                   letterSpacing: "0.05em",
                   fontVariantNumeric: "lining-nums tabular-nums",
                   fontWeight: p.primary ? 500 : 400,
+                  unicodeBidi: "isolate",
                 }}
               >
-                <span>{p.display}</span>
+                <span>{localizedDigits(p.display, lang)}</span>
                 <span aria-hidden className="cc-phone-dot" />
               </a>
               {p.note && (

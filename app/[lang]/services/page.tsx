@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { LANGS, type Lang } from "@/lib/i18n";
+import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
@@ -140,7 +140,9 @@ function PhaseRow({
             opacity: 0.7,
           }}
         >
-          {String(index + 1).padStart(2, "0")}
+          {lang === "ar"
+            ? localizedNumeral(index + 1, lang).padStart(2, "٠")
+            : String(index + 1).padStart(2, "0")}
         </p>
         <h3
           className={isAr ? "type-arabic-display" : "type-display"}

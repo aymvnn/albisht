@@ -113,7 +113,7 @@ export function ActsParallax({ lang }: { lang: Lang }) {
                 {/* zari corner mark — sits on the top scrim, readable */}
                 <div className="absolute top-6 left-6 right-6 flex items-center justify-between text-[color:var(--color-zari-bright)]">
                   <span className="type-roman text-[0.86rem] tracking-[0.35em]">
-                    {localizedNumeral(i + 1, lang).padStart(2, "0")}
+                    {localizedNumeral(i + 1, lang).padStart(2, lang === "ar" ? "٠" : "0")}
                   </span>
                   <span className="type-roman text-[0.82rem] tracking-[0.4em]">
                     {item.kicker}

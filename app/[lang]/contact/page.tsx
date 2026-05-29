@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LANGS, type Lang } from "@/lib/i18n";
+import { LANGS, type Lang, localizedDigits } from "@/lib/i18n";
 import { PHONES, EMAIL, LOCATION, INSTAGRAM } from "@/lib/contact";
 import { PageHero } from "@/components/PageHero";
 
@@ -70,15 +70,17 @@ export default async function ContactPage({
               <a
                 href={`tel:${PHONES.mens.tel}`}
                 className="inline-flex items-baseline gap-4 mt-4 hover:text-[color:var(--color-zari-deep)] transition-colors"
+                dir="ltr"
                 style={{
-                  fontFamily: "var(--font-roman)",
+                  fontFamily: isAr ? "var(--font-arabic)" : "var(--font-roman)",
                   fontSize: "clamp(1.6rem, 1.2rem + 1.4vw, 2rem)",
                   color: "var(--color-zari)",
                   letterSpacing: "0.04em",
                   fontVariantNumeric: "lining-nums tabular-nums",
+                  unicodeBidi: "isolate",
                 }}
               >
-                {PHONES.mens.display}
+                <span>{localizedDigits(PHONES.mens.display, lang)}</span>
                 <span className="text-[0.7em] flip-rtl">→</span>
               </a>
             </div>
@@ -107,15 +109,17 @@ export default async function ContactPage({
             <a
               href={`tel:${PHONES.womens.tel}`}
               className="hover:text-[color:var(--color-zari-deep)] transition-colors"
+              dir="ltr"
               style={{
-                fontFamily: "var(--font-roman)",
+                fontFamily: isAr ? "var(--font-arabic)" : "var(--font-roman)",
                 fontSize: "1.3rem",
                 color: "var(--color-zari)",
                 letterSpacing: "0.04em",
                 fontVariantNumeric: "lining-nums tabular-nums",
+                unicodeBidi: "isolate",
               }}
             >
-              {PHONES.womens.display}
+              {localizedDigits(PHONES.womens.display, lang)}
             </a>
           </div>
         </div>

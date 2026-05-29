@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
+import { LANGS, type Lang, localizedNumeral, localizedDigits, localizedThousands } from "@/lib/i18n";
 import { PACKAGES_META } from "@/lib/copy";
 import {
   PACKAGES,
@@ -113,7 +113,7 @@ function OverviewCard({
   meta: typeof PACKAGES_META.ar | typeof PACKAGES_META.en;
 }) {
   const isAr = lang === "ar";
-  const formattedPrice = pkg.priceQAR.toLocaleString(isAr ? "ar-EG" : "en-US");
+  const formattedPrice = localizedThousands(pkg.priceQAR, lang);
 
   return (
     <Link
@@ -235,7 +235,7 @@ function PackageBlock({
   const dividerColor = "var(--color-ink-warm)";
   const numberStr = String(index + 1).padStart(2, "0");
   const localizedNumber = isAr ? localizedNumeral(index + 1, lang).padStart(2, "٠") : numberStr;
-  const formattedPrice = pkg.priceQAR.toLocaleString(isAr ? "ar-EG" : "en-US");
+  const formattedPrice = localizedThousands(pkg.priceQAR, lang);
 
   return (
     <section
@@ -355,7 +355,7 @@ function PackageBlock({
                       className="block mt-2 w-1 h-1 rounded-full flex-shrink-0"
                       style={{ background: "var(--color-zari)" }}
                     />
-                    <span>{b}</span>
+                    <span>{localizedDigits(b, lang)}</span>
                   </li>
                 ))}
               </ul>
@@ -487,7 +487,7 @@ function WomensSection({ lang }: { lang: Lang }) {
                         fontSize: "1.05rem",
                       }}
                     >
-                      {item[lang]}
+                      {localizedDigits(item[lang], lang)}
                     </li>
                   ))}
                 </ul>
@@ -507,14 +507,16 @@ function WomensSection({ lang }: { lang: Lang }) {
           <a
             href={`tel:${phone.tel}`}
             className="type-display inline-flex items-center hover:text-[color:var(--color-zari-deep)] transition-colors"
+            dir="ltr"
             style={{
               fontSize: "clamp(1.8rem, 1.2rem + 2vw, 2.75rem)",
               color: "var(--color-zari)",
               fontVariantNumeric: "lining-nums tabular-nums",
               letterSpacing: "0.04em",
+              unicodeBidi: "isolate",
             }}
           >
-            {phone.display}
+            {localizedDigits(phone.display, lang)}
           </a>
           <Link
             href={`/${lang}/consult?line=womens`}
