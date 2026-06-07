@@ -74,6 +74,7 @@ export const PROMISE = {
 export const ACTS = {
   ar: {
     label: "الليلة في ثلاثة فصول",
+    heading: "ثَلاثُ لَحظاتٍ تَصنَع المَساء.",
     items: [
       {
         kicker: "الفصل الأول",
@@ -97,6 +98,7 @@ export const ACTS = {
   },
   en: {
     label: "The evening in three acts",
+    heading: "Three moments shape the evening.",
     items: [
       {
         kicker: "Act i",

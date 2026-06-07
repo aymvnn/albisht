@@ -3,8 +3,15 @@ import { INVITATION } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
 import { Logo } from "./Logo";
 
-export function InvitationSection({ lang }: { lang: Lang }) {
-  const inv = INVITATION[lang];
+export function InvitationSection({
+  lang,
+  content,
+}: {
+  lang: Lang;
+  content?: { title: string; line1: string; line2: string; cta: string; ctaHref: string };
+}) {
+  const inv = content ?? INVITATION[lang];
+  const ctaHref = content?.ctaHref ?? "/consult";
 
   return (
     <section className="relative py-32 md:py-48 surface-bisht overflow-hidden">
@@ -39,7 +46,7 @@ export function InvitationSection({ lang }: { lang: Lang }) {
           {inv.line2}
         </p>
         <Link
-          href={`/${lang}/consult`}
+          href={`/${lang}${ctaHref}`}
           className="btn-brand inline-flex items-center gap-4 border"
         >
           <span>{inv.cta}</span>

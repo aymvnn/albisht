@@ -2,56 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
+import { USE_STORYBLOK } from "@/lib/storyblok/api";
+import { getStoryList } from "@/lib/storyblok/fetch";
+import { mapJournalList } from "@/lib/content/from-storyblok";
+import type { SbJournalEntry } from "@/lib/storyblok/types";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
-const ENTRIES = {
-  ar: [
-    {
-      kicker: "حِرفة",
-      title: "حسن المَنّاعي والزَّري المَفقود",
-      excerpt:
-        "في الزاوية الخلفية من سوق واقف، آخر خَطّاطين يَعرِفُون كيف يُلَفّون خَيط الذَّهب على وَبَر الجَمل. زُرناه ليُعَلِّمَنا.",
-      photo: "/photos/craft/sweets-silver-platter.jpg",
-    },
-    {
-      kicker: "موسيقى",
-      title: "لِماذا لا DJ",
-      excerpt:
-        "العود والقانون. وإذا اقتَضى الحال، صَوتٌ بَدوي. كلُّ ما عدا ذلك، ضَجيج.",
-      photo: "/photos/craft/chocolate-server-portrait.jpg",
-    },
-    {
-      kicker: "بروتوكول",
-      title: "أَربعَةُ أيّامٍ من الزَّواج القَطَري، مَشروحَة",
-      excerpt:
-        "الخِطبة، الجاهة، العَقد، الزَّفاف. كلُّ ليلةٍ لها وَجهٌ، ولها لِباس، ولها صَمت.",
-      photo: "/photos/craft/gilded-table-flowers.jpg",
-    },
-  ],
-  en: [
-    {
-      kicker: "Craft",
-      title: "Hassan al-Mannai and the disappearing zari",
-      excerpt:
-        "In the back corner of Souq Waqif, the last calligraphers who still know how to wind gold thread around camel hair. We went to learn.",
-      photo: "/photos/craft/sweets-silver-platter.jpg",
-    },
-    {
-      kicker: "Music",
-      title: "Why no DJ",
-      excerpt: "Oud and qanun. If the occasion asks, a Bedouin voice. Everything else is noise.",
-      photo: "/photos/craft/chocolate-server-portrait.jpg",
-    },
-    {
-      kicker: "Protocol",
-      title: "The four days of a Qatari wedding, explained",
-      excerpt:
-        "Khitba, jaha, agd, zafaf. Each night has its face, its dress, and its silence.",
-      photo: "/photos/craft/gilded-table-flowers.jpg",
-    },
-  ],
-};
+export const revalidate = 900;
 
 export default async function JournalPage({
   params,
@@ -61,30 +19,22 @@ export default async function JournalPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const entries = ENTRIES[lang];
+
+  const stories = USE_STORYBLOK
+    ? await getStoryList<SbJournalEntry>({ starts_with: "journal/", sort_by: "created_at:asc" }, lang)
+    : [];
+  const j = mapJournalList(stories.length ? stories.map((s) => s.content) : null, lang);
+  const entries = j.entries;
 
   return (
     <>
-      <PageHero
-        lang={lang}
-        eyebrow={lang === "ar" ? "اليوميّات" : "Journal"}
-        title={
-          lang === "ar"
-            ? "ما نَكتُبه بين حَفلٍ وحَفل."
-            : "What we write between weddings."
-        }
-        intro={
-          lang === "ar"
-            ? "ثلاثُ مقالاتٍ مُختارة عن الحِرفة، الصَّمت، والبروتوكول القَطَري — ما نَكتُبه بين مُناسبةٍ ومُناسبة."
-            : "Three selected essays on craft, silence, and Qatari protocol — what we write between one celebration and the next."
-        }
-      />
+      <PageHero lang={lang} eyebrow={j.meta.eyebrow} title={j.meta.title} intro={j.meta.intro} />
 
       <section className="relative surface-pearl py-14 md:py-20 border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {entries.map((e, i) => (
-              <li key={i} className="group">
+            {entries.map((e) => (
+              <li key={e.slug} className="group">
                 <Link href="#" className="block">
                   <div className="relative aspect-[4/5] overflow-hidden mb-6">
                     <Image

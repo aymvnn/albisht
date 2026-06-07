@@ -2,18 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral, localizedDigits, localizedThousands } from "@/lib/i18n";
-import { PACKAGES_META } from "@/lib/copy";
-import {
-  PACKAGES,
-  WOMENS_HOSPITALITY,
-  WOMENS_BEVERAGES,
-  WOMENS_BEVERAGE_CATEGORIES,
-  WOMENS_META,
-} from "@/lib/packages";
 import type { Package } from "@/lib/packages";
+import { USE_STORYBLOK } from "@/lib/storyblok/api";
+import { getStoryContent } from "@/lib/storyblok/fetch";
+import { mapPackages, type PackagesContent } from "@/lib/content/from-storyblok";
+import type { SbPackagesPage } from "@/lib/storyblok/types";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 import { PHONES } from "@/lib/contact";
+
+export const revalidate = 900;
 
 export default async function PackagesPage({
   params,
@@ -23,8 +21,10 @@ export default async function PackagesPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const meta = PACKAGES_META[lang];
-  const packages = PACKAGES[lang];
+  const sb = USE_STORYBLOK ? await getStoryContent<SbPackagesPage>("packages", lang) : null;
+  const pc = mapPackages(sb, lang);
+  const meta = pc.meta;
+  const packages = pc.tiers;
 
   return (
     <>
@@ -48,7 +48,7 @@ export default async function PackagesPage({
       ))}
 
       {/* === Women's atelier section — distinct product line === */}
-      <WomensSection lang={lang} />
+      <WomensSection lang={lang} womens={pc.womens} />
 
       {/* === Closing CTA — the full ContactCallout with both phones + letter === */}
       <ContactCallout lang={lang} variant="dark" />
@@ -70,7 +70,7 @@ function PackagesOverview({
 }: {
   packages: Package[];
   lang: Lang;
-  meta: typeof PACKAGES_META.ar | typeof PACKAGES_META.en;
+  meta: PackagesContent["meta"];
 }) {
   const isAr = lang === "ar";
   const eyebrow = isAr ? "نظرة عامة" : "At a glance";
@@ -110,7 +110,7 @@ function OverviewCard({
   pkg: Package;
   lang: Lang;
   detailsLabel: string;
-  meta: typeof PACKAGES_META.ar | typeof PACKAGES_META.en;
+  meta: PackagesContent["meta"];
 }) {
   const isAr = lang === "ar";
   const formattedPrice = localizedThousands(pkg.priceQAR, lang);
@@ -223,7 +223,7 @@ function PackageBlock({
   pkg: Package;
   index: number;
   lang: Lang;
-  meta: typeof PACKAGES_META.ar | typeof PACKAGES_META.en;
+  meta: PackagesContent["meta"];
 }) {
   const isAr = lang === "ar";
   // Single light tone for every tier. Subtle ivory variant on every other
@@ -384,9 +384,9 @@ function PackageBlock({
    menu-like (capacities + drinks), single CTA to the women's phone.
    ============================================================ */
 
-function WomensSection({ lang }: { lang: Lang }) {
+function WomensSection({ lang, womens }: { lang: Lang; womens: PackagesContent["womens"] }) {
   const isAr = lang === "ar";
-  const meta = WOMENS_META[lang];
+  const meta = womens.meta;
   const phone = PHONES.womens;
 
   return (
@@ -438,14 +438,14 @@ function WomensSection({ lang }: { lang: Lang }) {
           {/* Hospitality capacities */}
           <CapacityList
             title={meta.hospitalityTitle}
-            tiers={WOMENS_HOSPITALITY}
+            tiers={womens.hospitality}
             unit={meta.perPerson}
             lang={lang}
           />
           {/* Beverage tray capacities */}
           <CapacityList
             title={meta.beveragesTitle}
-            tiers={WOMENS_BEVERAGES}
+            tiers={womens.beverages}
             unit={meta.perPerson}
             lang={lang}
           />
@@ -463,8 +463,8 @@ function WomensSection({ lang }: { lang: Lang }) {
             {meta.menuTitle}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-12">
-            {WOMENS_BEVERAGE_CATEGORIES.map((cat) => (
-              <div key={cat.name.en}>
+            {womens.menu.map((cat, ci) => (
+              <div key={ci}>
                 <h4
                   className={`${
                     isAr ? "type-arabic-headline" : "type-roman"
@@ -475,19 +475,19 @@ function WomensSection({ lang }: { lang: Lang }) {
                     fontSize: "1rem",
                   }}
                 >
-                  {cat.name[lang]}
+                  {cat.name}
                 </h4>
                 <ul className="space-y-2">
-                  {cat.items.map((item) => (
+                  {cat.items.map((item, ii) => (
                     <li
-                      key={item.en}
+                      key={ii}
                       className={`${isAr ? "type-arabic" : "type-serif"}`}
                       style={{
                         color: "var(--color-ink)",
                         fontSize: "1.05rem",
                       }}
                     >
-                      {localizedDigits(item[lang], lang)}
+                      {localizedDigits(item, lang)}
                     </li>
                   ))}
                 </ul>

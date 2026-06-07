@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CALLOUT, PHONES } from "@/lib/contact";
 import { type Lang, localizedDigits } from "@/lib/i18n";
+import { getGlobals } from "@/lib/content/globals";
 import { SilkRibbon } from "./SilkRibbon";
 
 /**
@@ -25,14 +25,15 @@ import { SilkRibbon } from "./SilkRibbon";
  *   • All hover micro-animations are pure CSS (defined in globals.css under
  *     .cc-letter-cta / .cc-phone-line / .cc-phone-dot / .cc-door)
  */
-export function ContactCallout({
+export async function ContactCallout({
   lang,
   variant = "dark",
 }: {
   lang: Lang;
   variant?: "dark" | "light" | "inline";
 }) {
-  const c = CALLOUT[lang];
+  const g = await getGlobals(lang);
+  const c = g.callout;
   const isAr = lang === "ar";
   const isDark = variant === "dark";
   const isInline = variant === "inline";
@@ -208,14 +209,8 @@ export function ContactCallout({
             kind="letter"
             href={`/${lang}/consult`}
             title={c.letter}
-            description={
-              isAr
-                ? "للاستفسارات المُفَصَّلة — التاريخ، عَدَد الضيوف، الباقة. نَرُد خلال ثلاثة أيام."
-                : "For detailed enquiries — the date, the number of guests, the chosen package. We reply within three days."
-            }
-            actionLabel={
-              isAr ? "اكتب الرسالة الكاملة" : "Write the full letter"
-            }
+            description={c.letterDesc}
+            actionLabel={c.letterAction}
             text={text}
             muted={muted}
             isAr={isAr}
@@ -225,12 +220,8 @@ export function ContactCallout({
           {/* DOOR 2 — BY PHONE */}
           <Door
             kind="phone"
-            title={isAr ? "أو اِتصِل" : "Or call"}
-            description={
-              isAr
-                ? "للاتصال المباشر بصالة الرجال — كامل خدمات الأَتيليه. للسيدات خَطٌّ مُختار للضيافة والمشروبات."
-                : "Direct line to the men's atelier — the full ALBISHT service. For the women's atelier, a parallel line for hospitality and beverage."
-            }
+            title={c.callTitle}
+            description={c.callDesc}
             text={text}
             muted={muted}
             isAr={isAr}
@@ -239,17 +230,17 @@ export function ContactCallout({
               {
                 key: "mens",
                 role: isAr ? "صالة الرجال" : "Men's atelier",
-                note: PHONES.mens.note?.[lang] ?? "",
-                display: PHONES.mens.display,
-                tel: PHONES.mens.tel,
+                note: g.phones.mens.note,
+                display: g.phones.mens.display,
+                tel: g.phones.mens.tel,
                 primary: true,
               },
               {
                 key: "womens",
                 role: isAr ? "صالة السيدات" : "Women's atelier",
-                note: PHONES.womens.note?.[lang] ?? "",
-                display: PHONES.womens.display,
-                tel: PHONES.womens.tel,
+                note: g.phones.womens.note,
+                display: g.phones.womens.display,
+                tel: g.phones.womens.tel,
                 primary: false,
               },
             ]}

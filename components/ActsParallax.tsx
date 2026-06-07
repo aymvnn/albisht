@@ -9,8 +9,14 @@ import { type Lang, localizedNumeral } from "@/lib/i18n";
  * "The evening in three acts" — horizontal parallax tryptiek.
  * Three full-height panels that scroll past with subtle parallax inside each photo.
  */
-export function ActsParallax({ lang }: { lang: Lang }) {
-  const data = ACTS[lang];
+export function ActsParallax({
+  lang,
+  content,
+}: {
+  lang: Lang;
+  content?: { label: string; heading: string; items: { kicker: string; title: string; line: string; photo: string }[] };
+}) {
+  const data = content ?? ACTS[lang];
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -72,9 +78,7 @@ export function ActsParallax({ lang }: { lang: Lang }) {
             letterSpacing: lang === "ar" ? "0" : "-0.015em",
           }}
         >
-          {lang === "ar"
-            ? "ثَلاثُ لَحظاتٍ تَصنَع المَساء."
-            : "Three moments shape the evening."}
+          {data.heading}
         </h2>
       </div>
 

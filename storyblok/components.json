@@ -1,0 +1,384 @@
+{
+  "_comment": "ALBISHT Storyblok content model. Push with: npx storyblok push-components <SPACE_ID> --file storyblok/components.json. Field-level translations: fields marked translatable:true hold one value per space language (ar = default/canonical, en = mirror). Fields suffixed _ar / _en are BILINGUAL-SIMULTANEOUS (both shown on every page regardless of active language) and are intentionally NOT translatable. Headline fields accept *word* markup: wrap one word per line in asterisks to render it gold+italic (parsed by FormatHeadline.tsx). Do not change the *word* convention without updating that component.",
+  "components": [
+    {
+      "name": "globals",
+      "display_name": "Globals (site-wide)",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "tab_contact": { "type": "tab", "display_name": "Contact", "keys": ["phone_mens", "phone_womens", "email", "location", "reception_hours", "socials"] },
+        "phone_mens": { "type": "bloks", "restrict_components": true, "component_whitelist": ["phone"], "minimum": 1, "maximum": 1, "description": "Men's hall — the primary, full-service line." },
+        "phone_womens": { "type": "bloks", "restrict_components": true, "component_whitelist": ["phone"], "minimum": 1, "maximum": 1, "description": "Women's atelier — selected services line." },
+        "email": { "type": "text", "description": "Single contact email, e.g. hello@albisht.qa" },
+        "location": { "type": "text", "translatable": true, "description": "City line, e.g. الدوحة، قطر / Doha, Qatar" },
+        "reception_hours": { "type": "textarea", "translatable": true, "description": "Shown on the contact page. Use a line break between the day-range and the time-range." },
+        "socials": { "type": "bloks", "restrict_components": true, "component_whitelist": ["social_link"], "maximum": 6, "description": "Instagram / Facebook / TikTok." },
+        "tab_nav": { "type": "tab", "display_name": "Navigation & footer", "keys": ["nav", "footer_tagline", "footer_address", "footer_rights"] },
+        "nav": { "type": "bloks", "restrict_components": true, "component_whitelist": ["nav_item"], "minimum": 1, "maximum": 10, "description": "Main navigation order. The header shows the first 6; the footer and mobile drawer show all. Each href must point to a real page." },
+        "footer_tagline": { "type": "text", "translatable": true, "description": "Short line under the footer logo." },
+        "footer_address": { "type": "text", "translatable": true },
+        "footer_rights": { "type": "text", "translatable": true, "description": "e.g. جميع الحقوق محفوظة / All rights reserved" },
+        "tab_callout": { "type": "tab", "display_name": "Contact call-out (site-wide block)", "keys": ["callout_eyebrow", "callout_title", "callout_intro", "callout_letter_label", "callout_letter_desc", "callout_letter_action", "callout_call_title", "callout_call_desc"] },
+        "callout_eyebrow": { "type": "text", "translatable": true },
+        "callout_title": { "type": "text", "translatable": true, "description": "Headline of the closing call-out block. *word* markup allowed." },
+        "callout_intro": { "type": "textarea", "translatable": true },
+        "callout_letter_label": { "type": "text", "translatable": true, "description": "Title of the 'letter' door." },
+        "callout_letter_desc": { "type": "textarea", "translatable": true },
+        "callout_letter_action": { "type": "text", "translatable": true, "description": "Button label, e.g. اكتب الرسالة الكاملة / Write the full letter." },
+        "callout_call_title": { "type": "text", "translatable": true, "description": "Title of the 'call' door, e.g. أو اِتصِل / Or call." },
+        "callout_call_desc": { "type": "textarea", "translatable": true }
+      }
+    },
+    {
+      "name": "phone",
+      "display_name": "Phone number",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "tel": { "type": "text", "required": true, "description": "International format for tel: links, no spaces. e.g. +97433777074" },
+        "display": { "type": "text", "required": true, "description": "Human display variant with spaces. e.g. +974 3377 7074" },
+        "label": { "type": "text", "translatable": true, "description": "e.g. صالة الرجال / Men's Hall" },
+        "note": { "type": "text", "translatable": true, "description": "Short scope note shown under the number." },
+        "weight": { "type": "option", "default_value": "primary", "options": [ { "name": "Primary (full service)", "value": "primary" }, { "name": "Secondary (selected services)", "value": "secondary" } ] }
+      }
+    },
+    {
+      "name": "social_link",
+      "display_name": "Social link",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "platform": { "type": "option", "required": true, "options": [ { "name": "Instagram", "value": "instagram" }, { "name": "Facebook", "value": "facebook" }, { "name": "TikTok", "value": "tiktok" } ] },
+        "handle": { "type": "text", "description": "e.g. @albishtqtr" },
+        "url": { "type": "text", "required": true, "description": "Full URL incl. https://" }
+      }
+    },
+    {
+      "name": "nav_item",
+      "display_name": "Nav item",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "label": { "type": "text", "translatable": true, "required": true },
+        "href": { "type": "text", "required": true, "description": "Path without language prefix, e.g. /atelier" }
+      }
+    },
+    {
+      "name": "seo",
+      "display_name": "SEO meta",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text", "translatable": true, "description": "Browser tab + search title. ~55 chars." },
+        "description": { "type": "textarea", "translatable": true, "description": "Search snippet. ~155 chars." },
+        "og_image": { "type": "asset", "filetypes": ["images"], "description": "Social share image (1200×630). Falls back to brand default if empty." }
+      }
+    },
+    {
+      "name": "page_hero",
+      "display_name": "Page hero",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "eyebrow": { "type": "text", "translatable": true },
+        "headline": { "type": "text", "translatable": true, "required": true, "description": "*word* markup allowed (one word per line in asterisks → gold italic)." },
+        "intro": { "type": "textarea", "translatable": true }
+      }
+    },
+    {
+      "name": "act",
+      "display_name": "Act (evening in three acts)",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "kicker": { "type": "text", "translatable": true, "description": "e.g. الفصل الأول / Act i" },
+        "title": { "type": "text", "translatable": true },
+        "line": { "type": "textarea", "translatable": true },
+        "photo": { "type": "asset", "filetypes": ["images"], "required": true }
+      }
+    },
+    {
+      "name": "principle",
+      "display_name": "Principle (atelier)",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "word_ar": { "type": "text", "required": true, "description": "Arabic word, shown LARGE in calligraphy on every language. Not a translation." },
+        "word_en": { "type": "text", "required": true, "description": "English word, shown as the roman label on every language. Not a translation." },
+        "body": { "type": "textarea", "translatable": true, "required": true },
+        "photo": { "type": "asset", "filetypes": ["images"], "required": true }
+      }
+    },
+    {
+      "name": "phase",
+      "display_name": "Phase (services protocol)",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "name_ar": { "type": "text", "required": true, "description": "Arabic name, shown LARGE on every language. Not a translation." },
+        "name_en": { "type": "text", "required": true, "description": "English name, shown as roman label on every language. Not a translation." },
+        "body": { "type": "textarea", "translatable": true, "required": true },
+        "photo": { "type": "asset", "filetypes": ["images"], "required": true }
+      }
+    },
+    {
+      "name": "chapter",
+      "display_name": "Chapter (heritage long-read)",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "number": { "type": "text", "description": "e.g. 01 — display only; rendered in brand numerals automatically." },
+        "title": { "type": "text", "translatable": true, "required": true },
+        "body": { "type": "textarea", "translatable": true, "required": true },
+        "pullquote": { "type": "textarea", "translatable": true, "description": "Optional. If set, a pull-quote is rendered after this chapter." }
+      }
+    },
+    {
+      "name": "package_section",
+      "display_name": "Package section",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "key": { "type": "option", "description": "Canonical section. Leave empty and fill Custom label to add a brand-new section (e.g. Music).", "options": [ { "name": "Inside the hall", "value": "hall" }, { "name": "Lobby seating", "value": "lobby" }, { "name": "Hospitality", "value": "hospitality" }, { "name": "Photography", "value": "photography" }, { "name": "Outside the hall", "value": "exterior" } ] },
+        "custom_label": { "type": "text", "translatable": true, "description": "Only needed for a non-canonical section. Overrides the label of the chosen key if both are set." },
+        "bullets": { "type": "textarea", "translatable": true, "required": true, "description": "One inclusion per line. Lines map 1:1 to bullets on the page." }
+      }
+    },
+    {
+      "name": "package_tier",
+      "display_name": "Package tier",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "uid": { "type": "text", "required": true, "description": "Stable slug for analytics & deep-links (#tier-<uid>). e.g. silver. Do NOT change once published." },
+        "tier_slug": { "type": "text", "description": "Visual tier family for styling: silver / gold / platinum / vip / top-vip. Free text so a new family can be introduced." },
+        "name": { "type": "text", "translatable": true, "required": true, "description": "Display name. Arabic renders in the ceremonial face." },
+        "price_qar": { "type": "number", "required": true, "description": "Integer, Qatari Riyal. Formatted to brand numerals automatically." },
+        "highlight": { "type": "textarea", "translatable": true, "description": "One-line summary of what makes this tier special." },
+        "photo": { "type": "asset", "filetypes": ["images"], "required": true },
+        "sections": { "type": "bloks", "restrict_components": true, "component_whitelist": ["package_section"], "minimum": 1, "description": "Inclusion sections in display order." }
+      }
+    },
+    {
+      "name": "section_label",
+      "display_name": "Section label",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "key": { "type": "text", "required": true, "description": "Matches package_section key: hall / lobby / hospitality / photography / exterior." },
+        "label": { "type": "text", "translatable": true, "required": true }
+      }
+    },
+    {
+      "name": "capacity_tier",
+      "display_name": "Capacity tier (women's)",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "capacity": { "type": "number", "required": true, "description": "Guest count, e.g. 25." },
+        "note": { "type": "text", "translatable": true, "description": "Optional short note under the number." }
+      }
+    },
+    {
+      "name": "beverage_item",
+      "display_name": "Beverage item",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "name": { "type": "text", "translatable": true, "required": true }
+      }
+    },
+    {
+      "name": "beverage_category",
+      "display_name": "Beverage category",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "name": { "type": "text", "translatable": true, "required": true },
+        "items": { "type": "bloks", "restrict_components": true, "component_whitelist": ["beverage_item"] }
+      }
+    },
+    {
+      "name": "home_page",
+      "display_name": "Home page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "tab_seo": { "type": "tab", "display_name": "SEO", "keys": ["seo"] },
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "tab_hero": { "type": "tab", "display_name": "Hero", "keys": ["hero_eyebrow", "hero_headline", "hero_subline", "hero_cta_label", "hero_cta_href", "hero_image", "reveal_phrase"] },
+        "hero_eyebrow": { "type": "text", "translatable": true },
+        "hero_headline": { "type": "text", "translatable": true, "required": true, "description": "*word* markup allowed.", "max_length": 60 },
+        "hero_subline": { "type": "text", "translatable": true },
+        "hero_cta_label": { "type": "text", "translatable": true },
+        "hero_cta_href": { "type": "text", "description": "Path without language prefix, e.g. /consult" },
+        "hero_image": { "type": "asset", "filetypes": ["images"], "required": true },
+        "reveal_phrase": { "type": "text", "translatable": true, "description": "Phrase shown during the opening bisht-reveal cinematic." },
+        "tab_promise": { "type": "tab", "display_name": "Promise", "keys": ["promise_title", "promise_lines"] },
+        "promise_title": { "type": "text", "translatable": true },
+        "promise_lines": { "type": "textarea", "translatable": true, "description": "One line per row." },
+        "tab_acts": { "type": "tab", "display_name": "Three acts", "keys": ["acts_label", "acts_heading", "acts"] },
+        "acts_label": { "type": "text", "translatable": true, "description": "Eyebrow above the section." },
+        "acts_heading": { "type": "text", "translatable": true, "description": "Section headline, e.g. ثَلاثُ لَحظاتٍ تَصنَع المَساء. / Three moments shape the evening." },
+        "acts": { "type": "bloks", "restrict_components": true, "component_whitelist": ["act"], "minimum": 3, "maximum": 3, "description": "Exactly three acts — cannot add or remove." },
+        "tab_celebrations": { "type": "tab", "display_name": "Celebrations strip", "keys": ["celebrations_label", "celebrations_title", "celebrations_intro"] },
+        "celebrations_label": { "type": "text", "translatable": true },
+        "celebrations_title": { "type": "text", "translatable": true, "description": "*word* markup allowed." },
+        "celebrations_intro": { "type": "textarea", "translatable": true, "description": "The three cards below are pulled automatically from the newest Celebration entries." },
+        "tab_invitation": { "type": "tab", "display_name": "Invitation", "keys": ["invitation_title", "invitation_line1", "invitation_line2", "invitation_cta_label", "invitation_cta_href"] },
+        "invitation_title": { "type": "text", "translatable": true },
+        "invitation_line1": { "type": "text", "translatable": true },
+        "invitation_line2": { "type": "text", "translatable": true },
+        "invitation_cta_label": { "type": "text", "translatable": true },
+        "invitation_cta_href": { "type": "text", "description": "Path without language prefix." }
+      }
+    },
+    {
+      "name": "atelier_page",
+      "display_name": "Atelier page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "hero": { "type": "bloks", "restrict_components": true, "component_whitelist": ["page_hero"], "minimum": 1, "maximum": 1 },
+        "principles_label": { "type": "text", "translatable": true },
+        "principles": { "type": "bloks", "restrict_components": true, "component_whitelist": ["principle"], "minimum": 3, "maximum": 3, "description": "Exactly three principles." },
+        "network_label": { "type": "text", "translatable": true },
+        "network_title": { "type": "text", "translatable": true },
+        "network_body": { "type": "textarea", "translatable": true },
+        "network_photo": { "type": "asset", "filetypes": ["images"], "required": true },
+        "terms_label": { "type": "text", "translatable": true },
+        "terms_title": { "type": "text", "translatable": true },
+        "terms_lines": { "type": "textarea", "translatable": true, "description": "One term per line." }
+      }
+    },
+    {
+      "name": "heritage_page",
+      "display_name": "Heritage page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "hero": { "type": "bloks", "restrict_components": true, "component_whitelist": ["page_hero"], "minimum": 1, "maximum": 1 },
+        "intro_image": { "type": "asset", "filetypes": ["images"], "required": true, "description": "First full-bleed photo break, under the hero." },
+        "chapters": { "type": "bloks", "restrict_components": true, "component_whitelist": ["chapter"], "minimum": 1, "maximum": 12, "description": "Chapters in order; the page splits them around the middle photo break." },
+        "intermezzo_image": { "type": "asset", "filetypes": ["images"], "required": true, "description": "Second full-bleed photo break, between chapter groups." }
+      }
+    },
+    {
+      "name": "services_page",
+      "display_name": "Services page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "hero": { "type": "bloks", "restrict_components": true, "component_whitelist": ["page_hero"], "minimum": 1, "maximum": 1 },
+        "phases": { "type": "bloks", "restrict_components": true, "component_whitelist": ["phase"], "minimum": 4, "maximum": 12, "description": "Protocol phases in order. The mid-page photo break appears after phase 4." },
+        "intermezzo_image": { "type": "asset", "filetypes": ["images"], "required": true }
+      }
+    },
+    {
+      "name": "consult_page",
+      "display_name": "Consult page (The Letter)",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "eyebrow": { "type": "text", "translatable": true },
+        "headline": { "type": "text", "translatable": true, "description": "Typed out letter-by-letter on load." },
+        "sub": { "type": "textarea", "translatable": true },
+        "body": { "type": "textarea", "translatable": true },
+        "field_name_label": { "type": "text", "translatable": true },
+        "field_date_label": { "type": "text", "translatable": true },
+        "field_date_placeholder": { "type": "text", "translatable": true },
+        "field_guests_label": { "type": "text", "translatable": true },
+        "field_contact_label": { "type": "text", "translatable": true },
+        "field_notes_label": { "type": "text", "translatable": true },
+        "field_notes_hint": { "type": "text", "translatable": true },
+        "submit_label": { "type": "text", "translatable": true },
+        "submitted_line1": { "type": "text", "translatable": true },
+        "submitted_line2": { "type": "text", "translatable": true }
+      }
+    },
+    {
+      "name": "contact_page",
+      "display_name": "Contact page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "hero": { "type": "bloks", "restrict_components": true, "component_whitelist": ["page_hero"], "minimum": 1, "maximum": 1 },
+        "primary_image": { "type": "asset", "filetypes": ["images"], "required": true, "description": "Photo beside the primary (men's) line." },
+        "letter_label": { "type": "text", "translatable": true },
+        "letter_headline": { "type": "text", "translatable": true },
+        "letter_body": { "type": "textarea", "translatable": true },
+        "letter_cta_label": { "type": "text", "translatable": true }
+      }
+    },
+    {
+      "name": "packages_page",
+      "display_name": "Packages page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "tab_seo": { "type": "tab", "display_name": "SEO & hero", "keys": ["seo", "hero"] },
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "hero": { "type": "bloks", "restrict_components": true, "component_whitelist": ["page_hero"], "minimum": 1, "maximum": 1 },
+        "tab_mens": { "type": "tab", "display_name": "Men's packages", "keys": ["mens_eyebrow", "mens_title", "mens_intro", "mens_cta", "price_label", "section_labels", "mens_tiers"] },
+        "mens_eyebrow": { "type": "text", "translatable": true },
+        "mens_title": { "type": "text", "translatable": true },
+        "mens_intro": { "type": "textarea", "translatable": true },
+        "mens_cta": { "type": "text", "translatable": true, "description": "Per-package reserve button, e.g. احجز هذه الباقة / Reserve this package." },
+        "price_label": { "type": "text", "translatable": true, "description": "e.g. ريال قطري / QAR" },
+        "section_labels": { "type": "bloks", "restrict_components": true, "component_whitelist": ["section_label"], "minimum": 1, "description": "Display labels for the canonical section keys." },
+        "mens_tiers": { "type": "bloks", "restrict_components": true, "component_whitelist": ["package_tier"], "minimum": 1, "description": "Package tiers in display order. Add, remove or reorder freely (at least one)." },
+        "tab_womens": { "type": "tab", "display_name": "Women's atelier", "keys": ["womens_eyebrow", "womens_title", "womens_intro", "womens_hospitality_title", "womens_beverages_title", "womens_per_person", "womens_per_tray", "womens_enquire_label", "womens_phone_label", "womens_menu_title", "womens_hospitality", "womens_beverages", "womens_menu"] },
+        "womens_eyebrow": { "type": "text", "translatable": true },
+        "womens_title": { "type": "text", "translatable": true },
+        "womens_intro": { "type": "textarea", "translatable": true },
+        "womens_hospitality_title": { "type": "text", "translatable": true },
+        "womens_beverages_title": { "type": "text", "translatable": true },
+        "womens_per_person": { "type": "text", "translatable": true, "description": "Unit label, e.g. شخص / guests." },
+        "womens_per_tray": { "type": "text", "translatable": true },
+        "womens_enquire_label": { "type": "text", "translatable": true },
+        "womens_phone_label": { "type": "text", "translatable": true },
+        "womens_menu_title": { "type": "text", "translatable": true },
+        "womens_hospitality": { "type": "bloks", "restrict_components": true, "component_whitelist": ["capacity_tier"] },
+        "womens_beverages": { "type": "bloks", "restrict_components": true, "component_whitelist": ["capacity_tier"] },
+        "womens_menu": { "type": "bloks", "restrict_components": true, "component_whitelist": ["beverage_category"] }
+      }
+    },
+    {
+      "name": "journal_entry",
+      "display_name": "Journal entry",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "seo": { "type": "bloks", "restrict_components": true, "component_whitelist": ["seo"], "minimum": 1, "maximum": 1 },
+        "kicker": { "type": "text", "translatable": true, "description": "Category, e.g. حِرفة / Craft." },
+        "title": { "type": "text", "translatable": true, "required": true },
+        "excerpt": { "type": "textarea", "translatable": true, "required": true },
+        "cover_photo": { "type": "asset", "filetypes": ["images"], "required": true },
+        "body": { "type": "richtext", "translatable": true, "description": "Optional full essay body. Leave empty for excerpt-only cards." },
+        "published_at": { "type": "datetime", "description": "Controls ordering (newest first)." },
+        "featured": { "type": "boolean", "description": "Surface this entry where a featured slot is used." }
+      }
+    },
+    {
+      "name": "celebration_case",
+      "display_name": "Celebration",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "title": { "type": "text", "translatable": true, "required": true, "description": "*word* markup allowed (one word gold)." },
+        "when": { "type": "text", "translatable": true, "description": "e.g. نوفمبر ٢٠٢٥ / November 2025." },
+        "where": { "type": "text", "translatable": true, "description": "City/venue, names withheld." },
+        "guests": { "type": "text", "translatable": true, "description": "e.g. ست مئة ضيف / Six hundred guests." },
+        "note": { "type": "textarea", "translatable": true },
+        "photo": { "type": "asset", "filetypes": ["images"], "required": true },
+        "published_at": { "type": "datetime", "description": "Controls ordering (newest first). Home shows the newest three." }
+      }
+    }
+  ]
+}

@@ -11,8 +11,29 @@ import { WaxSealButton } from "./WaxSealButton";
  * Form fields are typographic, underlined, no boxes.
  * Submit is the WaxSealButton.
  */
-export function ConsultLetter({ lang }: { lang: Lang }) {
-  const c = CONSULT[lang];
+export function ConsultLetter({
+  lang,
+  content,
+}: {
+  lang: Lang;
+  content?: {
+    eyebrow: string;
+    headline: string;
+    sub: string;
+    body: string;
+    fields: { name: string; date: string; datePlaceholder: string; guests: string; contact: string; notes: string; notesHint: string };
+    submit: string;
+    submitted: { line1: string; line2: string };
+  };
+}) {
+  const c =
+    content ?? {
+      ...CONSULT[lang],
+      fields: {
+        ...CONSULT[lang].fields,
+        datePlaceholder: lang === "ar" ? "شهر/سنة" : "Month / Year",
+      },
+    };
   const [typed, setTyped] = useState("");
   const fullGreeting = c.headline;
   const [sent, setSent] = useState(false);
@@ -115,7 +136,7 @@ export function ConsultLetter({ lang }: { lang: Lang }) {
           {/* Form — typographic fields */}
           <form ref={formRef} onSubmit={onSubmit} className="space-y-10">
             <Field label={c.fields.name} type="text" name="name" required />
-            <Field label={c.fields.date} type="text" name="date" placeholder={lang === "ar" ? "شهر/سنة" : "Month / Year"} />
+            <Field label={c.fields.date} type="text" name="date" placeholder={c.fields.datePlaceholder} />
             <Field label={c.fields.guests} type="text" name="guests" />
             <Field label={c.fields.contact} type="text" name="contact" required />
             <FieldTextArea

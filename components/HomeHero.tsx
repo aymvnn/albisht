@@ -7,8 +7,22 @@ import { HERO } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
 import { FormatHeadline } from "./FormatHeadline";
 
-export function HomeHero({ lang }: { lang: Lang }) {
-  const h = HERO[lang];
+export function HomeHero({
+  lang,
+  content,
+}: {
+  lang: Lang;
+  content?: { eyebrow: string; headline: string; subline: string; cta: string; ctaHref: string; image: string };
+}) {
+  const base = HERO[lang];
+  const h = {
+    eyebrow: content?.eyebrow ?? base.eyebrow,
+    headline: content?.headline ?? base.headline,
+    subline: content?.subline ?? base.subline,
+    cta: content?.cta ?? base.cta,
+    ctaHref: content?.ctaHref ?? "/consult",
+    image: content?.image ?? "/photos/hall/hero-pearl-court.jpg",
+  };
   const ref = useRef<HTMLDivElement>(null);
 
   // Slow parallax on the hero image
@@ -30,7 +44,7 @@ export function HomeHero({ lang }: { lang: Lang }) {
     <section className="relative w-full h-[100svh] min-h-[680px] overflow-hidden">
       <div ref={ref} className="absolute inset-0 will-change-transform">
         <Image
-          src="/photos/hall/hero-pearl-court.jpg"
+          src={h.image}
           alt=""
           fill
           priority
@@ -123,7 +137,7 @@ export function HomeHero({ lang }: { lang: Lang }) {
               {h.subline}
             </p>
             <Link
-              href={`/${lang}/consult`}
+              href={`/${lang}${h.ctaHref}`}
               className="btn-brand inline-flex items-center gap-4 border"
             >
               <span>{h.cta}</span>

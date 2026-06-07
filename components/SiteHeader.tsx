@@ -13,13 +13,25 @@ import { PHONES } from "@/lib/contact";
 
 type BishtPhase = "closed" | "opening" | "revealed" | "fading" | "done";
 
-export function SiteHeader({ lang }: { lang: Lang }) {
+export function SiteHeader({
+  lang,
+  navItems,
+  phones,
+}: {
+  lang: Lang;
+  navItems?: { href: string; label: string }[];
+  phones?: { mens: { display: string; tel: string }; womens: { display: string; tel: string } };
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [bishtPhase, setBishtPhase] = useState<BishtPhase>("done");
-  const nav = NAV[lang];
+  const nav = navItems ?? NAV[lang];
+  const ph = phones ?? {
+    mens: { display: PHONES.mens.display, tel: PHONES.mens.tel },
+    womens: { display: PHONES.womens.display, tel: PHONES.womens.tel },
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -318,15 +330,15 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           >
             <PhoneRow
               label={lang === "ar" ? "صالة الرجال" : "Men's atelier"}
-              display={PHONES.mens.display}
-              tel={PHONES.mens.tel}
+              display={ph.mens.display}
+              tel={ph.mens.tel}
               lang={lang}
               primary
             />
             <PhoneRow
               label={lang === "ar" ? "صالة السيدات" : "Women's atelier"}
-              display={PHONES.womens.display}
-              tel={PHONES.womens.tel}
+              display={ph.womens.display}
+              tel={ph.womens.tel}
               lang={lang}
             />
 

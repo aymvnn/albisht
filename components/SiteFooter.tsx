@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { FOOTER, NAV } from "@/lib/copy";
 import { type Lang, localizedNumeral, localizedDigits } from "@/lib/i18n";
+import { getGlobals } from "@/lib/content/globals";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
-import { PHONES, EMAIL, SOCIALS } from "@/lib/contact";
 
-export function SiteFooter({ lang }: { lang: Lang }) {
-  const f = FOOTER[lang];
+type SocialLinkName = "instagram" | "facebook" | "tiktok";
+
+export async function SiteFooter({ lang }: { lang: Lang }) {
+  const g = await getGlobals(lang);
   const year = localizedNumeral(2026, lang);
 
   return (
     <footer className="surface-bisht relative z-10">
-      {/* Brand signature silk-and-zari ribbon spanning the top of the footer.
-          Anchored to the very top edge so the previous dark section bleeds
-          straight into the ribbon — no white gap between dark sections. */}
+      {/* Brand signature silk-and-zari ribbon spanning the top of the footer. */}
       <div className="relative h-20 md:h-28 overflow-hidden -mt-1 -mb-px">
         <SilkRibbon variant="horizontal" className="absolute inset-x-0 inset-y-0 w-full h-full" />
       </div>
@@ -23,14 +22,12 @@ export function SiteFooter({ lang }: { lang: Lang }) {
           <div className="md:col-span-5 space-y-8">
             <Logo height={120} variant="light" />
             <p className="type-serif text-[color:var(--color-mist)] max-w-sm">
-              {lang === "ar"
-                ? "صالة الرجال التي تليق بالديوان."
-                : "The men's hall worthy of the Diwan."}
+              {g.footer.tagline}
             </p>
           </div>
 
           <nav className="md:col-span-4 grid grid-cols-2 gap-x-6 gap-y-4 type-nav text-[color:var(--color-mist)]">
-            {NAV[lang].map((item) => (
+            {g.nav.map((item) => (
               <Link
                 key={item.href}
                 href={`/${lang}${item.href}`}
@@ -42,28 +39,28 @@ export function SiteFooter({ lang }: { lang: Lang }) {
           </nav>
 
           <div className="md:col-span-3 space-y-5 text-[color:var(--color-mist)] text-base">
-            <p className={lang === "ar" ? "type-arabic" : "type-serif"}>{f.address}</p>
+            <p className={lang === "ar" ? "type-arabic" : "type-serif"}>{g.footer.address}</p>
             <p className="type-serif">
-              <a href={`mailto:${EMAIL}`} className="hover:text-[color:var(--color-zari)]">
-                {EMAIL}
+              <a href={`mailto:${g.email}`} className="hover:text-[color:var(--color-zari)]">
+                {g.email}
               </a>
             </p>
 
             {/* Primary: men's hall — the full atelier */}
             <div className="pt-3">
-              <PhoneLine number={PHONES.mens} lang={lang} />
+              <PhoneLine number={g.phones.mens} lang={lang} />
             </div>
-            {/* Secondary: women — selected services, smaller + muted */}
-            <SecondaryPhoneLine number={PHONES.womens} lang={lang} />
+            {/* Secondary: women — selected services */}
+            <SecondaryPhoneLine number={g.phones.womens} lang={lang} />
 
             {/* Social channels */}
-            <SocialRow lang={lang} />
+            <SocialRow lang={lang} socials={g.socials} />
           </div>
         </div>
 
         <div className="mt-16 pt-8 border-t border-[color:var(--color-mist)]/15 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="type-roman-light text-[0.86rem] text-[color:var(--color-mist)]/80">
-            © {year} ALBISHT · {f.rights}
+            © {year} ALBISHT · {g.footer.rights}
           </p>
           <p className="type-roman text-[0.86rem] text-[color:var(--color-zari)]">
             Doha · {lang === "ar" ? "قطر" : "Qatar"}
@@ -78,7 +75,7 @@ function PhoneLine({
   number,
   lang,
 }: {
-  number: typeof PHONES.mens;
+  number: { label: string; tel: string; display: string };
   lang: Lang;
 }) {
   return (
@@ -91,7 +88,7 @@ function PhoneLine({
           letterSpacing: lang === "ar" ? 0 : "0.05em",
         }}
       >
-        {number.label[lang]}
+        {number.label}
       </span>
       <a
         href={`tel:${number.tel}`}
@@ -116,7 +113,7 @@ function SecondaryPhoneLine({
   number,
   lang,
 }: {
-  number: typeof PHONES.womens;
+  number: { tel: string; display: string };
   lang: Lang;
 }) {
   return (
@@ -146,15 +143,21 @@ function SecondaryPhoneLine({
   );
 }
 
-function SocialRow({ lang }: { lang: Lang }) {
-  const labels: Record<typeof SOCIALS[number]["name"], { ar: string; en: string }> = {
+function SocialRow({
+  lang,
+  socials,
+}: {
+  lang: Lang;
+  socials: { name: SocialLinkName; handle: string; url: string }[];
+}) {
+  const labels: Record<SocialLinkName, { ar: string; en: string }> = {
     instagram: { ar: "إنستغرام", en: "Instagram" },
     facebook: { ar: "فيسبوك", en: "Facebook" },
     tiktok: { ar: "تيك توك", en: "TikTok" },
   };
   return (
     <div className="pt-4 flex items-center gap-4">
-      {SOCIALS.map((s) => (
+      {socials.map((s) => (
         <a
           key={s.name}
           href={s.url}
@@ -171,9 +174,6 @@ function SocialRow({ lang }: { lang: Lang }) {
 }
 
 function SocialIcon({ name }: { name: SocialLinkName }) {
-  // 20px monoline glyphs — tuned to feel like part of the same engraved
-  // family as the zari hairlines elsewhere on the site (currentColor +
-  // strokeWidth ~1.4). Each icon ships as a single <svg>.
   const size = 20;
   if (name === "instagram") {
     return (
@@ -216,5 +216,3 @@ function SocialIcon({ name }: { name: SocialLinkName }) {
     </svg>
   );
 }
-
-type SocialLinkName = typeof SOCIALS[number]["name"];

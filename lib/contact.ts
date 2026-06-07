@@ -79,6 +79,12 @@ export const CALLOUT = {
     letter: "اكتب الرسالة",
     callPrefix: "اتصل بـ",
     secondaryNote: "للسيدات — خدمات مُختارة:",
+    letterDesc:
+      "للاستفسارات المُفَصَّلة — التاريخ، عَدَد الضيوف، الباقة. نَرُد خلال ثلاثة أيام.",
+    letterAction: "اكتب الرسالة الكاملة",
+    callTitle: "أو اِتصِل",
+    callDesc:
+      "للاتصال المباشر بصالة الرجال — كامل خدمات الأَتيليه. للسيدات خَطٌّ مُختار للضيافة والمشروبات.",
   },
   en: {
     eyebrow: "Reach us",
@@ -88,5 +94,11 @@ export const CALLOUT = {
     letter: "Write the letter",
     callPrefix: "Call",
     secondaryNote: "For women — selected services:",
+    letterDesc:
+      "For detailed enquiries — the date, the number of guests, the chosen package. We reply within three days.",
+    letterAction: "Write the full letter",
+    callTitle: "Or call",
+    callDesc:
+      "Direct line to the men's atelier — the full ALBISHT service. For the women's atelier, a parallel line for hospitality and beverage.",
   },
 };

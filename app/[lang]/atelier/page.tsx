@@ -1,10 +1,15 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
-import { ATELIER } from "@/lib/copy";
+import { USE_STORYBLOK } from "@/lib/storyblok/api";
+import { getStoryContent } from "@/lib/storyblok/fetch";
+import { mapAtelier } from "@/lib/content/from-storyblok";
+import type { SbAtelierPage } from "@/lib/storyblok/types";
 import { FormatHeadline } from "@/components/FormatHeadline";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
+
+export const revalidate = 900;
 
 export default async function AtelierPage({
   params,
@@ -14,75 +19,69 @@ export default async function AtelierPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const c = ATELIER[lang];
+  const sb = USE_STORYBLOK ? await getStoryContent<SbAtelierPage>("atelier", lang) : null;
+  const c = mapAtelier(sb, lang);
 
   return (
     <>
       <PageHero
         lang={lang}
-        eyebrow={c.eyebrow}
-        title={<FormatHeadline text={c.headline} />}
-        intro={c.intro}
+        eyebrow={c.hero.eyebrow}
+        title={<FormatHeadline text={c.hero.headline} />}
+        intro={c.hero.intro}
       />
 
       {/* Principles — three cards with photo backdrop per principle */}
       <section className="relative py-16 md:py-24 surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
           <div className="seal-divider type-roman text-[0.95rem] mb-14 max-w-md mx-auto">
-            <span>{lang === "ar" ? "ثلاثة مبادئ" : "Three principles"}</span>
+            <span>{c.principlesLabel}</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
-            {c.principles.map((p, i) => {
-              const photos = [
-                "/photos/craft/server-shemagh-cups.jpg",
-                "/photos/hall/olive-tree-light.jpg",
-                "/photos/craft/sweets-silver-platter.jpg",
-              ];
-              return (
-                <article key={i} className="group flex flex-col gap-8">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={photos[i]}
-                      alt=""
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.65) 100%)",
-                      }}
-                    />
-                    <p
-                      className={`absolute inset-x-6 bottom-6 ${
-                        lang === "ar" ? "type-arabic-display" : "type-display"
-                      } text-[color:var(--color-zari)]`}
-                      style={{
-                        fontSize: "clamp(2.5rem, 1.8rem + 2vw, 3.5rem)",
-                        lineHeight: lang === "ar" ? "1.4" : "1",
-                        textShadow: "0 2px 16px rgba(0,0,0,0.7)",
-                      }}
-                    >
-                      {p.ar}
-                    </p>
-                  </div>
-                  <div className="space-y-4 px-1">
-                    <p className="type-roman text-[1rem] text-[color:var(--color-zari-deep)]">
-                      {p.en}
-                    </p>
-                    <p
-                      className={`${
-                        lang === "ar" ? "type-arabic" : "type-serif"
-                      } text-[color:var(--color-ink-soft)] text-lg leading-relaxed`}
-                    >
-                      {p.body}
-                    </p>
-                  </div>
-                </article>
-              );
-            })}
+            {c.principles.map((p, i) => (
+              <article key={i} className="group flex flex-col gap-8">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <Image
+                    src={p.photo}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-105"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.65) 100%)",
+                    }}
+                  />
+                  <p
+                    className={`absolute inset-x-6 bottom-6 ${
+                      lang === "ar" ? "type-arabic-display" : "type-display"
+                    } text-[color:var(--color-zari)]`}
+                    style={{
+                      fontSize: "clamp(2.5rem, 1.8rem + 2vw, 3.5rem)",
+                      lineHeight: lang === "ar" ? "1.4" : "1",
+                      textShadow: "0 2px 16px rgba(0,0,0,0.7)",
+                    }}
+                  >
+                    {p.ar}
+                  </p>
+                </div>
+                <div className="space-y-4 px-1">
+                  <p className="type-roman text-[1rem] text-[color:var(--color-zari-deep)]">
+                    {p.en}
+                  </p>
+                  <p
+                    className={`${
+                      lang === "ar" ? "type-arabic" : "type-serif"
+                    } text-[color:var(--color-ink-soft)] text-lg leading-relaxed`}
+                  >
+                    {p.body}
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -92,7 +91,7 @@ export default async function AtelierPage({
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[600px]">
             <Image
-              src="/photos/majlis/sheikh-portrait.jpg"
+              src={c.network.photo}
               alt=""
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

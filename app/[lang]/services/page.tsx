@@ -1,31 +1,14 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
+import { USE_STORYBLOK } from "@/lib/storyblok/api";
+import { getStoryContent } from "@/lib/storyblok/fetch";
+import { mapServices } from "@/lib/content/from-storyblok";
+import type { SbServicesPage } from "@/lib/storyblok/types";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
-const PHASES = {
-  ar: [
-    { ar: "التشاور", en: "Consultation", body: "الجلسة الأولى. في البيت أو في فندق الديوان.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
-    { ar: "التصميم", en: "Composition", body: "اللون، الخَطّاط، البِشت، الأَزهار.", photo: "/photos/hall/outdoor-marquetry-roses.jpg" },
-    { ar: "التراث", en: "Heritage craft", body: "خَتم العائلة، الدعوة المَخطوطة، الفضة المَنقوشة.", photo: "/photos/hall/mashrabiya-tall-arch.jpg" },
-    { ar: "الكَرَم", en: "Hospitality", body: "القهوة، التَّمر، بَخور العود، عَطر الضيف.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
-    { ar: "القاعة", en: "The men's hall", body: "المَكان، الكَوشة، المَشربيّات، الكروم.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
-    { ar: "الموسيقى", en: "Music", body: "العود والقانون. لا غَير.", photo: "/photos/craft/red-carpet-dark.jpg" },
-    { ar: "اليوم", en: "The day", body: "الجَدوَل، البروتوكول، الاستقبال على مستوى الديوان.", photo: "/photos/craft/server-shemagh-cups.jpg" },
-    { ar: "الذاكرة", en: "Memory", body: "الألبوم، هَدايا الشُكر، الرسالة الختامية.", photo: "/photos/majlis/sheikh-portrait.jpg" },
-  ],
-  en: [
-    { ar: "التشاور", en: "Consultation", body: "The first conversation. At home, or at the palace hotel.", photo: "/photos/majlis/outdoor-marquetry.jpg" },
-    { ar: "التصميم", en: "Composition", body: "Colour, the calligrapher, the bisht, the flowers.", photo: "/photos/hall/outdoor-marquetry-roses.jpg" },
-    { ar: "التراث", en: "Heritage craft", body: "Family seal, hand-written invitation, engraved silver.", photo: "/photos/hall/mashrabiya-tall-arch.jpg" },
-    { ar: "الكَرَم", en: "Hospitality", body: "Coffee, dates, oud-bakhoor, perfume for the guest.", photo: "/photos/craft/tray-chocolates-olive.jpg" },
-    { ar: "القاعة", en: "The men's hall", body: "The venue, the kosha, mashrabiya screens, the chandeliers.", photo: "/photos/hall/mashrabiya-chandelier.jpg" },
-    { ar: "الموسيقى", en: "Music", body: "Oud and qanun. Nothing else.", photo: "/photos/craft/red-carpet-dark.jpg" },
-    { ar: "اليوم", en: "The day", body: "The timeline, the protocol, Diwan-level reception.", photo: "/photos/craft/server-shemagh-cups.jpg" },
-    { ar: "الذاكرة", en: "Memory", body: "The album, gifts of thanks, the closing letter.", photo: "/photos/majlis/sheikh-portrait.jpg" },
-  ],
-};
+export const revalidate = 900;
 
 export default async function ServicesPage({
   params,
@@ -35,20 +18,18 @@ export default async function ServicesPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const phases = PHASES[lang];
+  const sb = USE_STORYBLOK ? await getStoryContent<SbServicesPage>("services", lang) : null;
+  const c = mapServices(sb, lang);
+  const phases = c.phases;
   const isAr = lang === "ar";
 
   return (
     <>
       <PageHero
         lang={lang}
-        eyebrow={isAr ? "الخدمات" : "Services"}
-        title={isAr ? "البروتوكول." : "The protocol."}
-        intro={
-          isAr
-            ? "ثَمانية فُصول، يُسَلَّم كلٌّ منها بيَدِنا، ولا يَخرُج من تَحت أَيدينا حتى يَكتَمِل."
-            : "Eight chapters, each delivered by our hand. Nothing leaves us before it is complete."
-        }
+        eyebrow={c.eyebrow}
+        title={c.title}
+        intro={c.intro}
       />
 
       {/* === Phases — alternating photo/text rows === */}
@@ -64,7 +45,7 @@ export default async function ServicesPage({
       <section className="relative">
         <div className="relative aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden">
           <Image
-            src="/photos/craft/chocolate-tray-red-velvet.jpg"
+            src={c.intermezzoImage}
             alt=""
             fill
             sizes="100vw"

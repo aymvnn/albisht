@@ -2,8 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedDigits } from "@/lib/i18n";
-import { PHONES, EMAIL, LOCATION, INSTAGRAM } from "@/lib/contact";
+import { USE_STORYBLOK } from "@/lib/storyblok/api";
+import { getStoryContent } from "@/lib/storyblok/fetch";
+import { mapContact } from "@/lib/content/from-storyblok";
+import { getGlobals } from "@/lib/content/globals";
+import type { SbContactPage } from "@/lib/storyblok/types";
 import { PageHero } from "@/components/PageHero";
+
+export const revalidate = 900;
 
 export default async function ContactPage({
   params,
@@ -15,27 +21,23 @@ export default async function ContactPage({
   const lang = rawLang as Lang;
   const isAr = lang === "ar";
 
+  const sb = USE_STORYBLOK ? await getStoryContent<SbContactPage>("contact", lang) : null;
+  const c = mapContact(sb, lang);
+  const g = await getGlobals(lang);
+  const ig = g.socials.find((s) => s.name === "instagram");
+
   return (
     <>
-      <PageHero
-        lang={lang}
-        eyebrow={isAr ? "التواصل" : "Contact"}
-        title={isAr ? "البَاب." : "The door."}
-        intro={
-          isAr
-            ? "صالة الرجال هي مَرسَمُنا الكامل — الباقات، التَجهيز، الضيافة، التَوثيق. للسيدات، نَعرِض خدماتٍ مُختارة."
-            : "The men's hall is our full atelier — packages, production, hospitality, documentation. For women, we offer selected services."
-        }
-      />
+      <PageHero lang={lang} eyebrow={c.eyebrow} title={c.title} intro={c.intro} />
 
-      {/* === PRIMARY: Men's hall — full-width block === */}
+      {/* === PRIMARY: Men's hall === */}
       <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-10 py-14 md:py-20 items-center">
             <div className="md:col-span-5">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src="/photos/majlis/calligraphy-wood-wall.jpg"
+                  src={c.primaryImage}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
@@ -55,20 +57,16 @@ export default async function ContactPage({
                   lineHeight: isAr ? "1.4" : "1.02",
                 }}
               >
-                {PHONES.mens.label[lang]}
+                {g.phones.mens.label}
               </h2>
               <p
                 className={`${isAr ? "type-arabic" : "type-serif"} italic`}
-                style={{
-                  fontSize: "1.1rem",
-                  color: "var(--color-ink-warm)",
-                  maxWidth: "32rem",
-                }}
+                style={{ fontSize: "1.1rem", color: "var(--color-ink-warm)", maxWidth: "32rem" }}
               >
-                {PHONES.mens.note?.[lang]}
+                {g.phones.mens.note}
               </p>
               <a
-                href={`tel:${PHONES.mens.tel}`}
+                href={`tel:${g.phones.mens.tel}`}
                 className="inline-flex items-baseline gap-4 mt-4 hover:text-[color:var(--color-zari-deep)] transition-colors"
                 dir="ltr"
                 style={{
@@ -80,7 +78,7 @@ export default async function ContactPage({
                   unicodeBidi: "isolate",
                 }}
               >
-                <span>{localizedDigits(PHONES.mens.display, lang)}</span>
+                <span>{localizedDigits(g.phones.mens.display, lang)}</span>
                 <span className="text-[0.7em] flip-rtl">→</span>
               </a>
             </div>
@@ -88,7 +86,7 @@ export default async function ContactPage({
         </div>
       </section>
 
-      {/* === SECONDARY: Women — compact strip === */}
+      {/* === SECONDARY: Women === */}
       <section className="relative surface-pearl border-t border-[color:var(--color-ink-warm)]/15">
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 py-10 md:py-14">
           <div className="flex flex-col md:flex-row md:items-baseline gap-y-4 md:gap-x-8">
@@ -98,16 +96,13 @@ export default async function ContactPage({
               </p>
               <p
                 className={`${isAr ? "type-arabic" : "type-serif"} italic`}
-                style={{
-                  fontSize: "1rem",
-                  color: "var(--color-ink-warm)",
-                }}
+                style={{ fontSize: "1rem", color: "var(--color-ink-warm)" }}
               >
                 {isAr ? "خدمات مُختارة فقط" : "Selected services only"}
               </p>
             </div>
             <a
-              href={`tel:${PHONES.womens.tel}`}
+              href={`tel:${g.phones.womens.tel}`}
               className="hover:text-[color:var(--color-zari-deep)] transition-colors"
               dir="ltr"
               style={{
@@ -119,7 +114,7 @@ export default async function ContactPage({
                 unicodeBidi: "isolate",
               }}
             >
-              {localizedDigits(PHONES.womens.display, lang)}
+              {localizedDigits(g.phones.womens.display, lang)}
             </a>
           </div>
         </div>
@@ -130,52 +125,32 @@ export default async function ContactPage({
         <div className="mx-auto max-w-[var(--container-wide)] px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-7">
             <p className="type-roman text-[0.95rem] text-[color:var(--color-zari-deep)] mb-8">
-              {isAr ? "الرسالة" : "The letter"}
+              {c.letter.label}
             </p>
             <h2
               className={`${isAr ? "type-arabic-display" : "type-display"} text-[color:var(--color-ink)] mb-8`}
               style={{ fontSize: "clamp(2.2rem, 1.6rem + 2.4vw, 3.8rem)", lineHeight: isAr ? "1.4" : "1.05" }}
             >
-              {isAr ? "اُكتُب الرسالة الكاملة." : "Write the full letter."}
+              {c.letter.headline}
             </h2>
             <p
               className={`${isAr ? "type-arabic" : "type-serif"} text-[color:var(--color-ink-soft)] text-lg italic leading-relaxed mb-12 max-w-xl`}
             >
-              {isAr
-                ? "للاستفسارات المفصّلة — التاريخ، عدد الضيوف، الباقة المُختارة — اُكتُب لنا الرسالة الكاملة وسَنرُد خلال ثلاثة أيام."
-                : "For detailed enquiries — date, number of guests, chosen package — write the full letter and we will reply within three days."}
+              {c.letter.body}
             </p>
-            <Link
-              href={`/${lang}/consult`}
-              className="btn-brand inline-flex items-center gap-4 border"
-            >
-              <span>{isAr ? "اكتب الرسالة" : "Write the letter"}</span>
+            <Link href={`/${lang}/consult`} className="btn-brand inline-flex items-center gap-4 border">
+              <span>{c.letter.cta}</span>
               <span className="btn-brand-arrow flip-rtl">→</span>
             </Link>
           </div>
 
           <div className="md:col-span-4 md:col-start-9 space-y-10 md:pt-16">
-            <Block
-              label={isAr ? "العنوان" : "Address"}
-              value={LOCATION[lang]}
-            />
-            <Block
-              label={isAr ? "البريد" : "Email"}
-              value={EMAIL}
-              href={`mailto:${EMAIL}`}
-            />
-            <Block
-              label={isAr ? "إنستغرام" : "Instagram"}
-              value={INSTAGRAM.handle}
-              href={INSTAGRAM.url}
-            />
+            <Block label={isAr ? "العنوان" : "Address"} value={g.location} />
+            <Block label={isAr ? "البريد" : "Email"} value={g.email} href={`mailto:${g.email}`} />
+            {ig && <Block label={isAr ? "إنستغرام" : "Instagram"} value={ig.handle} href={ig.url} />}
             <Block
               label={isAr ? "ساعات الاستقبال" : "Reception hours"}
-              value={
-                isAr
-                  ? "الأحد ـ الخميس\n١٠ صباحًا ـ ٧ مساءً"
-                  : "Sunday – Thursday\n10:00 — 19:00"
-              }
+              value={g.receptionHours}
             />
           </div>
         </div>

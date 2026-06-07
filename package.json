@@ -6,25 +6,33 @@
     "dev": "next dev -p 3300",
     "build": "next build",
     "start": "next start -p 3300",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sb:migrate": "tsx storyblok/migrate/run.ts",
+    "sb:lang": "tsx storyblok/migrate/run.ts --lang",
+    "sb:components": "tsx storyblok/migrate/run.ts --components",
+    "sb:assets": "tsx storyblok/migrate/run.ts --assets",
+    "sb:content": "tsx storyblok/migrate/run.ts --content"
   },
   "dependencies": {
-    "next": "^15.0.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "@storyblok/react": "^6.1.10",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.13.1",
     "gsap": "^3.12.5",
     "lenis": "^1.1.18",
-    "clsx": "^2.1.1"
+    "next": "^15.0.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
+    "@tailwindcss/postcss": "^4.0.0-beta.3",
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
-    "tailwindcss": "^4.0.0-beta.3",
-    "@tailwindcss/postcss": "^4.0.0-beta.3",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "autoprefixer": "^10.4.20"
+    "storyblok": "^4.17.9",
+    "tailwindcss": "^4.0.0-beta.3",
+    "tsx": "^4.22.4",
+    "typescript": "^5.6.3"
   }
 }

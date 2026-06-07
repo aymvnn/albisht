@@ -7,6 +7,13 @@ dist/
 # Local env
 .env*
 !.env.example
+!.env.local.example
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Storyblok migration artifacts (space-specific, regenerated)
+storyblok/migrate/asset-map.json
 
 # OS noise
 .DS_Store

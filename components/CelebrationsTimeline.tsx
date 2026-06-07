@@ -10,14 +10,21 @@ import { FormatHeadline } from "./FormatHeadline";
 export function CelebrationsTimeline({
   lang,
   showHeader = true,
+  content,
 }: {
   lang: Lang;
   /** When true (default), render the inline eyebrow + headline + intro at
    * the top of the timeline. Set to false when the parent page already
    * provides a PageHero so the page doesn't show two stacked titles. */
   showHeader?: boolean;
+  content?: {
+    label: string;
+    title: string;
+    intro: string;
+    items: { title: string; when: string; where: string; guests: string; note: string; photo: string }[];
+  };
 }) {
-  const data = CELEBRATIONS[lang];
+  const data = content ?? CELEBRATIONS[lang];
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {

@@ -1,8 +1,14 @@
 import { PROMISE } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
 
-export function PromiseSection({ lang }: { lang: Lang }) {
-  const p = PROMISE[lang];
+export function PromiseSection({
+  lang,
+  content,
+}: {
+  lang: Lang;
+  content?: { title: string; lines: string[] };
+}) {
+  const p = content ?? PROMISE[lang];
   const isAr = lang === "ar";
 
   return (
