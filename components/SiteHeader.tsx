@@ -11,8 +11,6 @@ import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
 import { PHONES } from "@/lib/contact";
 
-type BishtPhase = "closed" | "opening" | "revealed" | "fading" | "done";
-
 export function SiteHeader({
   lang,
   navItems,
@@ -26,7 +24,6 @@ export function SiteHeader({
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [bishtPhase, setBishtPhase] = useState<BishtPhase>("done");
   const nav = navItems ?? NAV[lang];
   const ph = phones ?? {
     mens: { display: PHONES.mens.display, tel: PHONES.mens.tel },
@@ -43,20 +40,16 @@ export function SiteHeader({
   // Portal target needs the document — wait until mounted on the client
   useEffect(() => { setMounted(true); }, []);
 
-  // Track the BishtReveal phase so we can swap the logo to light while the
-  // panels are closed (background is dark) and hide it while the reveal is
-  // mid-flight, then restore the normal dark logo once the overlay is gone.
-  useEffect(() => {
-    const sync = (p: string | undefined) =>
-      setBishtPhase(((p as BishtPhase) || "done"));
-    sync(document.documentElement.dataset.bishtPhase);
-    const onPhase = (e: Event) => sync((e as CustomEvent).detail);
-    window.addEventListener("bisht-phase", onPhase);
-    return () => window.removeEventListener("bisht-phase", onPhase);
-  }, []);
-
-  const logoVariant: "dark" | "light" = bishtPhase === "closed" ? "light" : "dark";
-  const logoHidden = bishtPhase === "opening" || bishtPhase === "revealed";
+  // Logo variant rule:
+  //   - Home (above the fold) sits on the dark cinematic hero → light mark.
+  //   - Everywhere else (subpages with the pearl PageHero, or any page once
+  //     the user scrolls past the hero into pearl chrome) → dark mark.
+  // The logo is ALWAYS rendered and ALWAYS linked to /{lang} so it can
+  // never go missing or stop working — the previous BishtReveal-phase
+  // coupling occasionally left logoHidden=true when the visitor navigated
+  // mid-animation, which is the inconsistency we're fixing.
+  const isHome = pathname === `/${lang}` || pathname === `/${lang}/`;
+  const logoVariant: "dark" | "light" = isHome && !scrolled ? "light" : "dark";
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -95,10 +88,6 @@ export function SiteHeader({
           href={`/${lang}`}
           className="flex items-center gap-4 group"
           aria-label="ALBISHT — Home"
-          style={{
-            opacity: logoHidden ? 0 : 1,
-            transition: "opacity 0.6s var(--ease-veil)",
-          }}
         >
           <Logo
             height={44}
