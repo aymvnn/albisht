@@ -52,15 +52,15 @@ export async function SiteFooter({ lang }: { lang: Lang }) {
             {/* Primary: men's hall — the full atelier */}
             <div className="pt-3">
               <PhoneLine number={g.phones.mens} lang={lang} />
-              <WhatsAppLink
-                lang={lang}
-                line="mens"
-                variant="text"
-                className="text-[color:var(--color-mist)]/75"
-              />
             </div>
             {/* Secondary: women — selected services */}
             <SecondaryPhoneLine number={g.phones.womens} lang={lang} />
+
+            {/* WhatsApp — two separate channels */}
+            <div className="pt-2 flex flex-col gap-2.5">
+              <WhatsAppLink lang={lang} line="mens" variant="chip" label={g.phones.mens.label} />
+              <WhatsAppLink lang={lang} line="womens" variant="chip" label={g.phones.womens.label} />
+            </div>
 
             {/* Social channels */}
             <SocialRow lang={lang} socials={g.socials} />
