@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/copy";
 import { type Lang, switchLang, localizedNumeral, localizedDigits } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
+import { WhatsAppLink } from "./WhatsAppLink";
 import { PHONES } from "@/lib/contact";
+
+/** Remember the chosen language for a year — the root redirect reads this
+ *  cookie so a returning visitor lands directly in their register. */
+const rememberLang = (lang: Lang) => {
+  document.cookie = `albisht-lang=${lang}; path=/; max-age=31536000; samesite=lax`;
+};
 
 export function SiteHeader({
   lang,
@@ -24,6 +31,11 @@ export function SiteHeader({
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // Swipe-down-to-close bookkeeping for the mobile drawer: only a downward
+  // pull that starts with the drawer scrolled to its top closes it, so the
+  // gesture never fights normal scrolling inside the menu.
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef<number | null>(null);
   const nav = navItems ?? NAV[lang];
   const ph = phones ?? {
     mens: { display: PHONES.mens.display, tel: PHONES.mens.tel },
@@ -76,7 +88,7 @@ export function SiteHeader({
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
+      className={`print-hide fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
         scrolled
           ? "backdrop-blur-md bg-[color:var(--color-pearl)]/85 border-b border-[color:var(--color-mist)]/40"
           : ""
@@ -116,7 +128,8 @@ export function SiteHeader({
         <div className="flex items-center gap-5">
           <Link
             href={otherHref}
-            className="nav-link force-latin text-[color:var(--color-ink-warm)]"
+            onClick={() => rememberLang(otherLang)}
+            className="nav-link force-latin text-[color:var(--color-ink-warm)] px-2 py-2"
             aria-label={`Switch language to ${otherLang}`}
           >
             {lang === "ar" ? "EN" : "ع"}
@@ -129,9 +142,9 @@ export function SiteHeader({
           </Link>
           <button
             type="button"
-            aria-label="Menu"
+            aria-label={lang === "ar" ? "القائمة" : "Menu"}
             onClick={() => setOpen(true)}
-            className="lg:hidden p-2"
+            className="lg:hidden p-3 -me-1.5 min-w-[44px] min-h-[44px] inline-flex flex-col items-center justify-center press-dim"
           >
             <span className="block w-5 h-px bg-[color:var(--color-ink-soft)]" />
             <span className="block w-5 h-px bg-[color:var(--color-ink-soft)] mt-1.5" />
@@ -155,10 +168,31 @@ export function SiteHeader({
           produced no visible drawer. */}
       {open && mounted && createPortal(
         <div
+          ref={drawerRef}
           className="lg:hidden fixed inset-0 z-[60] surface-bisht overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-label={lang === "ar" ? "القائمة" : "Menu"}
+          onTouchStart={(e) => {
+            const drawer = drawerRef.current;
+            touchStartY.current =
+              drawer && drawer.scrollTop <= 0 ? e.touches[0]?.clientY ?? null : null;
+          }}
+          onTouchEnd={(e) => {
+            const startY = touchStartY.current;
+            touchStartY.current = null;
+            const endY = e.changedTouches[0]?.clientY;
+            const drawer = drawerRef.current;
+            if (
+              startY !== null &&
+              endY !== undefined &&
+              drawer &&
+              drawer.scrollTop <= 0 &&
+              endY - startY > 72
+            ) {
+              setOpen(false);
+            }
+          }}
         >
           {/* ── Decorative layers ── */}
           {/* Top gold gradient hairline */}
@@ -322,6 +356,7 @@ export function SiteHeader({
               display={ph.mens.display}
               tel={ph.mens.tel}
               lang={lang}
+              line="mens"
               primary
             />
             <PhoneRow
@@ -329,13 +364,17 @@ export function SiteHeader({
               display={ph.womens.display}
               tel={ph.womens.tel}
               lang={lang}
+              line="womens"
             />
 
             <div className="pt-4 flex items-center justify-between gap-4">
               <Link
                 href={otherHref}
-                onClick={() => setOpen(false)}
-                className="nav-link force-latin"
+                onClick={() => {
+                  rememberLang(otherLang);
+                  setOpen(false);
+                }}
+                className="nav-link force-latin py-2"
                 style={{ color: "var(--color-mist)" }}
               >
                 {lang === "ar" ? "English" : "العربية"}
@@ -362,12 +401,14 @@ function PhoneRow({
   display,
   tel,
   lang,
+  line,
   primary = false,
 }: {
   label: string;
   display: string;
   tel: string;
   lang: Lang;
+  line: "mens" | "womens";
   primary?: boolean;
 }) {
   return (
@@ -400,6 +441,12 @@ function PhoneRow({
         <span>{localizedDigits(display, lang)}</span>
         <span aria-hidden className="cc-phone-dot" />
       </a>
+      <WhatsAppLink
+        lang={lang}
+        line={line}
+        variant="text"
+        className="self-start text-[color:var(--color-zari)]/75"
+      />
     </div>
   );
 }

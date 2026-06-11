@@ -42,6 +42,14 @@ const REVEAL_COOKIE = "albisht_reveal_seen";
 export function BishtReveal({ lang: _lang }: { lang: Lang }) {
   const [phase, setPhase] = useState<Phase>("done");
   const startedRef = useRef(false);
+  // The opening sequence arms three timeouts; if the visitor navigates away
+  // mid-reveal the component unmounts before they fire. Track them so the
+  // unmount cleanup can cancel the stragglers.
+  const timersRef = useRef<number[]>([]);
+  useEffect(() => {
+    const timers = timersRef.current;
+    return () => { timers.forEach((t) => window.clearTimeout(t)); };
+  }, []);
 
   // Broadcast the active phase so the rest of the chrome (notably SiteHeader)
   // can react — e.g. swap the dark logo for the light variant while the
@@ -86,14 +94,16 @@ export function BishtReveal({ lang: _lang }: { lang: Lang }) {
       opened = true;
       setPhase("opening");
       // sequence: opening → revealed → fading → done
-      setTimeout(() => setPhase("revealed"), 1600);
-      setTimeout(() => setPhase("fading"), 3200);
-      setTimeout(() => {
-        setPhase("done");
-        document.body.style.overflow = "";
-        // Set session cookie so the reveal plays at most once per session
-        document.cookie = `${REVEAL_COOKIE}=1; path=/; max-age=3600; SameSite=Lax`;
-      }, 4700);
+      timersRef.current.push(
+        window.setTimeout(() => setPhase("revealed"), 1600),
+        window.setTimeout(() => setPhase("fading"), 3200),
+        window.setTimeout(() => {
+          setPhase("done");
+          document.body.style.overflow = "";
+          // Set session cookie so the reveal plays at most once per session
+          document.cookie = `${REVEAL_COOKIE}=1; path=/; max-age=3600; SameSite=Lax`;
+        }, 4700)
+      );
     };
 
     const onScroll = (e: WheelEvent | TouchEvent) => { e.preventDefault?.(); open(); };

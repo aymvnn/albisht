@@ -1,15 +1,40 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedDigits } from "@/lib/i18n";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent } from "@/lib/storyblok/fetch";
-import { mapContact } from "@/lib/content/from-storyblok";
+import { pageMetadata } from "@/lib/seo";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { contactQuery } from "@/lib/sanity/queries";
+import { mapContact } from "@/lib/content/from-sanity";
 import { getGlobals } from "@/lib/content/globals";
-import type { SbContactPage } from "@/lib/storyblok/types";
+import { FaqSection } from "@/components/FaqSection";
+import { InstagramStrip } from "@/components/InstagramStrip";
 import { PageHero } from "@/components/PageHero";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
 
 export const revalidate = 900;
+
+/** Six curated frames for the Instagram strip — hands, trays, halls. */
+const IG_PHOTOS = [
+  "/photos/craft/sweets-detail.jpg",
+  "/photos/hall/court-empty-chandelier.jpg",
+  "/photos/craft/server-shemagh-cups.jpg",
+  "/photos/hall/mashrabiya-chandelier.jpg",
+  "/photos/craft/fresh-juices-tray.jpg",
+  "/photos/majlis/night-majlis-outdoor.jpg",
+];
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = (LANGS.includes(rawLang as Lang) ? rawLang : "ar") as Lang;
+  return pageMetadata(lang, "/contact");
+}
 
 export default async function ContactPage({
   params,
@@ -21,8 +46,8 @@ export default async function ContactPage({
   const lang = rawLang as Lang;
   const isAr = lang === "ar";
 
-  const sb = USE_STORYBLOK ? await getStoryContent<SbContactPage>("contact", lang) : null;
-  const c = mapContact(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: contactQuery })).data : null;
+  const c = mapContact(doc, lang);
   const g = await getGlobals(lang);
   const ig = g.socials.find((s) => s.name === "instagram");
 
@@ -81,6 +106,12 @@ export default async function ContactPage({
                 <span>{localizedDigits(g.phones.mens.display, lang)}</span>
                 <span className="text-[0.7em] flip-rtl">→</span>
               </a>
+              <WhatsAppLink
+                lang={lang}
+                line="mens"
+                variant="chip"
+                className="self-start"
+              />
             </div>
           </div>
         </div>
@@ -116,6 +147,12 @@ export default async function ContactPage({
             >
               {localizedDigits(g.phones.womens.display, lang)}
             </a>
+            <WhatsAppLink
+              lang={lang}
+              line="womens"
+              variant="text"
+              className="text-[color:var(--color-zari-deep)]"
+            />
           </div>
         </div>
       </section>
@@ -155,6 +192,12 @@ export default async function ContactPage({
           </div>
         </div>
       </section>
+
+      {/* === Protocol questions, answered — saves a phone call === */}
+      <FaqSection lang={lang} surface="marble" />
+
+      {/* === The atelier's eye — curated frames from @albishtqtr === */}
+      <InstagramStrip lang={lang} photos={IG_PHOTOS} />
     </>
   );
 }

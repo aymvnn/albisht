@@ -1,16 +1,28 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { LANGS, type Lang } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 import { type HeritageChapter as HeritageChapterData } from "@/lib/inline-content";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent } from "@/lib/storyblok/fetch";
-import { mapHeritage } from "@/lib/content/from-storyblok";
-import type { SbHeritagePage } from "@/lib/storyblok/types";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { heritageQuery } from "@/lib/sanity/queries";
+import { mapHeritage } from "@/lib/content/from-sanity";
 import { PullQuote } from "@/components/PullQuote";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
 export const revalidate = 900;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = (LANGS.includes(rawLang as Lang) ? rawLang : "ar") as Lang;
+  return pageMetadata(lang, "/heritage");
+}
 
 export default async function HeritagePage({
   params,
@@ -20,8 +32,8 @@ export default async function HeritagePage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const sb = USE_STORYBLOK ? await getStoryContent<SbHeritagePage>("heritage", lang) : null;
-  const c = mapHeritage(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: heritageQuery })).data : null;
+  const c = mapHeritage(doc, lang);
   // The page keeps its two-article rhythm with a full-bleed photo break in
   // between: the first article carries the opening chapters, the second the
   // closing ones. Split at the midpoint so the layout adapts if chapters are
@@ -85,15 +97,29 @@ function ChapterBlock({
 }) {
   return (
     <>
-      <Chapter n={chapter.number} title={chapter.title} body={chapter.body} />
+      <Chapter n={chapter.number} title={chapter.title} body={chapter.body} lang={lang} />
       {chapter.pullquote && <PullQuote lang={lang} text={chapter.pullquote} />}
     </>
   );
 }
 
-function Chapter({ n, title, body }: { n: string; title: string; body: string }) {
-  const first = body.charAt(0);
-  const rest = body.slice(1);
+function Chapter({
+  n,
+  title,
+  body,
+  lang,
+}: {
+  n: string;
+  title: string;
+  body: string;
+  lang: Lang;
+}) {
+  const isAr = lang === "ar";
+  // Drop caps are a Latin convention. Splitting the first Arabic letter into
+  // its own span detaches it from the word and breaks contextual joining
+  // (initial/medial letter forms), so Arabic chapters open plainly.
+  const first = isAr ? "" : body.charAt(0);
+  const rest = isAr ? body : body.slice(1);
   return (
     <section className="mb-16 md:mb-20 grid grid-cols-1 md:grid-cols-12 gap-6">
       <div className="md:col-span-2">
@@ -102,11 +128,19 @@ function Chapter({ n, title, body }: { n: string; title: string; body: string })
         </p>
       </div>
       <div className="md:col-span-10">
-        <h2 className="type-display text-3xl md:text-4xl text-[color:var(--color-ink)] mb-6">
+        <h2
+          className={`${
+            isAr ? "type-arabic-headline" : "type-display"
+          } text-3xl md:text-4xl text-[color:var(--color-ink)] mb-6`}
+        >
           {title}
         </h2>
-        <p className="text-[color:var(--color-ink-soft)] text-lg leading-relaxed">
-          <span className="drop-cap">{first}</span>
+        <p
+          className={`${
+            isAr ? "type-arabic" : ""
+          } text-[color:var(--color-ink-soft)] text-lg leading-relaxed`}
+        >
+          {first && <span className="drop-cap">{first}</span>}
           {rest}
         </p>
       </div>

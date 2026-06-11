@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * The submission "button" — a ceremonial seal that presses into the letter.
@@ -28,6 +28,14 @@ export function WaxSealButton({
   disabled?: boolean;
 }) {
   const [pressed, setPressed] = useState(false);
+
+  // Release the seal when the in-flight submission ends without the form
+  // unmounting (i.e. delivery failed). Otherwise the seal stayed compressed
+  // and the label hidden forever after an error — the visitor could never
+  // retry.
+  useEffect(() => {
+    if (!pending) setPressed(false);
+  }, [pending]);
 
   const handleClick = () => {
     if (disabled || pending) return;

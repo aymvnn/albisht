@@ -25,19 +25,68 @@ export function HomeHero({
   };
   const ref = useRef<HTMLDivElement>(null);
 
-  // Slow parallax on the hero image
+  // Slow parallax on the hero image. On touch devices without a permission
+  // gate, a whisper of gyroscope tilt is layered in (max ±6px) so the photo
+  // breathes in the hand — the mobile counterpart of the desktop cursor glow.
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let raf = 0;
+    let scrollY = 0;
+    // Lerped gyro offsets — target follows the sensor, current eases toward it.
+    let gx = 0, gy = 0, targetGx = 0, targetGy = 0;
+    let gyroActive = false;
+
+    const apply = () => {
+      raf = 0;
+      if (!ref.current) return;
+      if (gyroActive) {
+        gx += (targetGx - gx) * 0.08;
+        gy += (targetGy - gy) * 0.08;
+      }
+      ref.current.style.transform = `translate3d(${gx.toFixed(2)}px, ${(
+        scrollY * 0.18 + gy
+      ).toFixed(2)}px, 0) scale(1.08)`;
+      // Keep easing while the gyro is still travelling toward its target.
+      if (gyroActive && (Math.abs(targetGx - gx) > 0.1 || Math.abs(targetGy - gy) > 0.1)) {
+        raf = requestAnimationFrame(apply);
+      }
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+
     const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        if (!ref.current) return;
-        const y = window.scrollY * 0.18;
-        ref.current.style.transform = `translate3d(0, ${y}px, 0) scale(1.08)`;
-      });
+      scrollY = window.scrollY;
+      schedule();
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    // Gyro: only where deviceorientation fires without an explicit permission
+    // prompt (iOS 13+ requires a user-gesture request — we skip it rather than
+    // interrupt the opening with a dialog).
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const needsPermission =
+      typeof (DeviceOrientationEvent as unknown as { requestPermission?: unknown })
+        ?.requestPermission === "function";
+    const onTilt = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      gyroActive = true;
+      // gamma: left/right tilt (±90°), beta: front/back (±180°). Clamp to a
+      // gentle window and map to a few pixels.
+      targetGx = Math.max(-1, Math.min(1, e.gamma / 24)) * 6;
+      targetGy = Math.max(-1, Math.min(1, (e.beta - 45) / 32)) * 4;
+      schedule();
+    };
+    if (isTouch && !needsPermission && "DeviceOrientationEvent" in window) {
+      window.addEventListener("deviceorientation", onTilt, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("deviceorientation", onTilt);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (

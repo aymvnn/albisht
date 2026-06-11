@@ -3,6 +3,7 @@ import Image from "next/image";
 import { type Lang, localizedDigits } from "@/lib/i18n";
 import { getGlobals } from "@/lib/content/globals";
 import { SilkRibbon } from "./SilkRibbon";
+import { WhatsAppLink } from "./WhatsAppLink";
 
 /**
  * ContactCallout — the ceremonial closing block.
@@ -402,6 +403,12 @@ function Door(props: {
                 <span>{localizedDigits(p.display, lang)}</span>
                 <span aria-hidden className="cc-phone-dot" />
               </a>
+              <WhatsAppLink
+                lang={lang}
+                line={p.key === "womens" ? "womens" : "mens"}
+                variant="text"
+                className="text-[color:var(--color-zari)]/80"
+              />
               {p.note && (
                 <span
                   className={`${isAr ? "type-arabic" : "type-serif"} italic`}

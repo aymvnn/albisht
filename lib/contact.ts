@@ -52,6 +52,36 @@ export const PHONES: { mens: ContactNumber; womens: ContactNumber } = {
   },
 };
 
+/* === WhatsApp ===============================================================
+ * Qatar's primary enquiry channel. Both atelier lines are mobile numbers and
+ * are reachable on WhatsApp. Links use the universal wa.me format with a
+ * pre-filled, brand-voice opening message per language.
+ *
+ * `waHref(line, lang, message?)` — returns a complete wa.me URL. Pass a
+ * custom `message` to override the default opener (e.g. a package-specific
+ * enquiry from /packages, or the consult-letter summary).
+ */
+export const WA_DEFAULT_MESSAGE: Record<"mens" | "womens", Record<Lang, string>> = {
+  mens: {
+    ar: "السلام عليكم، أرغب بالاستفسار عن خدمات البِشت لصالة الرجال.",
+    en: "Greetings — I would like to enquire about ALBISHT's men's hall services.",
+  },
+  womens: {
+    ar: "السلام عليكم، أرغب بالاستفسار عن الضيافة النسائية.",
+    en: "Greetings — I would like to enquire about ALBISHT's women's hospitality service.",
+  },
+};
+
+export const waHref = (
+  line: "mens" | "womens",
+  lang: Lang,
+  message?: string
+): string => {
+  const digits = PHONES[line].tel.replace(/[^\d]/g, "");
+  const text = message ?? WA_DEFAULT_MESSAGE[line][lang];
+  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+};
+
 export const EMAIL = "hello@albisht.qa";
 export const INSTAGRAM = { handle: "@albishtqtr", url: "https://instagram.com/albishtqtr" };
 export const FACEBOOK = { handle: "albishtqtr", url: "https://facebook.com/albishtqtr" };

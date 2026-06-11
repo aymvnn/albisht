@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { INVITATION } from "@/lib/copy";
 import type { Lang } from "@/lib/i18n";
+import { DateConcierge } from "./DateConcierge";
 import { Logo } from "./Logo";
 
 export function InvitationSection({
@@ -12,6 +13,11 @@ export function InvitationSection({
 }) {
   const inv = content ?? INVITATION[lang];
   const ctaHref = content?.ctaHref ?? "/consult";
+  // Server-computed so the client concierge never constructs a Date itself
+  // (avoids hydration drift). Weddings book ~7 months out, so three years
+  // of choice is generous.
+  const thisYear = new Date().getFullYear();
+  const years = [thisYear, thisYear + 1, thisYear + 2];
 
   return (
     <section className="relative py-32 md:py-48 surface-bisht overflow-hidden">
@@ -52,6 +58,12 @@ export function InvitationSection({
           <span>{inv.cta}</span>
           <span className="btn-brand-arrow flip-rtl">→</span>
         </Link>
+
+        {/* The date concierge — begin with the month, arrive at the letter
+            with the date already written. */}
+        <div className="mt-14 pt-10 border-t border-[color:var(--color-mist)]/15">
+          <DateConcierge lang={lang} years={years} />
+        </div>
       </div>
     </section>
   );

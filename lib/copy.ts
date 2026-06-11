@@ -79,7 +79,7 @@ export const ACTS = {
       {
         kicker: "الفصل الأول",
         title: "الاستقبال",
-        line: "الباب يُفتح، البخور يُشعل، البِشت يَستقبل البِشت.",
+        line: "الباب يُفتح، العود يُشعل، البِشت يَستقبل البِشت.",
         photo: "/photos/heritage/lantern-entrance-portraits.jpg",
       },
       {
@@ -356,6 +356,215 @@ export const CONSULT = {
  *   highlight   — one short line that summarises what makes this tier special
  *   photo       — hero photo for the section
  */
+/**
+ * FAQ — protocol questions, answered in the atelier's voice.
+ * Every answer is sourced from existing copy (atelier terms, packages intro,
+ * consult body) — nothing invented. Phone digits are stored Latin and
+ * localised at render time via localizedDigits().
+ */
+export const FAQ = {
+  ar: {
+    eyebrow: "الأسئلة",
+    title: "أسئلةٌ تُطرَح.",
+    items: [
+      {
+        q: "متى يجب الحجز؟",
+        a: "نَقبَل المناسبة قبل سبعة أشهر على الأقل. ثلاث مئة مناسبة في العام — لكلٍّ منها وقتها الكامل.",
+      },
+      {
+        q: "أين تعملون؟",
+        a: "في قطر، والبحرين، والإمارات. المرسم في الدوحة.",
+      },
+      {
+        q: "هل الباقة كاملة بذاتها؟",
+        a: "نعم. خمس باقات، كلٌّ منها تشمل القاعة واللوبي والضيافة والتصوير والتجهيزات الخارجية. لا حاجة لإضافات.",
+      },
+      {
+        q: "ما الفرق بين خطّ الرجال وخطّ السيدات؟",
+        a: "صالة الرجال خدمة كاملة للمناسبة، على الرقم +974 3377 7074. وللسيدات ضيافة ومشروبات بحسب عدد الضيوف، على الرقم +974 5000 8019.",
+      },
+      {
+        q: "متى يصلنا الرد؟",
+        a: "خلال ثلاثة أيام من وصول الرسالة.",
+      },
+      {
+        q: "هل تُذكَر أسماؤكم؟",
+        a: "لا. الاسم لا يخرج من الرسالة، والمناسبات تُعرَض بلا أسماء.",
+      },
+    ],
+  },
+  en: {
+    eyebrow: "Questions",
+    title: "Questions, answered.",
+    items: [
+      {
+        q: "When should we reserve?",
+        a: "We accept a wedding no less than seven months in advance. Three hundred ceremonies a year — each is given its full time.",
+      },
+      {
+        q: "Where do you work?",
+        a: "Qatar, Bahrain and the Emirates. The atelier is in Doha.",
+      },
+      {
+        q: "Is a package complete in itself?",
+        a: "Yes. Five packages, each covering the hall, the lobby, hospitality, photography and the exterior. No add-ons are needed.",
+      },
+      {
+        q: "What distinguishes the men's and women's lines?",
+        a: "The men's hall is the full ceremony service, on +974 3377 7074. For women, hospitality and beverages by guest count, on +974 5000 8019.",
+      },
+      {
+        q: "When will we hear back?",
+        a: "Within three days of the letter arriving.",
+      },
+      {
+        q: "Will our name be mentioned?",
+        a: "No. Your name does not leave the letter, and celebrations are shown without names.",
+      },
+    ],
+  },
+} as const;
+
+/** Sticky mobile action bar — three quiet actions. */
+export const STICKY_BAR = {
+  ar: { call: "اتصال", whatsapp: "واتساب", consult: "الاستشارة" },
+  en: { call: "Call", whatsapp: "WhatsApp", consult: "Consult" },
+} as const;
+
+/** WhatsApp action label (used wherever a wa.me link sits beside a phone). */
+export const WHATSAPP_LABEL = {
+  ar: "واتساب",
+  en: "WhatsApp",
+} as const;
+
+/** Brochure (print / save-as-PDF) route copy. */
+export const BROCHURE = {
+  ar: {
+    action: "احفظ الباقة PDF",
+    print: "اطبع أو احفظ PDF",
+    back: "عودة إلى الباقات",
+    issued: "صادرة عن مرسم البِشت — الدوحة، قطر",
+  },
+  en: {
+    action: "Save as PDF",
+    print: "Print or save as PDF",
+    back: "Back to packages",
+    issued: "Issued by the ALBISHT atelier — Doha, Qatar",
+  },
+} as const;
+
+/** Ceremonial 404. */
+export const NOT_FOUND = {
+  ar: {
+    eyebrow: "٤٠٤",
+    title: "هذه الصفحة ليست في البروتوكول.",
+    line: "ربما تغيَّر العنوان، أو لم يُكتَب بعد.",
+    cta: "إلى الصفحة الرئيسة",
+  },
+  en: {
+    eyebrow: "404",
+    title: "This page is not on the protocol.",
+    line: "The address may have changed, or was never written.",
+    cta: "Return to the beginning",
+  },
+} as const;
+
+/** The viewing room — lightbox gallery labels. */
+export const VIEWING_ROOM = {
+  ar: {
+    eyebrow: "غرفة المشاهدة",
+    title: "تفاصيل من الصالة.",
+    view: "عرض",
+    close: "إغلاق",
+    prev: "السابق",
+    next: "التالي",
+    of: "من",
+  },
+  en: {
+    eyebrow: "The viewing room",
+    title: "Details from the hall.",
+    view: "View",
+    close: "Close",
+    prev: "Previous",
+    next: "Next",
+    of: "of",
+  },
+} as const;
+
+/** Date concierge — begin the consultation with the intended month. */
+export const DATE_CONCIERGE = {
+  ar: {
+    label: "تاريخكم المُقترَح",
+    month: "الشهر",
+    year: "السنة",
+    action: "ابدأ بالتاريخ",
+    months: [
+      "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+      "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر",
+    ],
+  },
+  en: {
+    label: "Your intended date",
+    month: "Month",
+    year: "Year",
+    action: "Begin with the date",
+    months: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ],
+  },
+} as const;
+
+/** Consult letter — additions: line selector, error state, WhatsApp continue. */
+export const CONSULT_EXTRAS = {
+  ar: {
+    lineLabel: "الخط",
+    lineMens: "صالة الرجال",
+    lineWomens: "ضيافة السيدات",
+    packageLabel: "الباقة المُختارة",
+    sending: "يُختَم…",
+    error: {
+      line1: "تعذَّر إرسال الرسالة.",
+      line2: "تكرَّم بالمحاولة مرة أخرى، أو تواصل مباشرة:",
+    },
+    whatsappContinue: "أكمِل عبر واتساب",
+    promise: "نَرُدُّ خلال ثلاثة أيام.",
+  },
+  en: {
+    lineLabel: "The line",
+    lineMens: "Men's hall",
+    lineWomens: "Women's hospitality",
+    packageLabel: "Chosen package",
+    sending: "Sealing…",
+    error: {
+      line1: "The letter could not be sent.",
+      line2: "Kindly try again, or reach us directly:",
+    },
+    whatsappContinue: "Continue on WhatsApp",
+    promise: "We reply within three days.",
+  },
+} as const;
+
+/** Skip-to-content link (a11y). */
+export const SKIP_LINK = {
+  ar: "تجاوَز إلى المحتوى",
+  en: "Skip to content",
+} as const;
+
+/** /packages — labels for the collapsible inclusion lists + tier rail. */
+export const PACKAGES_EXTRAS = {
+  ar: {
+    fullProtocol: "العرض الكامل",
+    collapse: "اختصر",
+    railLabel: "الباقات",
+  },
+  en: {
+    fullProtocol: "The full protocol",
+    collapse: "Collapse",
+    railLabel: "The tiers",
+  },
+} as const;
+
 export const PACKAGES_META = {
   ar: {
     eyebrow: "الباقات",

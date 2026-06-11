@@ -1,15 +1,27 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent } from "@/lib/storyblok/fetch";
-import { mapAtelier } from "@/lib/content/from-storyblok";
-import type { SbAtelierPage } from "@/lib/storyblok/types";
+import { pageMetadata } from "@/lib/seo";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { atelierQuery } from "@/lib/sanity/queries";
+import { mapAtelier } from "@/lib/content/from-sanity";
 import { FormatHeadline } from "@/components/FormatHeadline";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
 export const revalidate = 900;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = (LANGS.includes(rawLang as Lang) ? rawLang : "ar") as Lang;
+  return pageMetadata(lang, "/atelier");
+}
 
 export default async function AtelierPage({
   params,
@@ -19,8 +31,8 @@ export default async function AtelierPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const sb = USE_STORYBLOK ? await getStoryContent<SbAtelierPage>("atelier", lang) : null;
-  const c = mapAtelier(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: atelierQuery })).data : null;
+  const c = mapAtelier(doc, lang);
 
   return (
     <>
@@ -97,10 +109,14 @@ export default async function AtelierPage({
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
+            {/* Fade toward the text column: in RTL the grid flips, so the
+                text sits at the photo's left edge and the fade flips too. */}
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(90deg, transparent 60%, oklch(0.135 0.005 60 / 0.4) 100%)",
+                background: `linear-gradient(${
+                  lang === "ar" ? "270deg" : "90deg"
+                }, transparent 60%, oklch(0.135 0.005 60 / 0.4) 100%)`,
               }}
             />
           </div>

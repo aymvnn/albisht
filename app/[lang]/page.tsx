@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { LANGS, type Lang } from "@/lib/i18n";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent, getStoryList } from "@/lib/storyblok/fetch";
-import { mapHome, mapCelebrationItems } from "@/lib/content/from-storyblok";
-import type { SbHomePage, SbCelebrationCase } from "@/lib/storyblok/types";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { homeQuery, celebrationsHomeQuery } from "@/lib/sanity/queries";
+import { mapHome, mapCelebrationItems } from "@/lib/content/from-sanity";
 import { BishtReveal } from "@/components/BishtReveal";
 import { HomeHero } from "@/components/HomeHero";
 import { PromiseSection } from "@/components/PromiseSection";
@@ -22,19 +22,11 @@ export default async function HomePage({
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
 
-  const sb = USE_STORYBLOK ? await getStoryContent<SbHomePage>("home", lang) : null;
-  const c = mapHome(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: homeQuery })).data : null;
+  const c = mapHome(doc, lang);
 
-  const celStories = USE_STORYBLOK
-    ? await getStoryList<SbCelebrationCase>(
-        { starts_with: "celebrations/", sort_by: "created_at:asc", per_page: 3 },
-        lang
-      )
-    : [];
-  const celItems = mapCelebrationItems(
-    celStories.length ? celStories.map((s) => s.content) : null,
-    lang
-  );
+  const celDocs = USE_SANITY ? (await sanityFetch({ query: celebrationsHomeQuery })).data : null;
+  const celItems = mapCelebrationItems(celDocs, lang);
 
   return (
     <>

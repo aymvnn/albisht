@@ -480,8 +480,13 @@
       color 520ms var(--ease-ceremonial),
       border-color 520ms var(--ease-ceremonial),
       transform 520ms var(--ease-ceremonial),
+      translate 300ms var(--ease-out-quart),
       box-shadow 520ms var(--ease-ceremonial);
     will-change: transform;
+    /* Magnetic attraction (MagneticCTAs.tsx sets --mag-x/--mag-y on
+       pointer-fine devices). `translate` composes with the hover
+       `transform` lift instead of overwriting it. */
+    translate: var(--mag-x, 0px) var(--mag-y, 0px);
   }
   /* Arabic-language buttons get slightly bigger and no Latin tracking
      (joining Naskh letters should not be artificially spaced). */
@@ -923,5 +928,159 @@ html[dir="rtl"] .force-latin {
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: none;
+}
+
+/* ============================================================
+   PREMIUM-UX LAYER — FAQ accordion, skip link, scrollbar, press
+   states, print/brochure, lightbox, tier anchors. Placed outside
+   @layer base for the same cascade reasons as the RTL overrides.
+   ============================================================ */
+
+/* === FAQ accordion — native <details> styled as ceremonial rows ========== */
+.faq-item {
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ink-warm) 22%, transparent);
+  /* Smooth height interpolation where supported (progressive enhancement —
+     other browsers simply open instantly, which is fine). */
+  interpolate-size: allow-keywords;
+}
+.faq-q {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding-block: 1.4rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--color-ink);
+  transition: color 380ms var(--ease-ceremonial);
+}
+.faq-q::-webkit-details-marker { display: none; }
+.faq-q:hover { color: var(--color-zari-deep); }
+.faq-num {
+  font-family: var(--font-roman);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  color: var(--color-zari);
+  min-width: 2rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  flex-shrink: 0;
+}
+html[dir="rtl"] .faq-num { letter-spacing: 0; font-size: 0.95rem; }
+.faq-marker {
+  margin-inline-start: auto;
+  flex-shrink: 0;
+  color: var(--color-zari);
+  transition: transform 420ms var(--ease-ceremonial);
+  transform-origin: center;
+}
+.faq-item[open] .faq-marker { transform: rotate(45deg); }
+.faq-a {
+  overflow: hidden;
+  padding-inline-start: 3.25rem;
+  padding-bottom: 1.6rem;
+  max-width: 58ch;
+  color: var(--color-ink-warm);
+}
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 480ms var(--ease-ceremonial), content-visibility 480ms allow-discrete;
+}
+.faq-item[open]::details-content { block-size: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content { transition: none; }
+  .faq-marker { transition: none; }
+}
+
+/* === Page veil — soft entrance on every route change ======================
+   Opacity-only on purpose: a transform here would turn the wrapper into a
+   containing block for position:fixed children (BishtReveal, drawers) and
+   break their viewport anchoring. */
+@keyframes page-veil-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page-veil {
+  animation: page-veil-in 480ms var(--ease-ceremonial) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-veil { animation: none; }
+}
+
+/* === Skip link (a11y) — hidden until keyboard focus ====================== */
+.skip-link {
+  position: fixed;
+  inset-inline-start: 1rem;
+  top: 1rem;
+  z-index: 120;
+  transform: translateY(-300%);
+  background: var(--color-pearl);
+  color: var(--color-ink);
+  border: 1px solid var(--color-zari);
+  padding: 0.7rem 1.4rem;
+  font-family: var(--font-roman);
+  font-size: 0.9rem;
+  transition: transform 300ms var(--ease-ceremonial);
+}
+html[dir="rtl"] .skip-link { font-family: var(--font-arabic); font-size: 1rem; }
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* === Quiet desktop scrollbar ============================================= */
+@media (pointer: fine) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--color-ink) 32%, transparent) transparent;
+  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-ink) 28%, transparent);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-zari-deep) 70%, transparent);
+    background-clip: content-box;
+  }
+}
+
+/* === Touch press feedback — hover has no meaning on coarse pointers ====== */
+@media (pointer: coarse) {
+  .btn-brand:active,
+  .press-dim:active {
+    opacity: 0.82;
+    transform: scale(0.985);
+    transition: opacity 120ms ease-out, transform 120ms ease-out;
+  }
+  .nav-link:active,
+  .drawer-link:active { color: var(--color-zari) !important; }
+}
+
+/* === Packages tier anchors — clear the fixed header when deep-linking ==== */
+[id^="tier-"] { scroll-margin-top: clamp(84px, 12vh, 132px); }
+
+/* === iOS safe area helper (sticky action bar) ============================ */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* === Lightbox entrance =================================================== */
+@keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lb-zoom { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
+.lb-fade { animation: lb-fade 420ms var(--ease-ceremonial) both; }
+.lb-zoom { animation: lb-zoom 560ms var(--ease-ceremonial) both; }
+@media (prefers-reduced-motion: reduce) {
+  .lb-fade, .lb-zoom { animation: none; }
+}
+
+/* === Print — site chrome off, brochure sheet on ========================== */
+@page { margin: 12mm; }
+@media print {
+  html { background: #fff; }
+  body { background: #fff; color: #000; }
+  body::before { display: none; }            /* paper grain */
+  .print-hide { display: none !important; }   /* header, footer, bars, cursor */
+  .brochure-sheet { box-shadow: none !important; border: none !important; }
+  .brochure-sheet a { text-decoration: none; color: inherit; }
+  [id^="tier-"] { scroll-margin-top: 0; }
 }
 

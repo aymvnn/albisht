@@ -13,13 +13,10 @@ const nextConfig = {
     // For production deployment on Vercel, re-enable by removing this flag.
     unoptimized: true,
     formats: ['image/webp'],
-    // Storyblok-hosted assets (when USE_STORYBLOK=true). Even with
-    // `unoptimized`, next/image validates remote hostnames against
-    // remotePatterns, so both the global (a.storyblok.com) and the EU
-    // space CDN (a-eu.storyblok.com) must be allow-listed.
+    // Sanity-hosted assets (when USE_SANITY=true). Even with `unoptimized`,
+    // next/image validates remote hostnames against remotePatterns.
     remotePatterns: [
-      { protocol: 'https', hostname: 'a.storyblok.com' },
-      { protocol: 'https', hostname: 'a-eu.storyblok.com' },
+      { protocol: 'https', hostname: 'cdn.sanity.io' },
     ],
   },
 };

@@ -1,17 +1,34 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral, localizedDigits, localizedThousands } from "@/lib/i18n";
 import type { Package } from "@/lib/packages";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent } from "@/lib/storyblok/fetch";
-import { mapPackages, type PackagesContent } from "@/lib/content/from-storyblok";
-import type { SbPackagesPage } from "@/lib/storyblok/types";
+import { BROCHURE, PACKAGES_EXTRAS } from "@/lib/copy";
+import { pageMetadata } from "@/lib/seo";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { packagesQuery } from "@/lib/sanity/queries";
+import { mapPackages, type PackagesContent } from "@/lib/content/from-sanity";
 import { ContactCallout } from "@/components/ContactCallout";
+import { FaqSection } from "@/components/FaqSection";
+import { PackageInclusions } from "@/components/PackageInclusions";
 import { PageHero } from "@/components/PageHero";
+import { TierRail } from "@/components/TierRail";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { PHONES } from "@/lib/contact";
 
 export const revalidate = 900;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = (LANGS.includes(rawLang as Lang) ? rawLang : "ar") as Lang;
+  return pageMetadata(lang, "/packages");
+}
 
 export default async function PackagesPage({
   params,
@@ -21,8 +38,8 @@ export default async function PackagesPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const sb = USE_STORYBLOK ? await getStoryContent<SbPackagesPage>("packages", lang) : null;
-  const pc = mapPackages(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: packagesQuery })).data : null;
+  const pc = mapPackages(doc, lang);
   const meta = pc.meta;
   const packages = pc.tiers;
 
@@ -42,6 +59,18 @@ export default async function PackagesPage({
           anchored detail section below. */}
       <PackagesOverview packages={packages} lang={lang} meta={meta} />
 
+      {/* === In-page tier navigation — sticky pill strip on mobile,
+          quiet dot rail at the inline edge on desktop === */}
+      <TierRail
+        lang={lang}
+        label={PACKAGES_EXTRAS[lang].railLabel}
+        tiers={packages.map((p) => ({
+          id: p.id,
+          name: p.name,
+          price: localizedThousands(p.priceQAR, lang),
+        }))}
+      />
+
       {/* === Each men's package as its own full-width chapter === */}
       {packages.map((pkg, i) => (
         <PackageBlock key={pkg.id} pkg={pkg} index={i} lang={lang} meta={meta} />
@@ -49,6 +78,9 @@ export default async function PackagesPage({
 
       {/* === Women's atelier section — distinct product line === */}
       <WomensSection lang={lang} womens={pc.womens} />
+
+      {/* === Protocol questions, answered === */}
+      <FaqSection lang={lang} />
 
       {/* === Closing CTA — the full ContactCallout with both phones + letter === */}
       <ContactCallout lang={lang} variant="dark" />
@@ -329,42 +361,38 @@ function PackageBlock({
           />
         </div>
 
-        {/* === Inclusions grid: five sections, two-column responsive === */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-          {pkg.sections.map((section) => (
-            <div key={section.key}>
-              <div className="flex items-center gap-3 mb-4 pb-3 border-b" style={{ borderColor: `${dividerColor}` , opacity: 0.95 }}>
-                <span
-                  className="type-roman"
-                  style={{
-                    color: "var(--color-zari)",
-                    fontSize: "1rem",
-                  }}
-                >
-                  {meta.sectionLabels[section.key]}
-                </span>
-              </div>
-              <ul className="space-y-3">
-                {section.bullets.map((b, j) => (
-                  <li
-                    key={j}
-                    className={`${isAr ? "type-arabic" : "type-serif"} leading-relaxed flex gap-3 items-start`}
-                    style={{ color: textColor, fontSize: "1.15rem" }}
-                  >
-                    <span
-                      className="block mt-2 w-1 h-1 rounded-full flex-shrink-0"
-                      style={{ background: "var(--color-zari)" }}
-                    />
-                    <span>{localizedDigits(b, lang)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        {/* === Inclusions grid: five sections, two-column responsive.
+            Collapsed to the first bullets per section — "the full protocol"
+            unfolds on request, so the chapter scans in seconds. === */}
+        <PackageInclusions
+          lang={lang}
+          sections={pkg.sections}
+          labels={meta.sectionLabels}
+        />
 
-        {/* === Per-package CTA === */}
-        <div className="mt-12 md:mt-14 flex justify-center md:justify-end">
+        {/* === Per-package actions: consult (primary), WhatsApp with the
+            tier pre-spoken, and the printable brochure sheet === */}
+        <div className="mt-12 md:mt-14 flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-5">
+          <Link
+            href={`/${lang}/packages/brochure/${pkg.id}`}
+            className="nav-link press-dim"
+            style={{
+              color: "var(--color-ink-warm)",
+              fontSize: isAr ? "1rem" : "0.88rem",
+            }}
+          >
+            {BROCHURE[lang].action}
+          </Link>
+          <WhatsAppLink
+            lang={lang}
+            line="mens"
+            variant="chip"
+            message={
+              isAr
+                ? `السلام عليكم، أرغب بالاستفسار عن ${pkg.name}.`
+                : `Greetings — I would like to enquire about the ${pkg.name} package.`
+            }
+          />
           <Link
             href={`/${lang}/consult?package=${pkg.id}`}
             className="btn-brand inline-flex items-center gap-4 border"
@@ -518,13 +546,16 @@ function WomensSection({ lang, womens }: { lang: Lang; womens: PackagesContent["
           >
             {localizedDigits(phone.display, lang)}
           </a>
-          <Link
-            href={`/${lang}/consult?line=womens`}
-            className="btn-brand inline-flex items-center gap-4 mt-4 border"
-          >
-            <span>{meta.enquireLabel}</span>
-            <span className="btn-brand-arrow flip-rtl">→</span>
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-4">
+            <WhatsAppLink lang={lang} line="womens" variant="chip" />
+            <Link
+              href={`/${lang}/consult?line=womens`}
+              className="btn-brand inline-flex items-center gap-4 border"
+            >
+              <span>{meta.enquireLabel}</span>
+              <span className="btn-brand-arrow flip-rtl">→</span>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

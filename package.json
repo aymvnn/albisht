@@ -7,21 +7,26 @@
     "build": "next build",
     "start": "next start -p 3300",
     "lint": "next lint",
-    "sb:migrate": "tsx storyblok/migrate/run.ts",
-    "sb:lang": "tsx storyblok/migrate/run.ts --lang",
-    "sb:components": "tsx storyblok/migrate/run.ts --components",
-    "sb:assets": "tsx storyblok/migrate/run.ts --assets",
-    "sb:content": "tsx storyblok/migrate/run.ts --content"
+    "sanity:import": "tsx sanity/import/run.ts",
+    "studio:dev": "sanity dev",
+    "studio:deploy": "sanity deploy"
   },
   "dependencies": {
+    "@portabletext/react": "^6.2.0",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^5.30.0",
+    "@sanity/visual-editing": "^5.4.3",
     "@storyblok/react": "^6.1.10",
     "clsx": "^2.1.1",
     "framer-motion": "^11.13.1",
     "gsap": "^3.12.5",
     "lenis": "^1.1.18",
     "next": "^15.0.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next-sanity": "^11.6.13",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "sanity": "^5.30.0",
+    "styled-components": "^6.4.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0-beta.3",

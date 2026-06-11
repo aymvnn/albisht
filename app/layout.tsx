@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ALBISHT — البِشت · Qatari Men's Hall Atelier",
   description:
     "ALBISHT is the Qatari ceremonial atelier for the men's hall of the wedding. Three hundred ceremonies a year. None of them repeated.",
-  metadataBase: new URL("http://localhost:3300"),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "ALBISHT — البِشت",
     description: "Qatari Men's Hall Atelier · Doha",

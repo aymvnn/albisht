@@ -3,15 +3,18 @@ import { type Lang, localizedNumeral, localizedDigits } from "@/lib/i18n";
 import { getGlobals } from "@/lib/content/globals";
 import { Logo } from "./Logo";
 import { SilkRibbon } from "./SilkRibbon";
+import { WhatsAppLink } from "./WhatsAppLink";
 
 type SocialLinkName = "instagram" | "facebook" | "tiktok";
 
 export async function SiteFooter({ lang }: { lang: Lang }) {
   const g = await getGlobals(lang);
-  const year = localizedNumeral(2026, lang);
+  // Server component — evaluated per ISR revalidation, so the year follows
+  // the calendar instead of being hardcoded.
+  const year = localizedNumeral(new Date().getFullYear(), lang);
 
   return (
-    <footer className="surface-bisht relative z-10">
+    <footer className="surface-bisht relative z-10 print-hide">
       {/* Brand signature silk-and-zari ribbon spanning the top of the footer. */}
       <div className="relative h-20 md:h-28 overflow-hidden -mt-1 -mb-px">
         <SilkRibbon variant="horizontal" className="absolute inset-x-0 inset-y-0 w-full h-full" />
@@ -49,6 +52,12 @@ export async function SiteFooter({ lang }: { lang: Lang }) {
             {/* Primary: men's hall — the full atelier */}
             <div className="pt-3">
               <PhoneLine number={g.phones.mens} lang={lang} />
+              <WhatsAppLink
+                lang={lang}
+                line="mens"
+                variant="text"
+                className="text-[color:var(--color-mist)]/75"
+              />
             </div>
             {/* Secondary: women — selected services */}
             <SecondaryPhoneLine number={g.phones.womens} lang={lang} />

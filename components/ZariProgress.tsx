@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The gold zari embroidery line at the top of the viewport.
- * Embroiders itself as the user scrolls — with micro stitches every 5% of progress.
+ * Embroiders itself as the user scrolls — with micro stitches every 5%.
+ *
+ * Perf note: progress is applied straight to the element's transform via a
+ * ref inside requestAnimationFrame. The previous version stored progress in
+ * React state, which re-rendered the component on every scroll frame for a
+ * purely visual update.
  */
 export function ZariProgress() {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
   const [rtl, setRtl] = useState(false); // assume LTR on SSR/first client render
 
   useEffect(() => {
@@ -22,7 +27,7 @@ export function ZariProgress() {
       const scrolled = h.scrollTop || document.body.scrollTop;
       const total = h.scrollHeight - h.clientHeight;
       const p = total > 0 ? Math.min(1, Math.max(0, scrolled / total)) : 0;
-      setProgress(p);
+      if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -30,8 +35,10 @@ export function ZariProgress() {
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -39,11 +46,12 @@ export function ZariProgress() {
   const stitches = Array.from({ length: 20 }, (_, i) => (i + 1) * 5);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-[60] pointer-events-none h-[3px]">
+    <div className="print-hide fixed inset-x-0 top-0 z-[60] pointer-events-none h-[3px]" aria-hidden="true">
       <div
+        ref={barRef}
         className="relative h-full transition-transform duration-200 ease-out"
         style={{
-          transform: `scaleX(${progress})`,
+          transform: "scaleX(0)",
           transformOrigin: rtl ? "right" : "left",
         }}
       >

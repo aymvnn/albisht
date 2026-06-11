@@ -1,14 +1,26 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { LANGS, type Lang, localizedNumeral } from "@/lib/i18n";
-import { USE_STORYBLOK } from "@/lib/storyblok/api";
-import { getStoryContent } from "@/lib/storyblok/fetch";
-import { mapServices } from "@/lib/content/from-storyblok";
-import type { SbServicesPage } from "@/lib/storyblok/types";
+import { pageMetadata } from "@/lib/seo";
+import { USE_SANITY } from "@/lib/sanity/client";
+import { sanityFetch } from "@/lib/sanity/live";
+import { servicesQuery } from "@/lib/sanity/queries";
+import { mapServices } from "@/lib/content/from-sanity";
 import { ContactCallout } from "@/components/ContactCallout";
 import { PageHero } from "@/components/PageHero";
 
 export const revalidate = 900;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = (LANGS.includes(rawLang as Lang) ? rawLang : "ar") as Lang;
+  return pageMetadata(lang, "/services");
+}
 
 export default async function ServicesPage({
   params,
@@ -18,8 +30,8 @@ export default async function ServicesPage({
   const { lang: rawLang } = await params;
   if (!LANGS.includes(rawLang as Lang)) notFound();
   const lang = rawLang as Lang;
-  const sb = USE_STORYBLOK ? await getStoryContent<SbServicesPage>("services", lang) : null;
-  const c = mapServices(sb, lang);
+  const doc = USE_SANITY ? (await sanityFetch({ query: servicesQuery })).data : null;
+  const c = mapServices(doc, lang);
   const phases = c.phases;
   const isAr = lang === "ar";
 
