@@ -94,7 +94,7 @@ export function mapAtelier(doc: Doc, lang: Lang) {
       label: t(doc?.networkLabel, lang, at.network.label),
       title: t(doc?.networkTitle, lang, at.network.title),
       body: t(doc?.networkBody, lang, at.network.body),
-      photo: img(doc?.networkPhoto, "/photos/majlis/sheikh-portrait.jpg"),
+      photo: img(doc?.networkPhoto, "/photos/majlis/night-majlis-outdoor.jpg"),
     },
     terms: {
       label: t(doc?.termsLabel, lang, at.terms.label),

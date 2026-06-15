@@ -30,6 +30,13 @@ export function SilkRibbon({
 }) {
   const opacity = intensity === "subtle" ? 0.7 : 1;
 
+  // Warm gold halo echoing the opening BishtReveal's luminous zari ("nfs dakhlat
+  // al-mawqi'") — gentle behind text, fuller as the footer signature band.
+  const glow =
+    intensity === "subtle"
+      ? "drop-shadow(0 0 3px rgba(246, 182, 43, 0.30))"
+      : "drop-shadow(0 0 4px rgba(246, 182, 43, 0.55)) drop-shadow(0 0 13px rgba(226, 159, 41, 0.30))";
+
   // Diagonal variant — gold zari band on transparent ground
   if (variant === "diagonal") {
     return (
@@ -38,7 +45,7 @@ export function SilkRibbon({
         preserveAspectRatio="xMidYMid meet"
         className={className}
         aria-hidden="true"
-        style={{ opacity }}
+        style={{ opacity, filter: glow }}
       >
         <Defs />
         {/* Gold zari band — single flowing element, transparent surroundings */}
@@ -58,6 +65,14 @@ export function SilkRibbon({
           fill="none"
           opacity="0.6"
         />
+        {/* Shadowed inner edge — raised woven thickness. */}
+        <path
+          d="M 640 60 C 600 65, 560 80, 500 100 C 320 175, 140 215, -40 340"
+          stroke="#5E461B"
+          strokeWidth="1.5"
+          fill="none"
+          opacity="0.5"
+        />
         <ZariMaskDef variant="diagonal" />
       </svg>
     );
@@ -70,7 +85,7 @@ export function SilkRibbon({
       preserveAspectRatio="none"
       className={className}
       aria-hidden="true"
-      style={{ opacity }}
+      style={{ opacity, filter: glow }}
     >
       <Defs />
       {/* Gold zari band — the flowing swoosh, on transparent ground */}
@@ -89,6 +104,14 @@ export function SilkRibbon({
         strokeWidth="1"
         fill="none"
         opacity="0.55"
+      />
+      {/* Shadowed lower lip — gives the band a raised, woven thickness. */}
+      <path
+        d="M -20 120 C 200 80, 400 160, 600 120 C 800 80, 1000 160, 1220 120"
+        stroke="#5E461B"
+        strokeWidth="1.5"
+        fill="none"
+        opacity="0.5"
       />
       <ZariMaskDef variant="horizontal" />
     </svg>
@@ -110,13 +133,16 @@ function Defs() {
         <stop offset="50%" stopColor="rgba(255,255,255,0.35)" />
         <stop offset="100%" stopColor="rgba(255,255,255,0)" />
       </linearGradient>
-      {/* Brand-gold gradient: #D28E29 → #F6B62B → #E29F29 → #B07418 */}
+      {/* Brand-gold brocade gradient — deep zari edges with a luminous centre
+          catch, matching the bisht-reveal panels' #8E6B2E↔#F6B62B range. */}
       <linearGradient id="zari-band-grad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#B07418" />
-        <stop offset="20%" stopColor="#D28E29" />
-        <stop offset="50%" stopColor="#F6B62B" />
-        <stop offset="80%" stopColor="#E29F29" />
-        <stop offset="100%" stopColor="#B07418" />
+        <stop offset="0%" stopColor="#7A5A22" />
+        <stop offset="14%" stopColor="#C98A2C" />
+        <stop offset="34%" stopColor="#F6B62B" />
+        <stop offset="50%" stopColor="#FBE3A6" />
+        <stop offset="66%" stopColor="#F6B62B" />
+        <stop offset="86%" stopColor="#C98A2C" />
+        <stop offset="100%" stopColor="#7A5A22" />
       </linearGradient>
     </defs>
   );
@@ -127,11 +153,17 @@ function DiagonalHatch() {
   // clips it to just the zari band shape so the weave shows only inside the gold.
   return (
     <g>
-      <pattern id="zari-stripes" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
-        <rect width="2" height="6" fill="rgba(0,0,0,0.5)" />
-        <rect x="3" width="1" height="6" fill="rgba(255,235,180,0.4)" />
+      {/* Primary zari threads — dark warp with a fine gold weft. */}
+      <pattern id="zari-stripes" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+        <rect width="1.5" height="5" fill="rgba(70,45,12,0.55)" />
+        <rect x="2.5" width="1" height="5" fill="rgba(255,238,190,0.45)" />
+      </pattern>
+      {/* Crossing gold thread — turns the single hatch into a woven brocade. */}
+      <pattern id="zari-stripes-cross" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(-45)">
+        <rect x="2" width="1" height="5" fill="rgba(255,228,150,0.30)" />
       </pattern>
       <rect x="-100" y="-100" width="1400" height="600" fill="url(#zari-stripes)" />
+      <rect x="-100" y="-100" width="1400" height="600" fill="url(#zari-stripes-cross)" />
     </g>
   );
 }

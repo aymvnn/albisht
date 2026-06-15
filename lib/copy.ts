@@ -80,7 +80,7 @@ export const ACTS = {
         kicker: "الفصل الأول",
         title: "الاستقبال",
         line: "الباب يُفتح، العود يُشعل، البِشت يَستقبل البِشت.",
-        photo: "/photos/heritage/lantern-entrance-portraits.jpg",
+        photo: "/photos/hall/mashrabiya-arch.jpg",
       },
       {
         kicker: "الفصل الثاني",
@@ -103,8 +103,8 @@ export const ACTS = {
       {
         kicker: "Act i",
         title: "The arrival",
-        line: "The door opens, the oud-bakhoor lights, the bisht meets the bisht.",
-        photo: "/photos/heritage/lantern-entrance-portraits.jpg",
+        line: "The door opens, the oud lights, the bisht meets the bisht.",
+        photo: "/photos/hall/mashrabiya-arch.jpg",
       },
       {
         kicker: "Act ii",
@@ -252,7 +252,7 @@ export const ATELIER = {
       lines: [
         "نَقبَل المناسبة قبل سبعة أشهر على الأقل.",
         "لا نُجري أكثر من ثلاث مئة مناسبة في العام.",
-        "نَعمَل في قطر، والبحرين، والإمارات.",
+        "نَعمَل في قطر.",
         "نتعامل مع وَلي الأمر، لا مع وكلائه.",
       ],
     },
@@ -291,7 +291,7 @@ export const ATELIER = {
       lines: [
         "We accept a wedding no less than seven months in advance.",
         "We do not undertake more than three hundred weddings a year.",
-        "We work in Qatar, Bahrain and the Emirates.",
+        "We work in Qatar.",
         "We speak with the head of the family, not with his agents.",
       ],
     },
@@ -373,7 +373,7 @@ export const FAQ = {
       },
       {
         q: "أين تعملون؟",
-        a: "في قطر، والبحرين، والإمارات. المرسم في الدوحة.",
+        a: "في قطر. المرسم في الدوحة.",
       },
       {
         q: "هل الباقة كاملة بذاتها؟",
@@ -403,7 +403,7 @@ export const FAQ = {
       },
       {
         q: "Where do you work?",
-        a: "Qatar, Bahrain and the Emirates. The atelier is in Doha.",
+        a: "Qatar. The atelier is in Doha.",
       },
       {
         q: "Is a package complete in itself?",

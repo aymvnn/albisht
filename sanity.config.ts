@@ -6,9 +6,22 @@ import { schemaTypes } from "./sanity/schemaTypes";
 import { structure } from "./sanity/structure";
 import { SINGLETONS } from "./sanity/schemaTypes/documents";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "placeholder";
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
-const previewOrigin = process.env.NEXT_PUBLIC_SANITY_PREVIEW_ORIGIN || "http://localhost:3300";
+/* The hosted Studio bundle only inlines SANITY_STUDIO_*-prefixed env vars —
+   NEXT_PUBLIC_* is Next.js-only and compiles to undefined in `sanity deploy`.
+   The project id is public (it appears in every API URL), so the literal
+   fallback is safe and keeps one config working in both runtimes. */
+const projectId =
+  process.env.SANITY_STUDIO_PROJECT_ID ||
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+  "y1819joy";
+const dataset =
+  process.env.SANITY_STUDIO_DATASET ||
+  process.env.NEXT_PUBLIC_SANITY_DATASET ||
+  "production";
+const previewOrigin =
+  process.env.SANITY_STUDIO_PREVIEW_ORIGIN ||
+  process.env.NEXT_PUBLIC_SANITY_PREVIEW_ORIGIN ||
+  "http://localhost:3300";
 
 const singletonSet = new Set<string>(SINGLETONS as readonly string[]);
 

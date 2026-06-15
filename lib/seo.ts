@@ -187,7 +187,7 @@ export function localBusinessJsonLd(lang: Lang) {
       addressRegion: "Khalifa City",
       addressCountry: "QA",
     },
-    areaServed: ["Qatar", "Bahrain", "United Arab Emirates"],
+    areaServed: ["Qatar"],
     sameAs: SOCIALS.map((s) => s.url),
     contactPoint: [
       {

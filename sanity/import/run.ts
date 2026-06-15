@@ -115,7 +115,7 @@ async function run() {
     networkLabel: ls(ATELIER.ar.network.label, ATELIER.en.network.label),
     networkTitle: ls(ATELIER.ar.network.title, ATELIER.en.network.title),
     networkBody: lt(ATELIER.ar.network.body, ATELIER.en.network.body),
-    networkPhoto: await image("/photos/majlis/sheikh-portrait.jpg"),
+    networkPhoto: await image("/photos/majlis/night-majlis-outdoor.jpg"),
     termsLabel: ls(ATELIER.ar.terms.label, ATELIER.en.terms.label),
     termsTitle: ls(ATELIER.ar.terms.title, ATELIER.en.terms.title),
     termsLines: lt(ATELIER.ar.terms.lines.join("\n"), ATELIER.en.terms.lines.join("\n")),

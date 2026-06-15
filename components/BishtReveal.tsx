@@ -211,17 +211,22 @@ export function BishtReveal({ lang: _lang }: { lang: Lang }) {
       />
 
       {/* === SEAM HAIRLINE — a single razor-thin bright zari line where the
-          two panels meet, that "wakes" when the panels start to open. */}
+          two panels meet. It "ignites" the instant the panels begin to part,
+          then vanishes fast — gone long before the 1.6s panel travel finishes —
+          so no gold streak is left stranded in the centre of the open gap. */}
       <div
         className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
           width: "1.5px",
           background:
             "linear-gradient(180deg, transparent 0%, #F6B62B 15%, #F6B62B 85%, transparent 100%)",
-          opacity:
-            phase === "closed" ? 0.55 : phase === "opening" ? 0.95 : 0,
+          // Visible only while closed; during the open it is driven entirely by
+          // the seam-ignite keyframe (flash → fade to 0) and otherwise stays 0.
+          opacity: phase === "closed" ? 0.55 : 0,
           filter: phase === "opening" ? "drop-shadow(0 0 6px #F6B62B)" : "none",
-          transition: "opacity 0.6s ease-out, filter 0.4s ease-out",
+          transition: "opacity 0.5s ease-out, filter 0.4s ease-out",
+          animation:
+            phase === "opening" ? "seam-ignite 0.55s ease-out forwards" : "none",
         }}
       />
 
@@ -279,6 +284,13 @@ export function BishtReveal({ lang: _lang }: { lang: Lang }) {
         @keyframes seam-pulse {
           0%, 100% { opacity: 0.4; transform: scaleY(0.9); }
           50% { opacity: 1; transform: scaleY(1.1); }
+        }
+        /* The seam flares bright as the panels split, then fades out fast so it
+           never lingers as a stranded gold line in the centre of the open gap. */
+        @keyframes seam-ignite {
+          0% { opacity: 0.55; }
+          22% { opacity: 1; }
+          100% { opacity: 0; }
         }
       `}</style>
     </div>
