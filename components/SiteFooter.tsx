@@ -75,6 +75,24 @@ export async function SiteFooter({ lang }: { lang: Lang }) {
             Doha · {lang === "ar" ? "قطر" : "Qatar"}
           </p>
         </div>
+
+        {/* Maker's mark — the atelier's owner signs the page, like a tailor's
+            label sewn into the bisht. Quiet, centred, the closing word. */}
+        <div className="mt-10 flex items-center justify-center gap-4 select-none">
+          <span aria-hidden className="h-px w-8 md:w-12 bg-[color:var(--color-zari)]/30" />
+          {lang === "ar" ? (
+            <p className="type-arabic flex items-baseline gap-2 leading-none">
+              <span className="text-[0.92rem] text-[color:var(--color-mist)]/45">بإدارة</span>
+              <span className="text-[1.05rem] text-[color:var(--color-mist)]/85">عبدالله الكعبي</span>
+            </p>
+          ) : (
+            <p className="type-serif flex items-baseline gap-2 leading-none">
+              <span className="italic text-[0.9rem] text-[color:var(--color-mist)]/45">By</span>
+              <span className="italic text-[1.05rem] text-[color:var(--color-mist)]/85">Abdullah Elkaabi</span>
+            </p>
+          )}
+          <span aria-hidden className="h-px w-8 md:w-12 bg-[color:var(--color-zari)]/30" />
+        </div>
       </div>
     </footer>
   );
